@@ -1,6 +1,7 @@
 package com.s0mbr3.moodtracker.controller.MainControllers;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import com.s0mbr3.moodtracker.model.Humor;
@@ -18,8 +19,8 @@ public class MainController {
     private Method m;
     private Humor humor;
 
-    public MainController(ImageView smiley) {
-        this.humor = new Humor(smiley);
+    public MainController(LinearLayout layout, ImageView smiley) {
+        this.humor = new Humor(layout, smiley);
 
         this.humorsList.add("getSadSmiley");
         this.humorsList.add("getDisappointedSmiley");

@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.s0mbr3.moodtracker.R;
@@ -22,6 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ImageView mSmiley;
+    private LinearLayout mLayout;
     private GestureDetectorCompat mDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.mSmiley = findViewById(R.id.activity_main_smiley_image);
-        this.mDetector = new GestureDetectorCompat(this, new MyGestureListener(this.mSmiley, 3));
+        this.mLayout = findViewById(R.id.activity_main_layout);
+        this.mDetector = new GestureDetectorCompat(this, new MyGestureListener(this.mLayout, this.mSmiley, 3));
     }
 
     @Override
