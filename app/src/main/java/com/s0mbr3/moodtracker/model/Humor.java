@@ -1,9 +1,9 @@
 package com.s0mbr3.moodtracker.model;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
+import android.widget.RelativeLayout;
 
 import com.s0mbr3.moodtracker.R;
 
@@ -13,9 +13,9 @@ import com.s0mbr3.moodtracker.R;
  */
 public class Humor {
     private ImageView mSmiley;
-    private LinearLayout mLayout;
+    private ConstraintLayout mLayout;
 
-    public Humor(LinearLayout layout, ImageView smiley){
+    public Humor(ConstraintLayout layout, ImageView smiley){
         this.mSmiley = smiley;
         this.mLayout = layout;
 

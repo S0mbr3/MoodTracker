@@ -1,24 +1,26 @@
 package com.s0mbr3.moodtracker.controller.MainControllers;
 
+import android.support.constraint.ConstraintLayout;
 import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Oxhart on 21/01/2019.
  */
 public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     private static final String DEBUG_TAG = "GESTURES";
-    private LinearLayout mLayout;
+    private ConstraintLayout mLayout;
     private ImageView mSmiley;
     private MainController mainController;
     private int mIndex;
     private boolean changed;
 
-    public MyGestureListener(LinearLayout layout, ImageView smiley, int index){
+    public MyGestureListener(ConstraintLayout layout, ImageView smiley, int index){
         this.mSmiley = smiley;
         this.mLayout = layout;
         this.mainController = new MainController(layout, smiley);

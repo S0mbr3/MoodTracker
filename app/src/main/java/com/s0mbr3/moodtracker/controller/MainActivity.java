@@ -1,29 +1,20 @@
 package com.s0mbr3.moodtracker.controller;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.s0mbr3.moodtracker.R;
-import com.s0mbr3.moodtracker.controller.MainControllers.MainController;
 import com.s0mbr3.moodtracker.controller.MainControllers.MyGestureListener;
-import com.s0mbr3.moodtracker.model.Humor;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ImageView mSmiley;
-    private LinearLayout mLayout;
+    private ConstraintLayout mLayout;
     private GestureDetectorCompat mDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
