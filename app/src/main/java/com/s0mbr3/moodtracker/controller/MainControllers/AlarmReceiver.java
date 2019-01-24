@@ -21,7 +21,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (extras != null) {
             String commentTxt = extras.getString(MainActivity.BUNDLE_EXTRA_COMMENT_TXT);
             int index = extras.getInt(MainActivity.BUNDLE_EXTRA_HUMORS_LIST_INDEX);
-            Log.d(DEBUG_TAG, commentTxt + " " + index);
+            Log.d("AlarmReceiver", "timer testing");
         }
     }
 }

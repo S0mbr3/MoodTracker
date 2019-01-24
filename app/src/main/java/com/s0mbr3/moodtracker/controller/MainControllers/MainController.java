@@ -1,16 +1,9 @@
 package com.s0mbr3.moodtracker.controller.MainControllers;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 
-import com.s0mbr3.moodtracker.controller.MainActivity;
 import com.s0mbr3.moodtracker.model.Humor;
 
 import java.lang.reflect.InvocationTargetException;

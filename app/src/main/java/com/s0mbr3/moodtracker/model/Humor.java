@@ -3,7 +3,6 @@ package com.s0mbr3.moodtracker.model;
 import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;
 
-import android.widget.RelativeLayout;
 
 import com.s0mbr3.moodtracker.R;
 

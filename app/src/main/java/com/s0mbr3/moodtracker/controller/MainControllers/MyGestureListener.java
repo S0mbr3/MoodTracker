@@ -1,16 +1,9 @@
 package com.s0mbr3.moodtracker.controller.MainControllers;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
-import com.s0mbr3.moodtracker.controller.MainActivity;
 
 /**
  * Created by Oxhart on 21/01/2019.
