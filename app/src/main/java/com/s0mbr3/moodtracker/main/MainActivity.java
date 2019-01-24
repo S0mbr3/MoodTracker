@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.controller;
+package com.s0mbr3.moodtracker.main;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -19,10 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.s0mbr3.moodtracker.R;
-import com.s0mbr3.moodtracker.controller.MainControllers.AlarmReceiver;
-import com.s0mbr3.moodtracker.controller.MainControllers.MainController;
-import com.s0mbr3.moodtracker.controller.MainControllers.MyGestureListener;
-import com.s0mbr3.moodtracker.controller.MainControllers.SerialiazedHumorFileWriter;
+import com.s0mbr3.moodtracker.historic.HistoricActivity;
+import com.s0mbr3.moodtracker.main.controllers.AlarmReceiver;
+import com.s0mbr3.moodtracker.main.controllers.MainController;
+import com.s0mbr3.moodtracker.main.controllers.MyGestureListener;
+import com.s0mbr3.moodtracker.main.controllers.SerialiazedHumorFileWriter;
 
 import java.util.Calendar;
 
@@ -38,13 +39,15 @@ public class MainActivity extends AppCompatActivity {
     private GestureDetectorCompat mDetector;
     private String mCommentTxt;
     private int mIndex;
+    private int mCurrentDayForHistoric;
+    private String mDirPath;
     private String mFilePath;
     private boolean mCommentTester;
     private SharedPreferences mPreferences;
     private MainController mMainController;
     private MyGestureListener mMyGestureListener;
     private Calendar mCalendar;
-    private SerialiazedHumorFileWriter mSerialiazedHumorFileWriter;
+    private SerialiazedHumorFileWriter mSerializedHumorFileWriter;
     public static final int  HISTORIC_ACTIVITY_REQUEST_CODE = 1337;
     public static final String PREF_KEY_COMMENT_TXT = "PREF_KEY_COMMENT_TXT";
     public static final String BUNDLE_EXTRA_COMMENT_TXT = "BUNDLE_EXTRA_COMMENT_TXT";
@@ -57,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
         mCommentTester = false;
         mIndex = 3;
-        mFilePath = this.getFilesDir().getPath() + "/selectedHumor.txt";
+        mCurrentDayForHistoric = 1;
+        mDirPath = this.getFilesDir().getPath();
+        mFilePath = "selectedHumor.txt";
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         mCalendar.set(Calendar.HOUR_OF_DAY, 16);
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         mCalendar.set(Calendar.MILLISECOND,0);
 
         mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        mIntent.putExtra(BUNDLE_EXTRA_COMMENT_TXT, mFilePath);
+        mIntent.putExtra(BUNDLE_EXTRA_COMMENT_TXT, mDirPath);
         mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
@@ -95,12 +100,9 @@ public class MainActivity extends AppCompatActivity {
             public void getIndex(int index) {
                 Log.d("getIndex", String.valueOf(index) + mCommentTxt);
                 mIndex = index;
-                if(mCommentTxt == null) {
-                    mCommentTxt = "null";
-                    mCommentTester = false;
-                }
-                mSerialiazedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex, mCommentTxt, mFilePath);
-                mSerialiazedHumorFileWriter.SerializedHumorFileWriting();
+                mSerializedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex, mCommentTxt,
+                        mCurrentDayForHistoric,mDirPath);
+                mSerializedHumorFileWriter.SerializedHumorFileWriting(mFilePath);
             }
         });
     }
@@ -123,8 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mCommentTxt = commentInput.getText().toString();
                         Log.d("addComment", mCommentTxt + " " + mIndex);
-                        mSerialiazedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex, mCommentTxt, mFilePath);
-                        mSerialiazedHumorFileWriter.SerializedHumorFileWriting();
+                        mSerializedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex,
+                                mCommentTxt, mCurrentDayForHistoric, mDirPath);
+                        mSerializedHumorFileWriter.SerializedHumorFileWriting(mFilePath);
                     }
                 })
                 .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {

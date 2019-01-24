@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.model;
+package com.s0mbr3.moodtracker.main.models;
 
 import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;

@@ -5,6 +5,6 @@
     android:background="@color/historicBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.HistoricActivity">
+    tools:context=".historic.HistoricActivity">
 
 </android.support.constraint.ConstraintLayout>

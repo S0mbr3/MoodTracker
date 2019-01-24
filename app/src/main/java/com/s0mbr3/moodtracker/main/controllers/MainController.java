@@ -1,10 +1,10 @@
-package com.s0mbr3.moodtracker.controller.MainControllers;
+package com.s0mbr3.moodtracker.main.controllers;
 
 import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;
 
 
-import com.s0mbr3.moodtracker.model.Humor;
+import com.s0mbr3.moodtracker.main.models.Humor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,17 +30,6 @@ public class MainController {
         this.humorsList.add("getSuperHappySmiley");
     }
 
-    public int getIndex(){
-        return this.mIndex;
-    }
-
-    public void setIndex(int index){
-        this.mIndex = index;
-    }
-
-    public List<String> getHumorsList() {
-        return humorsList;
-    }
 
     public void getMethodName(int index) {
         Class c1;

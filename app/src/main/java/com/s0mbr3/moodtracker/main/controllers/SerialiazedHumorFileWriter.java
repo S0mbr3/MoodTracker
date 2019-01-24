@@ -1,7 +1,7 @@
-package com.s0mbr3.moodtracker.controller.MainControllers;
+package com.s0mbr3.moodtracker.main.controllers;
 
 
-import com.s0mbr3.moodtracker.model.SelectedHumorSerializer;
+import com.s0mbr3.moodtracker.main.models.SelectedHumorSerializer;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -14,23 +14,27 @@ public class SerialiazedHumorFileWriter {
     private ObjectOutputStream objectOutputStream;
     private int mIndex;
     private String mCommentTxt;
-    private String mFilePath;
+    private String mDirPath;
+    private int mCurrentDayForHistoric;
 
-    public SerialiazedHumorFileWriter(int index, String commentTxt, String filePath) {
-        mFilePath = filePath;
+    public SerialiazedHumorFileWriter(int index, String commentTxt,int currentDayFprHistoric
+                                      ,String filePath) {
+        this.mDirPath = filePath;
         this.mIndex = index;
         this.mCommentTxt = commentTxt;
+        this.mCurrentDayForHistoric = currentDayFprHistoric;
     }
 
-    public void SerializedHumorFileWriting() {
+    public void SerializedHumorFileWriting(String filePath) {
 
         try {
             objectOutputStream = new ObjectOutputStream(
                     new BufferedOutputStream(
                             new FileOutputStream(
-                                    new File(mFilePath))));
+                                    new File(mDirPath, filePath))));
 
-            objectOutputStream.writeObject(new SelectedHumorSerializer(this.mIndex, this.mCommentTxt));
+            objectOutputStream.writeObject(new SelectedHumorSerializer(this.mIndex,
+                    this.mCommentTxt, this.mCurrentDayForHistoric));
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         } catch(IOException e){

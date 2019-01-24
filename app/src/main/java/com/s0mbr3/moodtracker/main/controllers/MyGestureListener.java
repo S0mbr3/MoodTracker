@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.controller.MainControllers;
+package com.s0mbr3.moodtracker.main.controllers;
 
 import android.util.Log;
 import android.view.GestureDetector;

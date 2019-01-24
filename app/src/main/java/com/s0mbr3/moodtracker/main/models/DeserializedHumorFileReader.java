@@ -1,6 +1,6 @@
-package com.s0mbr3.moodtracker.controller.MainControllers;
+package com.s0mbr3.moodtracker.main.models;
 
-import com.s0mbr3.moodtracker.model.SelectedHumorSerializer;
+import com.s0mbr3.moodtracker.main.models.SelectedHumorSerializer;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -13,23 +13,25 @@ public class DeserializedHumorFileReader {
     private ObjectInputStream mObjectInputStream;
     private int mIndex;
     private String mCommentTxt;
+    private int mCurrentDayForHistoric;
     private SelectedHumorSerializer deserializedHumor;
-    private String mFilePath;
+    private String mDirPath;
 
-    public DeserializedHumorFileReader(String filePath){
+    public DeserializedHumorFileReader(String dirPath){
         mIndex = 3;
-        mFilePath = filePath;
+        mDirPath = dirPath;
     }
-    public void objectDeserializer(){
+    public void objectDeserializer(String filePath){
         try {
             mObjectInputStream = new ObjectInputStream(
                     new BufferedInputStream(
                             new FileInputStream(
-                                    new File(mFilePath))));
+                                    new File(mDirPath, filePath))));
 
            deserializedHumor = (SelectedHumorSerializer)mObjectInputStream.readObject();
            mIndex = deserializedHumor.getIndex();
            mCommentTxt = deserializedHumor.getCommentTxt();
+           mCurrentDayForHistoric = deserializedHumor.getmCurrentDayForHistoric();
         } catch (FileNotFoundException e){
             e.printStackTrace();
         } catch (IOException e) {
@@ -51,7 +53,9 @@ public class DeserializedHumorFileReader {
         return mIndex;
     }
 
-    public String getmCommentTxt() {
+    public String getCommentTxt() {
         return mCommentTxt;
     }
+
+    public int getCurrentDayForHistoric(){return mCurrentDayForHistoric;}
 }
