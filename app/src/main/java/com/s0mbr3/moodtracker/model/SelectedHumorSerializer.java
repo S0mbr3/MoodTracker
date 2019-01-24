@@ -11,8 +11,16 @@ public class SelectedHumorSerializer implements Serializable {
         this.mCommentTxt = commentTxt;
     }
 
+    public int getIndex() {
+        return mIndex;
+    }
 
-    public String toString(){
+    public String getCommentTxt() {
+        return mCommentTxt;
+    }
+
+
+    public String toString() {
         return "The index that will be serialized  is "  + this.mIndex + "\n" +
                 "The comment that will be serialized is " + this.mCommentTxt;
     }

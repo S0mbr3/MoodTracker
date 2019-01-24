@@ -23,7 +23,6 @@ import com.s0mbr3.moodtracker.controller.MainControllers.AlarmReceiver;
 import com.s0mbr3.moodtracker.controller.MainControllers.MainController;
 import com.s0mbr3.moodtracker.controller.MainControllers.MyGestureListener;
 import com.s0mbr3.moodtracker.controller.MainControllers.SerialiazedHumorFileWriter;
-import com.s0mbr3.moodtracker.model.SelectedHumorSerializer;
 
 import java.util.Calendar;
 
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private GestureDetectorCompat mDetector;
     private String mCommentTxt;
     private int mIndex;
+    private String mFilePath;
     private boolean mCommentTester;
     private SharedPreferences mPreferences;
     private MainController mMainController;
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         mCommentTester = false;
         mIndex = 3;
+        mFilePath = this.getFilesDir().getPath() + "/selectedHumor.txt";
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         mCalendar.set(Calendar.HOUR_OF_DAY, 16);
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         mCalendar.set(Calendar.MILLISECOND,0);
 
         mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        mIntent.putExtra(BUNDLE_EXTRA_COMMENT_TXT, mFilePath);
         mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
@@ -97,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     mCommentTxt = "null";
                     mCommentTester = false;
                 }
-                mSerialiazedHumorFileWriter = new SerialiazedHumorFileWriter(
-                                                new SelectedHumorSerializer(mIndex, mCommentTxt));
+                mSerialiazedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex, mCommentTxt, mFilePath);
                 mSerialiazedHumorFileWriter.SerializedHumorFileWriting();
             }
         });
@@ -122,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mCommentTxt = commentInput.getText().toString();
                         Log.d("addComment", mCommentTxt + " " + mIndex);
-                        mSerialiazedHumorFileWriter = new SerialiazedHumorFileWriter(
-                                new SelectedHumorSerializer(mIndex, mCommentTxt));
+                        mSerialiazedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex, mCommentTxt, mFilePath);
                         mSerialiazedHumorFileWriter.SerializedHumorFileWriting();
                     }
                 })
