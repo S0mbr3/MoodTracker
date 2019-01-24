@@ -25,6 +25,7 @@ public class MainController {
     private List<String> humorsList = new ArrayList<>();
     private Method m;
     private Humor humor;
+    private int mIndex;
 
     public MainController(ConstraintLayout layout, ImageView smiley) {
         this.humor = new Humor(layout, smiley);
@@ -34,6 +35,14 @@ public class MainController {
         this.humorsList.add("getNormalSmiley");
         this.humorsList.add("getHappySmiley");
         this.humorsList.add("getSuperHappySmiley");
+    }
+
+    public int getIndex(){
+        return this.mIndex;
+    }
+
+    public void setIndex(int index){
+        this.mIndex = index;
     }
 
     public List<String> getHumorsList() {
