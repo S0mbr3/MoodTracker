@@ -9,6 +9,9 @@ import android.util.Log;
 import com.s0mbr3.moodtracker.activities.MainActivity;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
+import java.io.File;
+import java.io.IOException;
+
 
 /**
  * AlarmReceiver class is the schedule task broadcast receiver
@@ -22,6 +25,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private String mDirPath;
     private DeserializedHumorFileReader humorData;
     private SerialiazedHumorFileWriter mSerializedHumorForHistoric;
+    private File mHistoricDir;
 
     /**
      * onReceive event is triggered when the schedule task is fired, it read from a serialized
@@ -34,15 +38,20 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
         if(extras != null) mDirPath = extras.getString(MainActivity.BUNDLE_EXTRA_COMMENT_TXT);
+        File a = new File(mDirPath + "/historicdir");
+        a.mkdir();
+        if(a.mkdir()) Log.d(DEBUG_TAG, "ez");
+        else Log.d(DEBUG_TAG, String.valueOf(a));
         humorData = new DeserializedHumorFileReader(mDirPath);
         humorData.objectDeserializer("selectedHumor.txt");
         mIndex = humorData.getIndex();
         mCommentTxt = humorData.getCommentTxt();
         mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
         mSerializedHumorForHistoric = new SerialiazedHumorFileWriter(mIndex, mCommentTxt,
-                mCurrentDayForHistoric, mDirPath);
+                mCurrentDayForHistoric, mDirPath + "/historicdir");
         mSerializedHumorForHistoric.SerializedHumorFileWriting(String.format(
                 "day%s.txt", mCurrentDayForHistoric));
-        Log.d("AlarmReceiver", mCommentTxt + " " +  mIndex + " " + mCurrentDayForHistoric);
+
+        Log.d("AlarmReceiver", mCommentTxt + " " +  mIndex + " " + mCurrentDayForHistoric + " " + mDirPath);
     }
 }

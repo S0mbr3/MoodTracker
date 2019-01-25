@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         mCommentTester = false;
         mIndex = 3;
         mCurrentDayForHistoric = 1;
-        mDirPath = this.getFilesDir().getPath();
+        mDirPath = this.getFilesDir().getAbsolutePath();
         mFilePath = "selectedHumor.txt";
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
