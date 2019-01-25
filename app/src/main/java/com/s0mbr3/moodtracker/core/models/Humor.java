@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.main.models;
+package com.s0mbr3.moodtracker.core.models;
 
 import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;
@@ -8,6 +8,9 @@ import com.s0mbr3.moodtracker.R;
 
 
 /**
+ * Humor class is a set of setters/getters method to show on screen appropriate smileys
+ * and background colors by reflection
+ *
  * Created by Oxhart on 21/01/2019.
  */
 public class Humor {

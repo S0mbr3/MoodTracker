@@ -1,7 +1,7 @@
-package com.s0mbr3.moodtracker.main.controllers;
+package com.s0mbr3.moodtracker.core.controllers;
 
 
-import com.s0mbr3.moodtracker.main.models.SelectedHumorSerializer;
+import com.s0mbr3.moodtracker.core.models.SelectedHumorSerializer;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -10,6 +10,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+/**
+ * SerializedHumorFileWriterClass write into a file a SelectedHumorSerializer object
+ * Containing the humorsList index the actual comment and the day of the week we are
+ *
+ * @see SelectedHumorSerializer
+ */
 public class SerialiazedHumorFileWriter {
     private ObjectOutputStream objectOutputStream;
     private int mIndex;

@@ -1,6 +1,4 @@
-package com.s0mbr3.moodtracker.main.models;
-
-import com.s0mbr3.moodtracker.main.models.SelectedHumorSerializer;
+package com.s0mbr3.moodtracker.core.models;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -9,6 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+/**
+ * DeserializedHumorFileReader read from a file a SelectedHumorSerializer object
+ * triggered in the OnReceive event of the AlarmReceiver class
+ *
+ * @see SelectedHumorSerializer
+ */
 public class DeserializedHumorFileReader {
     private ObjectInputStream mObjectInputStream;
     private int mIndex;

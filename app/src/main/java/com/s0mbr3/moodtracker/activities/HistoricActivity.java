@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.historic;
+package com.s0mbr3.moodtracker.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

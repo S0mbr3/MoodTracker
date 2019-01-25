@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.main;
+package com.s0mbr3.moodtracker.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -19,15 +19,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.s0mbr3.moodtracker.R;
-import com.s0mbr3.moodtracker.historic.HistoricActivity;
-import com.s0mbr3.moodtracker.main.controllers.AlarmReceiver;
-import com.s0mbr3.moodtracker.main.controllers.MainController;
-import com.s0mbr3.moodtracker.main.controllers.MyGestureListener;
-import com.s0mbr3.moodtracker.main.controllers.SerialiazedHumorFileWriter;
+import com.s0mbr3.moodtracker.core.controllers.AlarmReceiver;
+import com.s0mbr3.moodtracker.core.controllers.MainController;
+import com.s0mbr3.moodtracker.core.controllers.MyGestureListener;
+import com.s0mbr3.moodtracker.core.controllers.SerialiazedHumorFileWriter;
 
 import java.util.Calendar;
 
 
+/**
+ * MainActivity class is the first activity of the application
+ * it allows user to select a smiley by swiping on the screen, add a comment to detail their humor
+ * and watch their weekly humor historic
+ */
 public class MainActivity extends AppCompatActivity {
     private AlarmManager mAlarmMgr;
     private PendingIntent mAlarmIntent;
@@ -53,6 +57,16 @@ public class MainActivity extends AppCompatActivity {
     public static final String BUNDLE_EXTRA_COMMENT_TXT = "BUNDLE_EXTRA_COMMENT_TXT";
     public static final String BUNDLE_EXTRA_HUMORS_LIST_INDEX = "BUNDLE_HUMORS_LIST_INDEX";
 
+    /**
+     * onCreate events initialize members variables of the activities at it creation as their
+     * widgets view screens (smiley, comment button, historic button)
+     * Instanciation of the Alarm manager to schedule daily saving of humor and comment at midnight
+     * Instanciation of the MyGestureListener to catch screen gestures of the user
+     * Instanciation of  the  comment button click listener mCommentBtn
+     * Instanciation of the historic  button click listener by this historic method
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         mMyGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
+            /**
+             * getIndex is a custom listener to catch the index used to travel in the humorsList
+             * serialize the weekly day, index  and comment and write it into a dedicated file
+             * @param index
+             */
             @Override
             public void getIndex(int index) {
                 Log.d("getIndex", String.valueOf(index) + mCommentTxt);
@@ -107,6 +126,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Event to catch screen gestures
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mDetector.onTouchEvent(event);
@@ -114,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * addComment method manage the mCommentBtn and show an AlertDialog to let the user comment is
+     * daily humor, then serialize the index, comment and weekly day and write the object into a
+     * dedicated file
+     */
     private void addComment(){
         final EditText commentInput = new EditText(this);
         commentInput.setHint("Commentez votre Humeur!");
@@ -139,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * the historic method contain manage the historic button activity when triggered it send
+     * the user to the historic activity
+     */
     private void historic(){
         mHistoricBtn.setOnClickListener(new View.OnClickListener() {
             @Override

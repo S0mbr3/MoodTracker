@@ -1,10 +1,10 @@
-package com.s0mbr3.moodtracker.main.controllers;
+package com.s0mbr3.moodtracker.core.controllers;
 
 import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;
 
 
-import com.s0mbr3.moodtracker.main.models.Humor;
+import com.s0mbr3.moodtracker.core.models.Humor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * MainController class control what humor to choose depending of an index to a built string list
+ * containing names of methods to use
+ *
  * Created by Oxhart on 21/01/2019.
  */
 public class MainController {
@@ -31,6 +34,13 @@ public class MainController {
     }
 
 
+    /**
+     * getMethodName method invoke by reflection the according method stored in the humorsList String
+     * List depending of the index determined in the MyGestureListener class
+     *
+     * @see MyGestureListener
+     * @param index
+     */
     public void getMethodName(int index) {
         Class c1;
         try {
