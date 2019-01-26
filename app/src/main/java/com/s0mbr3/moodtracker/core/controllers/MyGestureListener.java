@@ -64,12 +64,11 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
      */
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        //return super.onScroll(e1, e2, distanceX, distanceY);
-        if (distanceY < 0 && this.mChanged == false &&  this.mIndex >= 0){
+        if (distanceY < 0 && !this.mChanged &&  this.mIndex >= 0){
             this.mChanged = true;
             if (mIndex != 0) this.mIndex--;
             mMainController.getMethodName(this.mIndex);
-        } else if (distanceY > 0 && this.mChanged == false && this.mIndex <= 4){
+        } else if (distanceY > 0 && !this.mChanged && this.mIndex <= 4){
             if (mIndex != 4) this.mIndex++;
             mMainController.getMethodName(this.mIndex);
             this.mChanged = true;
@@ -90,7 +89,6 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        //return super.onFling(e1, e2, velocityX, velocityY);
         this.mChanged = false;
         Log.d(DEBUG_TAG, "onFling");
 

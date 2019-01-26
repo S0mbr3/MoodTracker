@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
      * Instanciation of the MyGestureListener to catch screen gestures of the user
      * Instanciation of  the  comment button click listener mCommentBtn
      * Instanciation of the historic  button click listener by this historic method
-     *
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Event to catch screen gestures
-     * @param event
-     * @return
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {

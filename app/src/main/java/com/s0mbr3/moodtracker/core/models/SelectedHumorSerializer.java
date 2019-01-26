@@ -20,14 +20,14 @@ public class SelectedHumorSerializer implements Serializable {
         this.mCurrentDayForHistoric = currentDayForHistoric;
     }
 
-    public int getIndex() {
+    int getIndex() {
         return mIndex;
     }
 
-    public String getCommentTxt() {
+    String getCommentTxt() {
         return mCommentTxt;
     }
-    public int getmCurrentDayForHistoric() {return this.mCurrentDayForHistoric;}
+    int getmCurrentDayForHistoric() {return this.mCurrentDayForHistoric;}
 
 
     public String toString() {

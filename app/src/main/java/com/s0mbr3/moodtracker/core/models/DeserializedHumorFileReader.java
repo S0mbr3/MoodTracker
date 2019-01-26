@@ -18,7 +18,6 @@ public class DeserializedHumorFileReader {
     private int mIndex;
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
-    private SelectedHumorSerializer deserializedHumor;
     private String mDirPath;
 
     public DeserializedHumorFileReader(String dirPath){
@@ -32,7 +31,7 @@ public class DeserializedHumorFileReader {
                             new FileInputStream(
                                     new File(mDirPath, filePath))));
 
-           deserializedHumor = (SelectedHumorSerializer)mObjectInputStream.readObject();
+            SelectedHumorSerializer deserializedHumor = (SelectedHumorSerializer) mObjectInputStream.readObject();
            mIndex = deserializedHumor.getIndex();
            mCommentTxt = deserializedHumor.getCommentTxt();
            mCurrentDayForHistoric = deserializedHumor.getmCurrentDayForHistoric();
