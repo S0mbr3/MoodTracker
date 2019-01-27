@@ -46,7 +46,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
                 currentDayForHistoric, String.format( mDirPath + historicDir +  "/day%s.txt", currentDayForHistoric));
-        ++currentDayForHistoric;
+
+        if (currentDayForHistoric == 7) currentDayForHistoric = 1;
+        else ++currentDayForHistoric;
+
         appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
                 currentDayForHistoric, mDirPath + currenntHumorFilePath);
@@ -55,7 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         List<String> results = new ArrayList<String>();
 
 
-        File[] files = new File(mDirPath).listFiles();
+        File[] files = new File(mDirPath + historicDir).listFiles();
 //If this pathname does not denote a directory, then listFiles() returns null.
 
         for (File file : files) {
