@@ -17,12 +17,11 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     private boolean mChanged;
     private IndexGetter mIndexListener;
 
-    public MyGestureListener(int index, MainController mainController){
-        this.mMainController = mainController;
+    public MyGestureListener(int index){
+        this.mMainController = MainController.INSTANCE;
         this.mIndex = index;
         this.mChanged = false;
         this.mIndexListener = null;
-        mMainController.getMethodName(3);
     }
 
 

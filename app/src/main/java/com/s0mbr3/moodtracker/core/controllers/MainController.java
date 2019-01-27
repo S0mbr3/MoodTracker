@@ -17,20 +17,14 @@ import java.util.List;
  *
  * Created by Oxhart on 21/01/2019.
  */
-public class MainController {
+public enum MainController {
+    INSTANCE;
     private List<String> humorsList = new ArrayList<>();
     private Method m;
     private Humor humor;
     private int mIndex;
 
-    public MainController(ConstraintLayout layout, ImageView smiley) {
-        this.humor = new Humor(layout, smiley);
-
-        this.humorsList.add("getSadSmiley");
-        this.humorsList.add("getDisappointedSmiley");
-        this.humorsList.add("getNormalSmiley");
-        this.humorsList.add("getHappySmiley");
-        this.humorsList.add("getSuperHappySmiley");
+    MainController() {
     }
 
 
@@ -58,4 +52,14 @@ public class MainController {
         }
     }
 
+    public void initMainController(ConstraintLayout layout, ImageView smiley){
+        this.humor = new Humor(layout, smiley);
+
+        this.humorsList.add("getSadSmiley");
+        this.humorsList.add("getDisappointedSmiley");
+        this.humorsList.add("getNormalSmiley");
+        this.humorsList.add("getHappySmiley");
+        this.humorsList.add("getSuperHappySmiley");
+
+    }
 }

@@ -17,7 +17,7 @@ import java.io.File;
  * Created by Oxhart on 22/01/2019.
  */
 public class AlarmReceiver extends BroadcastReceiver {
-    private String dirPath;
+    private String mDirPath;
     private static final String HISTORIC_DIR = "/historicDir";
     private static final String USER_CHOSEN_HUMOR_FILE = "selectedhumor.txt";
 
@@ -30,10 +30,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
-        if(extras != null) dirPath = extras.getString(MainActivity.BUNDLE_EXTRA_COMMENT_TXT);
-        new File(dirPath + HISTORIC_DIR).mkdir();
+        if(extras != null) mDirPath = extras.getString(MainActivity.BUNDLE_EXTRA_COMMENT_TXT);
+        new File(mDirPath + HISTORIC_DIR).mkdir();
 
-        DeserializedHumorFileReader humorData = new DeserializedHumorFileReader(dirPath);
+        DeserializedHumorFileReader humorData = new DeserializedHumorFileReader(mDirPath);
         humorData.objectDeserializer(USER_CHOSEN_HUMOR_FILE);
 
         int mIndex = humorData.getIndex();
@@ -41,10 +41,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         int mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
 
         SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter(mIndex, mCommentTxt,
-                mCurrentDayForHistoric, dirPath + HISTORIC_DIR);
+                mCurrentDayForHistoric, mDirPath + HISTORIC_DIR);
         mSerializedHumorForHistoric.SerializedHumorFileWriting(String.format(
                 "day%s.txt", mCurrentDayForHistoric));
 
-        Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + mCurrentDayForHistoric + " " + dirPath);
+        Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + mCurrentDayForHistoric + " " + mDirPath);
     }
 }

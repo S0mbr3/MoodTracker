@@ -20,6 +20,7 @@ import android.widget.ImageView;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.core.controllers.AlarmReceiver;
+import com.s0mbr3.moodtracker.core.controllers.AppStartDriver;
 import com.s0mbr3.moodtracker.core.controllers.MainController;
 import com.s0mbr3.moodtracker.core.controllers.MyGestureListener;
 import com.s0mbr3.moodtracker.core.controllers.SerialiazedHumorFileWriter;
@@ -70,11 +71,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mCommentTester = false;
-        mIndex = 3;
-        mCurrentDayForHistoric = 1;
-        mDirPath = this.getFilesDir().getAbsolutePath();
-        mFilePath = "selectedHumor.txt";
+        mSmiley = findViewById(R.id.activity_main_smiley_image);
+        mLayout = findViewById(R.id.activity_main_layout);
+        mCommentBtn = findViewById(R.id.activity_main_comment_btn);
+        mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
+
+        mMainController = MainController.INSTANCE ;
+        mMainController.initMainController(mLayout, mSmiley);
+        AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
+        appStartDriver.configurator(MainActivity.this);
+        mIndex = appStartDriver.getIndex();
+        mDirPath = appStartDriver.getMainDirPath();
+        mFilePath = appStartDriver.getHumorFilePath();
+        mCommentTxt = appStartDriver.getmCommentTxt();
+
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
         mCalendar.set(Calendar.HOUR_OF_DAY, 16);
@@ -88,12 +98,7 @@ public class MainActivity extends AppCompatActivity {
         mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
 
-        mSmiley = findViewById(R.id.activity_main_smiley_image);
-        mLayout = findViewById(R.id.activity_main_layout);
-        mCommentBtn = findViewById(R.id.activity_main_comment_btn);
-        mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
-        mMainController = new MainController(mLayout, mSmiley);
-        mMyGestureListener = new MyGestureListener(3,mMainController);
+        mMyGestureListener = new MyGestureListener(3);
         mPreferences = getPreferences(MODE_PRIVATE);
 
         mDetector = new GestureDetectorCompat(this, mMyGestureListener);
@@ -141,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void addComment(){
         final EditText commentInput = new EditText(this);
+        commentInput.setText(mCommentTxt);
+        if(mCommentTxt != null) commentInput.setSelection(mCommentTxt.length());
         commentInput.setHint("Commentez votre Humeur!");
         new AlertDialog.Builder(this)
                 .setTitle("Commentaire")
