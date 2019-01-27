@@ -10,6 +10,8 @@ import com.s0mbr3.moodtracker.activities.MainActivity;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,9 +19,6 @@ import java.io.File;
  * Created by Oxhart on 22/01/2019.
  */
 public class AlarmReceiver extends BroadcastReceiver {
-    private String mDirPath;
-    private static final String HISTORIC_DIR = "/historicDir";
-    private static final String USER_CHOSEN_HUMOR_FILE = "selectedhumor.txt";
 
     /**
      * onReceive event is triggered when the schedule task is fired, it read from a serialized
@@ -29,22 +28,42 @@ public class AlarmReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
+        AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
         Bundle extras = intent.getExtras();
-        if(extras != null) mDirPath = extras.getString(MainActivity.BUNDLE_EXTRA_COMMENT_TXT);
-        new File(mDirPath + HISTORIC_DIR).mkdir();
+        //if(extras != null) mDirPath = extras.getString(MainActivity.BUNDLE_EXTRA_COMMENT_TXT);
+        String mDirPath = appStartDriver.getMainDirPath();
+        String currenntHumorFilePath = appStartDriver.getHumorFilePath();
+        String historicDir = appStartDriver.getHistoricDir();
+        new File(mDirPath + historicDir).mkdir();
 
         DeserializedHumorFileReader humorData = new DeserializedHumorFileReader(mDirPath);
-        humorData.objectDeserializer(USER_CHOSEN_HUMOR_FILE);
+        humorData.objectDeserializer(currenntHumorFilePath);
 
         int mIndex = humorData.getIndex();
         String mCommentTxt = humorData.getCommentTxt();
-        int mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
+        int currentDayForHistoric = humorData.getCurrentDayForHistoric();
 
-        SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter(mIndex, mCommentTxt,
-                mCurrentDayForHistoric, mDirPath + HISTORIC_DIR);
-        mSerializedHumorForHistoric.SerializedHumorFileWriting(String.format(
-                "day%s.txt", mCurrentDayForHistoric));
+        SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
+        mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
+                currentDayForHistoric, String.format( mDirPath + historicDir +  "/day%s.txt", currentDayForHistoric));
+        ++currentDayForHistoric;
+        appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
+        mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
+                currentDayForHistoric, mDirPath + currenntHumorFilePath);
 
-        Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + mCurrentDayForHistoric + " " + mDirPath);
+        boolean f = new File(mDirPath + currenntHumorFilePath).exists();
+        List<String> results = new ArrayList<String>();
+
+
+        File[] files = new File(mDirPath).listFiles();
+//If this pathname does not denote a directory, then listFiles() returns null.
+
+        for (File file : files) {
+            if (file.isFile()) {
+                results.add(file.getName());
+                Log.d("ala", file.getName());
+            }
+        }
+        Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + currentDayForHistoric + " " + f);
     }
 }

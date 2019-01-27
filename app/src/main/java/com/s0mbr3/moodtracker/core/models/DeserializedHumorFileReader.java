@@ -34,7 +34,7 @@ public class DeserializedHumorFileReader {
             SelectedHumorSerializer deserializedHumor = (SelectedHumorSerializer) mObjectInputStream.readObject();
            mIndex = deserializedHumor.getIndex();
            mCommentTxt = deserializedHumor.getCommentTxt();
-           mCurrentDayForHistoric = deserializedHumor.getmCurrentDayForHistoric();
+           mCurrentDayForHistoric = deserializedHumor.getCurrentDayForHistoric();
         } catch (FileNotFoundException e){
             e.printStackTrace();
         } catch (IOException e) {

@@ -14,8 +14,8 @@ public enum AppStartDriver {
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
     private String mDirPath;
-    private static final String HISTORIC_DIR = "/historicDir";
-    private static final String USER_CHOSEN_HUMOR_FILE = "selectedhumor.txt";
+    private static final String HISTORIC_DIR = "/historicdir";
+    private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
 
 
     AppStartDriver(){
@@ -46,6 +46,10 @@ public enum AppStartDriver {
         return this.mDirPath;
     }
 
+    public void setCurrentDayForHistoric(int currentDayForHistoric){
+        this.mCurrentDayForHistoric = currentDayForHistoric;
+    }
+
     public void configurator(Context context){
         this.mDirPath = context.getFilesDir().getAbsolutePath();
         if(new File(this.mDirPath, USER_CHOSEN_HUMOR_FILE).exists()) {
@@ -54,7 +58,7 @@ public enum AppStartDriver {
             this.mIndex = humorData.getIndex();
             this.mCommentTxt = humorData.getCommentTxt();
             this.mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
-            Log.d("add", String.valueOf(mIndex));
+            Log.d("add", String.valueOf(mIndex + " " + mCurrentDayForHistoric));
         } else {
             this.mIndex = 3;
             this.mCommentTxt = null;

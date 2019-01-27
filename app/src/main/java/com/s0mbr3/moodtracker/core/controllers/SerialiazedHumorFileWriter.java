@@ -23,21 +23,19 @@ public class SerialiazedHumorFileWriter {
     private String mDirPath;
     private int mCurrentDayForHistoric;
 
-    public SerialiazedHumorFileWriter(int index, String commentTxt,int currentDayFprHistoric
-                                      ,String filePath) {
-        this.mDirPath = filePath;
+    public SerialiazedHumorFileWriter() {
+    }
+
+    public void SerializedHumorFileWriting(int index, String commentTxt,int currentDayFprHistoric, String filePath) {
         this.mIndex = index;
         this.mCommentTxt = commentTxt;
         this.mCurrentDayForHistoric = currentDayFprHistoric;
-    }
-
-    public void SerializedHumorFileWriting(String filePath) {
 
         try {
             objectOutputStream = new ObjectOutputStream(
                     new BufferedOutputStream(
                             new FileOutputStream(
-                                    new File(mDirPath, filePath))));
+                                    new File(filePath))));
 
             objectOutputStream.writeObject(new SelectedHumorSerializer(this.mIndex,
                     this.mCommentTxt, this.mCurrentDayForHistoric));

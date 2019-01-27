@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private String mFilePath;
     private boolean mCommentTester;
     private SharedPreferences mPreferences;
+    private AppStartDriver appStartDriver;
     private MainController mMainController;
     private MyGestureListener mMyGestureListener;
     private Calendar mCalendar;
@@ -76,9 +77,10 @@ public class MainActivity extends AppCompatActivity {
         mCommentBtn = findViewById(R.id.activity_main_comment_btn);
         mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
 
+        mSerializedHumorFileWriter = new SerialiazedHumorFileWriter();
         mMainController = MainController.INSTANCE ;
         mMainController.initMainController(mLayout, mSmiley);
-        AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
+        appStartDriver = AppStartDriver.INSTANCE;
         appStartDriver.configurator(MainActivity.this);
         mIndex = appStartDriver.getIndex();
         mDirPath = appStartDriver.getMainDirPath();
@@ -87,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 16);
-        mCalendar.set(Calendar.MINUTE, 35);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 14);
+        mCalendar.set(Calendar.MINUTE, 37);
         mCalendar.set(Calendar.SECOND,0);
         mCalendar.set(Calendar.MILLISECOND,0);
 
@@ -120,11 +122,11 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void getIndex(int index) {
-                Log.d("getIndex", String.valueOf(index) + mCommentTxt);
+                Log.d("getIndex", String.valueOf(index) +  " " + mCommentTxt + " " + mCurrentDayForHistoric);
                 mIndex = index;
-                mSerializedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex, mCommentTxt,
-                        mCurrentDayForHistoric,mDirPath);
-                mSerializedHumorFileWriter.SerializedHumorFileWriting(mFilePath);
+                mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
+                mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex, mCommentTxt,
+                        mCurrentDayForHistoric, mDirPath + mFilePath);
             }
         });
     }
@@ -145,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
      * dedicated file
      */
     private void addComment(){
+        mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
         final EditText commentInput = new EditText(this);
         commentInput.setText(mCommentTxt);
         if(mCommentTxt != null) commentInput.setSelection(mCommentTxt.length());
@@ -157,9 +160,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mCommentTxt = commentInput.getText().toString();
                         Log.d("addComment", mCommentTxt + " " + mIndex);
-                        mSerializedHumorFileWriter = new SerialiazedHumorFileWriter(mIndex,
-                                mCommentTxt, mCurrentDayForHistoric, mDirPath);
-                        mSerializedHumorFileWriter.SerializedHumorFileWriting(mFilePath);
+                        mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex,
+                                mCommentTxt, mCurrentDayForHistoric, mDirPath + mFilePath);
                     }
                 })
                 .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {

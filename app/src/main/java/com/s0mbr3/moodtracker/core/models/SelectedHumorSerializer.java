@@ -27,7 +27,7 @@ public class SelectedHumorSerializer implements Serializable {
     String getCommentTxt() {
         return mCommentTxt;
     }
-    int getmCurrentDayForHistoric() {return this.mCurrentDayForHistoric;}
+    int getCurrentDayForHistoric() {return this.mCurrentDayForHistoric;}
 
 
     public String toString() {
