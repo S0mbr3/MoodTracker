@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mSmiley;
     private Button mCommentBtn;
     private Button mHistoricBtn;
-    private ViewGroup mLayout;
+    private ConstraintLayout mLayout;
     private GestureDetectorCompat mDetector;
     private String mCommentTxt;
     private int mIndex;

@@ -66,10 +66,10 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         if (distanceY < 0 && !this.mChanged &&  this.mIndex >= 0){
             this.mChanged = true;
             if (mIndex != 0) this.mIndex--;
-            mMainController.getMethodName(this.mIndex, false);
+            mMainController.getMethodName(this.mIndex);
         } else if (distanceY > 0 && !this.mChanged && this.mIndex <= 4){
             if (mIndex != 4) this.mIndex++;
-            mMainController.getMethodName(this.mIndex, false);
+            mMainController.getMethodName(this.mIndex);
             this.mChanged = true;
         }
         if(mIndexListener != null) mIndexListener.getIndex(mIndex);
