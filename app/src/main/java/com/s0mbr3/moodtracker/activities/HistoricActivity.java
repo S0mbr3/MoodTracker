@@ -29,7 +29,6 @@ public class HistoricActivity extends AppCompatActivity {
     private DisplayMetrics mDisplayMetrics;
     private int mHeight;
     private int mWidth;
-    private RelativeLayout mRlayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,5 +78,4 @@ public class HistoricActivity extends AppCompatActivity {
         if (filesList.size() > index) historicLiner(filesList, index);
     }
 
-    }
 }
