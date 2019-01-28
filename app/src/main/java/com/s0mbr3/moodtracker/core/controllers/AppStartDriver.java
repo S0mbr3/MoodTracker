@@ -79,6 +79,6 @@ public enum AppStartDriver {
             this.mCurrentDayForHistoric = 1;
         }
         MainController smileyStarter = MainController.INSTANCE;
-        smileyStarter.getMethodName(mIndex);
+        smileyStarter.getMethodName(mIndex, false);
     }
 }

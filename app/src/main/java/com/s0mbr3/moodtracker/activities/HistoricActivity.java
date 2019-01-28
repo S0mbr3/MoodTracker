@@ -3,6 +3,7 @@ package com.s0mbr3.moodtracker.activities;
 import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.core.controllers.AppStartDriver;
+import com.s0mbr3.moodtracker.core.controllers.MainController;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
 import java.io.File;
@@ -25,12 +27,19 @@ public class HistoricActivity extends AppCompatActivity {
     private String mAdayMessage;
     private LinearLayout mLayout;
     private AppStartDriver configs;
+    private DisplayMetrics mDisplayMetrics;
+    private int mHeight;
+    private int mWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historic);
 
+        mDisplayMetrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
+        mHeight= mDisplayMetrics.heightPixels;
+        mWidth = mDisplayMetrics.widthPixels;
         configs = AppStartDriver.INSTANCE;
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
@@ -52,6 +61,7 @@ public class HistoricActivity extends AppCompatActivity {
         String aDayFile = filesList.get(index);
 
         mLayout = findViewById(R.id.activity_historic_layout);
+        MainController mMaincontroller = MainController.INSTANCE;
         DeserializedHumorFileReader aDayHumor = new DeserializedHumorFileReader(mMainDir + mHistoricDir);
         aDayHumor.objectDeserializer(aDayFile);
         mIndex = aDayHumor.getIndex();
@@ -61,14 +71,11 @@ public class HistoricActivity extends AppCompatActivity {
 
 
         TextView historicLine = new TextView(this);
-        LinearLayout.LayoutParams loparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,100/7);
-        historicLine.setLayoutParams(loparams);
-        //ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //historicLine.setLayoutParams(lp);
+        mMaincontroller.setHistoricLayout(historicLine, mHeight, mWidth);
         historicLine.setText(mAdayMessage);
+        mMaincontroller.getMethodName(mIndex, true);
         mLayout.addView(historicLine);
-        historicLine.setBackgroundColor(0xffde3c50);
-        Log.d("mich", String.valueOf(mCurrentDayForHistoric) + " " + filesList.size());
+        Log.d("mich", String.valueOf(mIndex) + " " + filesList.size());
         ++index;
         if (filesList.size() > index) historicLiner(filesList, index);
     }

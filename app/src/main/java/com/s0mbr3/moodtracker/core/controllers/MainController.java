@@ -1,10 +1,15 @@
 package com.s0mbr3.moodtracker.core.controllers;
 
 import android.support.constraint.ConstraintLayout;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 import com.s0mbr3.moodtracker.core.models.Humor;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,10 +24,14 @@ import java.util.List;
  */
 public enum MainController {
     INSTANCE;
-    private List<String> humorsList = new ArrayList<>();
-    private Method m;
-    private Humor humor;
+    private List<String> mHumorsList = new ArrayList<>();
+    private Method mMethod;
+    private Humor mHumor;
     private int mIndex;
+    private ImageView mSmiley;
+    private TextView mHistoricLine;
+    private int mHeight;
+    private int mWidth;
 
     MainController() {
     }
@@ -35,12 +44,18 @@ public enum MainController {
      * @see MyGestureListener
      * @param index
      */
-    public void getMethodName(int index) {
+    public void getMethodName(int index, boolean isHistoric) {
         Class c1;
         try {
             c1 = Class.forName(Humor.class.getName());
-            this.m = c1.getMethod(this.humorsList.get(index), (Class[]) null);
-            this.m.invoke(this.humor, (Object[]) null);
+            if(isHistoric){
+                this.mMethod = c1.getMethod(this.mHumorsList.get(index), TextView.class, int.class, int.class);
+                this.mMethod.invoke(this.mHumor, mHistoricLine, mHeight, mWidth);
+            }
+            else{
+                this.mMethod = c1.getMethod(this.mHumorsList.get(index), ImageView.class);
+                this.mMethod.invoke(this.mHumor, mSmiley);
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -52,14 +67,20 @@ public enum MainController {
         }
     }
 
-    public void initMainController(ConstraintLayout layout, ImageView smiley){
-        this.humor = new Humor(layout, smiley);
+    public void setHistoricLayout(TextView historicLine, int height, int width ){
+        this.mHistoricLine = historicLine;
+        this.mHeight = height;
+        this.mWidth = width;
+    }
 
-        this.humorsList.add("getSadSmiley");
-        this.humorsList.add("getDisappointedSmiley");
-        this.humorsList.add("getNormalSmiley");
-        this.humorsList.add("getHappySmiley");
-        this.humorsList.add("getSuperHappySmiley");
+    public void initMainController(ViewGroup layout, ImageView smiley) {
+        this.mHumor = new Humor(layout);
+        this.mSmiley = smiley;
 
+        this.mHumorsList.add("setSadSmiley");
+        this.mHumorsList.add("setDisappointedSmiley");
+        this.mHumorsList.add("setNormalSmiley");
+        this.mHumorsList.add("setHappySmiley");
+        this.mHumorsList.add("setSuperHappySmiley");
     }
 }
