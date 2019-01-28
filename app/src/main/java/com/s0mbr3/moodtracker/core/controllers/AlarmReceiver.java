@@ -43,12 +43,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         String mCommentTxt = humorData.getCommentTxt();
         int currentDayForHistoric = humorData.getCurrentDayForHistoric();
 
+        if(currentDayForHistoric >= 7) currentDayForHistoric = 1;
+        else ++currentDayForHistoric;
+
         SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
                 currentDayForHistoric, String.format( mDirPath + historicDir +  "/day%s.txt", currentDayForHistoric));
-
-        if (currentDayForHistoric == 7) currentDayForHistoric = 1;
-        else ++currentDayForHistoric;
 
         appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,

@@ -6,6 +6,8 @@ import android.util.Log;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum AppStartDriver {
     INSTANCE;
@@ -16,9 +18,17 @@ public enum AppStartDriver {
     private String mDirPath;
     private static final String HISTORIC_DIR = "/historicdir";
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
+    private List<String> mHistoricMessgesList = new ArrayList<>();
 
 
     AppStartDriver(){
+        this.mHistoricMessgesList.add("Hier");
+        this.mHistoricMessgesList.add("Avant-hier");
+        this.mHistoricMessgesList.add("Il y a trois jours");
+        this.mHistoricMessgesList.add("Il y a quatre jours");
+        this.mHistoricMessgesList.add("Il y a cinqu jours");
+        this.mHistoricMessgesList.add("Il y a six jours");
+        this.mHistoricMessgesList.add("Il y a une semaine");
     }
 
 
@@ -49,6 +59,9 @@ public enum AppStartDriver {
     public void setCurrentDayForHistoric(int currentDayForHistoric){
         this.mCurrentDayForHistoric = currentDayForHistoric;
     }
+    public String getHistoricMessage(int index){
+        return this.mHistoricMessgesList.get(index);
+    }
 
     public void configurator(Context context){
         this.mDirPath = context.getFilesDir().getAbsolutePath();
@@ -57,7 +70,8 @@ public enum AppStartDriver {
             humorData.objectDeserializer(USER_CHOSEN_HUMOR_FILE);
             this.mIndex = humorData.getIndex();
             this.mCommentTxt = humorData.getCommentTxt();
-            this.mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
+            if(this.mCurrentDayForHistoric >=7) mCurrentDayForHistoric = 1;
+            else this.mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
             Log.d("add", String.valueOf(mIndex + " " + mCurrentDayForHistoric));
         } else {
             this.mIndex = 3;
