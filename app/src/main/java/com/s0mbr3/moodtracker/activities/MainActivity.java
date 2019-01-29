@@ -90,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
 
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 13);
-        mCalendar.set(Calendar.MINUTE, 20);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 12);
+        mCalendar.set(Calendar.MINUTE, 54);
         mCalendar.set(Calendar.SECOND,0);
         mCalendar.set(Calendar.MILLISECOND,0);
 

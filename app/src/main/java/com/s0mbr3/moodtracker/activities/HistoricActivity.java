@@ -10,10 +10,12 @@ import android.widget.TextView;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.core.controllers.AppStartDriver;
+import com.s0mbr3.moodtracker.core.controllers.MyComparator;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 import com.s0mbr3.moodtracker.core.models.Humor;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,26 +46,25 @@ public class HistoricActivity extends AppCompatActivity {
         configs = AppStartDriver.INSTANCE;
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
-        List<String> results = new ArrayList<String>();
-        List<File> files = Arrays.asList(new File(mMainDir + mHistoricDir).listFiles());
 
-        if(!files.isEmpty());
-        //will have to test for empty folder to prevent crashes
-        {
-            for (File file : files) {
-                if (file.isFile()) {
-                    results.add(file.getName());
-                    Log.d("mich", file.getName());
-                }
+        try {
+            List<File> files = new ArrayList<File>();
+            //will have to test for empty folder to prevent crashes
+            files = Arrays.asList(new File(mMainDir + mHistoricDir).listFiles());
+            Log.d("siz", String.valueOf(files.size()));
+            Collections.sort(files, new MyComparator());
+            for(File file : files){
+                Log.d("ala", file.getName());
             }
+            files = listReverser(files);
+            historicLiner(files, files.size() - 1);
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        Log.d("siz", String.valueOf(results.size()));
-        Collections.sort(results, Collections.reverseOrder());
-        historicLiner(results,results.size() - 1);
     }
 
-    public void historicLiner(List<String> filesList, int index){
-        String aDayFile = filesList.get(index);
+    public void historicLiner(List<File> filesList, int index){
+        String aDayFile = filesList.get(index).getName();
 
         mLayout = findViewById(R.id.activity_historic_layout);
         DeserializedHumorFileReader aDayHumor = new DeserializedHumorFileReader(mMainDir + mHistoricDir);
@@ -80,10 +81,18 @@ public class HistoricActivity extends AppCompatActivity {
         humor.setHistoricLayout(historicLine, mLayout, this, mHeight, mWidth);
         humor.createHistoricLine(mIndex);
         mLayout.addView(historicLine);
-        Log.d("mich", String.valueOf(index) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
+        Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
                 + " " + mCommentTxt);
         --index;
         if (index >= 0) historicLiner(filesList, index);
+    }
+
+    public List<File> listReverser(List<File> historyFiles){
+        List<File> reversed = new ArrayList<File>();
+        for(int i = historyFiles.size() - 1 ; i >= 0; i--){
+            reversed.add(historyFiles.get(i));
+        }
+        return reversed;
     }
 
 }

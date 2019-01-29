@@ -9,6 +9,11 @@ import android.util.Log;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 /**
@@ -31,6 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String mDirPath = appStartDriver.getMainDirPath();
         String currenntHumorFilePath = appStartDriver.getHumorFilePath();
         String historicDir = appStartDriver.getHistoricDir();
+        String archiveDir = appStartDriver.getArchiveDir();
         new File(mDirPath + historicDir).mkdir();
 
         DeserializedHumorFileReader humorData = new DeserializedHumorFileReader(mDirPath);
@@ -41,12 +47,27 @@ public class AlarmReceiver extends BroadcastReceiver {
         int currentDayForHistoric = humorData.getCurrentDayForHistoric();
 
 
-        if(currentDayForHistoric >= 8) currentDayForHistoric = 1;
-        else ++currentDayForHistoric;
 
         SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
-                currentDayForHistoric, String.format( mDirPath + historicDir +  "/day%s.txt", currentDayForHistoric));
+                currentDayForHistoric,mDirPath + historicDir + String.valueOf(currentDayForHistoric));
+
+        if(currentDayForHistoric >= 8) {
+            try {
+                List<File> files = new ArrayList<File>();
+                //will have to test for empty folder to prevent crashes
+                files = Arrays.asList(new File(mDirPath + historicDir).listFiles());
+                Collections.sort(files, new MyComparator());
+                for(File file : files){
+                    Log.d("alar", file.getName());
+                }
+                files.get(0).renameTo(new File(mDirPath + archiveDir + files.get(0).getName()));
+                Log.d("alar", files.get(0).getName());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        ++currentDayForHistoric;
 
         appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
