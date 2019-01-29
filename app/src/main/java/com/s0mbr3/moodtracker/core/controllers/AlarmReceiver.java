@@ -6,12 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.s0mbr3.moodtracker.activities.MainActivity;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -43,7 +40,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         String mCommentTxt = humorData.getCommentTxt();
         int currentDayForHistoric = humorData.getCurrentDayForHistoric();
 
-        if(currentDayForHistoric >= 7) currentDayForHistoric = 1;
+
+        if(currentDayForHistoric >= 8) currentDayForHistoric = 1;
         else ++currentDayForHistoric;
 
         SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
@@ -55,18 +53,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 currentDayForHistoric, mDirPath + currenntHumorFilePath);
 
         boolean f = new File(mDirPath + currenntHumorFilePath).exists();
-        List<String> results = new ArrayList<String>();
-
-
-        File[] files = new File(mDirPath + historicDir).listFiles();
-//If this pathname does not denote a directory, then listFiles() returns null.
-
-        for (File file : files) {
-            if (file.isFile()) {
-                results.add(file.getName());
-                Log.d("ala", file.getName());
-            }
-        }
         Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + currentDayForHistoric + " " + f);
     }
 }

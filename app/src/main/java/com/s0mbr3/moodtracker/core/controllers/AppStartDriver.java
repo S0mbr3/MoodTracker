@@ -70,9 +70,10 @@ public enum AppStartDriver {
             humorData.objectDeserializer(USER_CHOSEN_HUMOR_FILE);
             this.mIndex = humorData.getIndex();
             this.mCommentTxt = humorData.getCommentTxt();
-            if(this.mCurrentDayForHistoric >=7) mCurrentDayForHistoric = 1;
+            if(mCurrentDayForHistoric >= 8) mCurrentDayForHistoric = 1;
             else this.mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
             Log.d("add", String.valueOf(mIndex + " " + mCurrentDayForHistoric));
+            //new File(mDirPath + HISTORIC_DIR + "/day8.txt").delete();
         } else {
             this.mIndex = 3;
             this.mCommentTxt = null;

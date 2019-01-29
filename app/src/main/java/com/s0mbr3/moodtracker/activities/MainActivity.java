@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
 
-        mMyGestureListener = new MyGestureListener(3);
+        mMyGestureListener = new MyGestureListener(mIndex);
         mPreferences = getPreferences(MODE_PRIVATE);
 
         mDetector = new GestureDetectorCompat(this, mMyGestureListener);

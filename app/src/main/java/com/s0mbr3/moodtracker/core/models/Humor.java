@@ -56,7 +56,6 @@ public enum Humor {
             reflectClass = Class.forName(Humor.class.getName());
             Method method = reflectClass.getMethod(this.mHumorList.get(index), (Class[]) null);
             width = (int) method.invoke(this, (Object[]) null);
-            Log.d("mich", String.valueOf(width));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -72,7 +71,6 @@ public enum Humor {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, mHeight/7);
         this.mHistoricLayout.addView(relativeLayout);
         this.mHistoricLine.setLayoutParams(lp);
-        Log.d("mich", String.valueOf(width));
     }
 
 

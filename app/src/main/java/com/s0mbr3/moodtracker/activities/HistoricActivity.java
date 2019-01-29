@@ -15,6 +15,8 @@ import com.s0mbr3.moodtracker.core.models.Humor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class HistoricActivity extends AppCompatActivity {
@@ -43,16 +45,21 @@ public class HistoricActivity extends AppCompatActivity {
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
         List<String> results = new ArrayList<String>();
-        File[] files = new File(mMainDir + mHistoricDir).listFiles();
+        List<File> files = Arrays.asList(new File(mMainDir + mHistoricDir).listFiles());
 
+        if(!files.isEmpty());
         //will have to test for empty folder to prevent crashes
-        for (File file : files) {
-            if (file.isFile()) {
-                results.add(file.getName());
-                Log.d("ala", file.getName());
+        {
+            for (File file : files) {
+                if (file.isFile()) {
+                    results.add(file.getName());
+                    Log.d("mich", file.getName());
+                }
             }
         }
-        historicLiner(results, 0);
+        Log.d("siz", String.valueOf(results.size()));
+        Collections.sort(results, Collections.reverseOrder());
+        historicLiner(results,results.size() - 1);
     }
 
     public void historicLiner(List<String> filesList, int index){
@@ -73,9 +80,10 @@ public class HistoricActivity extends AppCompatActivity {
         humor.setHistoricLayout(historicLine, mLayout, this, mHeight, mWidth);
         humor.createHistoricLine(mIndex);
         mLayout.addView(historicLine);
-        Log.d("mich", String.valueOf(mIndex) + " " + filesList.size());
-        ++index;
-        if (filesList.size() > index) historicLiner(filesList, index);
+        Log.d("mich", String.valueOf(index) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
+                + " " + mCommentTxt);
+        --index;
+        if (index >= 0) historicLiner(filesList, index);
     }
 
 }
