@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.s0mbr3.moodtracker.R;
@@ -15,7 +14,6 @@ import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 import com.s0mbr3.moodtracker.core.models.Humor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +47,6 @@ public class HistoricActivity extends AppCompatActivity {
 
         try {
             List<File> files = new ArrayList<File>();
-            //will have to test for empty folder to prevent crashes
             files = Arrays.asList(new File(mMainDir + mHistoricDir).listFiles());
             Log.d("siz", String.valueOf(files.size()));
             Collections.sort(files, new MyComparator());
@@ -80,7 +77,6 @@ public class HistoricActivity extends AppCompatActivity {
         Humor humor = Humor.INSTANCE;
         humor.setHistoricLayout(historicLine, mLayout, this, mHeight, mWidth);
         humor.createHistoricLine(mIndex);
-        mLayout.addView(historicLine);
         Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
                 + " " + mCommentTxt);
         --index;

@@ -1,9 +1,9 @@
 package com.s0mbr3.moodtracker.core.models;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
+import android.content.res.Resources;
 import android.util.Log;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,11 +69,24 @@ public enum Humor {
         RelativeLayout relativeLayout = new RelativeLayout(mContext);
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(width, mHeight/7);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, mHeight/7);
+        relativeLayout.setLayoutParams(lp);
+        this.mHistoricLine.setLayoutParams(rlp);
         this.mHistoricLayout.addView(relativeLayout);
-        this.mHistoricLine.setLayoutParams(lp);
+        relativeLayout.addView(this.mHistoricLine);
+        createHistoricCommentButton(relativeLayout, width);
     }
 
 
+    private void createHistoricCommentButton(RelativeLayout relativeLayout, int width){
+        final Button commentButton = new Button(mContext);
+        commentButton.setBackgroundResource(R.drawable.ic_comment_black_48px);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mWidth / 16, mHeight/26);
+        lp.leftMargin = width - 80;
+        lp.topMargin = pxToDp(100);
+        commentButton.setLayoutParams(lp);
+        relativeLayout.addView(commentButton);
+
+    }
     public int setSadSmiley() {
         this.mHistoricLine.setBackgroundResource(R.color.faded_red);
         int width=  this.mWidth * 20/100;
@@ -102,6 +115,11 @@ public enum Humor {
         this.mHistoricLine.setBackgroundResource(R.color.banana_yellow);
         int width = mWidth;
         return width;
+    }
+
+    private static int pxToDp(int px)
+    {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
 }
