@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.s0mbr3.moodtracker.activities.MainActivity;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
 import java.io.File;
@@ -47,7 +48,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         int currentDayForHistoric = humorData.getCurrentDayForHistoric();
 
 
-
         SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
                 currentDayForHistoric,mDirPath + historicDir + String.valueOf(currentDayForHistoric));
@@ -70,7 +70,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         ++currentDayForHistoric;
 
         appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
-        mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
+        appStartDriver.setCommentTxt(null);
+        appStartDriver.setIndex(3);
+        HumorUpdater.getInstance().updateTrigger();
+        mSerializedHumorForHistoric.SerializedHumorFileWriting(3, null,
                 currentDayForHistoric, mDirPath + currenntHumorFilePath);
 
         boolean f = new File(mDirPath + currenntHumorFilePath).exists();

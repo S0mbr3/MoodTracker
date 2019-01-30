@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.core.controllers.AlarmReceiver;
 import com.s0mbr3.moodtracker.core.controllers.AppStartDriver;
+import com.s0mbr3.moodtracker.core.controllers.HumorUpdater;
 import com.s0mbr3.moodtracker.core.controllers.MainController;
 import com.s0mbr3.moodtracker.core.controllers.MyGestureListener;
 import com.s0mbr3.moodtracker.core.controllers.SerialiazedHumorFileWriter;
@@ -51,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean mCommentTester;
     private SharedPreferences mPreferences;
     private AppStartDriver appStartDriver;
-    private MainController mMainController;
-    private MyGestureListener mMyGestureListener;
     private Calendar mCalendar;
     private SerialiazedHumorFileWriter mSerializedHumorFileWriter;
     public static final int  HISTORIC_ACTIVITY_REQUEST_CODE = 1337;
@@ -79,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
         mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
 
         mSerializedHumorFileWriter = new SerialiazedHumorFileWriter();
-        mMainController = MainController.INSTANCE ;
-        mMainController.initMainController(mLayout, mSmiley);
         appStartDriver = AppStartDriver.INSTANCE;
         appStartDriver.configurator(MainActivity.this);
         mIndex = appStartDriver.getIndex();
@@ -90,22 +87,21 @@ public class MainActivity extends AppCompatActivity {
 
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 01);
-        mCalendar.set(Calendar.MINUTE, 15);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 12);
+        mCalendar.set(Calendar.MINUTE, 51);
         mCalendar.set(Calendar.SECOND,0);
         mCalendar.set(Calendar.MILLISECOND,0);
 
         mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        mIntent.putExtra(BUNDLE_EXTRA_COMMENT_TXT, mDirPath);
         mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        //dev purpose i will remove the updat ecurrent flag of the pending intent
         mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
 
-        mMyGestureListener = new MyGestureListener(mIndex);
         mPreferences = getPreferences(MODE_PRIVATE);
 
-        mDetector = new GestureDetectorCompat(this, mMyGestureListener);
 
+        Log.d("index", String.valueOf(appStartDriver.getIndex()));
         mCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +111,26 @@ public class MainActivity extends AppCompatActivity {
         this.historic();
 
 
-        mMyGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
+    }
+
+    /**
+     * Event to catch screen gestures
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final MainController mainController = new MainController(mLayout, mSmiley);
+        mainController.getMethodName(appStartDriver.getIndex());
+        mCommentTxt = appStartDriver.getmCommentTxt();
+        MyGestureListener myGestureListener = new MyGestureListener(mainController);
+        myGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
             /**
              * getIndex is a custom listener to catch the index used to travel in the humorsList
              * serialize the weekly day, index  and comment and write it into a dedicated file
@@ -130,16 +145,18 @@ public class MainActivity extends AppCompatActivity {
                         mCurrentDayForHistoric, mDirPath + mFilePath);
             }
         });
-    }
+        mDetector = new GestureDetectorCompat(this, myGestureListener);
 
-    /**
-     * Event to catch screen gestures
-     */
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+        HumorUpdater humorUpdater = HumorUpdater.getInstance();
 
+        humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
+            @Override
+            public void updaterAfterAlarm() {
+                Log.d("ala", "bigTest");
+                mainController.getMethodName(appStartDriver.getIndex());
+            }
+        });
+        Log.d("alarmR", "Deretour");
     }
 
     /**
@@ -159,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        mCommentTxt = commentInput.getText().toString();
+                        if(commentInput.getText().toString().length() == 0) mCommentTxt = null;
+                        else mCommentTxt = commentInput.getText().toString();
                         Log.d("addComment", mCommentTxt + " " + mIndex);
                         mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex,
                                 mCommentTxt, mCurrentDayForHistoric, mDirPath + mFilePath);

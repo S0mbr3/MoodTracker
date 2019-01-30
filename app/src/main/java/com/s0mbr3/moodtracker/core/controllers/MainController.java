@@ -1,18 +1,9 @@
 package com.s0mbr3.moodtracker.core.controllers;
 
-import android.content.Context;
 import android.support.constraint.ConstraintLayout;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 
 import com.s0mbr3.moodtracker.R;
-import com.s0mbr3.moodtracker.core.models.Humor;
-
-import org.w3c.dom.Text;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,20 +16,21 @@ import java.util.List;
  *
  * Created by Oxhart on 21/01/2019.
  */
-public enum MainController {
-    INSTANCE;
+public class MainController {
     private List<String> mHumorsList = new ArrayList<>();
     private Method mMethod;
-    private Humor mHumor;
-    private int mIndex;
     private ImageView mSmiley;
-    private TextView mHistoricLine;
-    private int mHeight;
-    private int mWidth;
-    private Context mContext;
     private ConstraintLayout mLayout;
 
-    MainController() {
+    public MainController(ConstraintLayout layout, ImageView smiley) {
+        this.mSmiley = smiley;
+        this.mLayout = layout;
+
+        this.mHumorsList.add("setSadSmiley");
+        this.mHumorsList.add("setDisappointedSmiley");
+        this.mHumorsList.add("setNormalSmiley");
+        this.mHumorsList.add("setHappySmiley");
+        this.mHumorsList.add("setSuperHappySmiley");
     }
 
 
@@ -64,18 +56,6 @@ public enum MainController {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public void initMainController(ConstraintLayout layout, ImageView smiley) {
-        this.mSmiley = smiley;
-        this.mLayout = layout;
-
-        this.mHumorsList.add("setSadSmiley");
-        this.mHumorsList.add("setDisappointedSmiley");
-        this.mHumorsList.add("setNormalSmiley");
-        this.mHumorsList.add("setHappySmiley");
-        this.mHumorsList.add("setSuperHappySmiley");
     }
 
     public void setSadSmiley() {

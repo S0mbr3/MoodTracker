@@ -13,13 +13,11 @@ import android.view.MotionEvent;
 public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     private static final String DEBUG_TAG = "GESTURES";
     private MainController mMainController;
-    private int mIndex;
     private boolean mChanged;
     private IndexGetter mIndexListener;
 
-    public MyGestureListener(int index){
-        this.mMainController = MainController.INSTANCE;
-        this.mIndex = index;
+    public MyGestureListener(MainController mainController){
+        this.mMainController = mainController;
         this.mChanged = false;
         this.mIndexListener = null;
     }
@@ -37,7 +35,7 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     }
 
     public void setIndexListener(IndexGetter indexListener) {
-        mIndexListener = indexListener;
+        this.mIndexListener = indexListener;
     }
 
     @Override
@@ -63,17 +61,20 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
      */
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (distanceY < 0 && !this.mChanged &&  this.mIndex >= 0){
+        AppStartDriver indexGetter = AppStartDriver.INSTANCE;
+        int index = indexGetter.getIndex();
+        if (distanceY < 0 && !this.mChanged &&  index >= 0){
             this.mChanged = true;
-            if (mIndex != 0) this.mIndex--;
-            mMainController.getMethodName(this.mIndex);
-        } else if (distanceY > 0 && !this.mChanged && this.mIndex <= 4){
-            if (mIndex != 4) this.mIndex++;
-            mMainController.getMethodName(this.mIndex);
+            if (index != 0) index--;
+            mMainController.getMethodName(index);
+        } else if (distanceY > 0 && !this.mChanged && index <= 4){
+            if (index != 4) index++;
+            mMainController.getMethodName(index);
             this.mChanged = true;
         }
-        if(mIndexListener != null) mIndexListener.getIndex(mIndex);
-        Log.d(DEBUG_TAG, "onScroll " + distanceX + " " + distanceY + " " + mIndex);
+        if(mIndexListener != null) mIndexListener.getIndex(index);
+        Log.d(DEBUG_TAG, "onScroll " + distanceX + " " + distanceY + " " + index);
+        indexGetter.setIndex(index);
         return true;
     }
 

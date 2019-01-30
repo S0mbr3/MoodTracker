@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -27,8 +26,7 @@ import java.util.List;
  *
  * Created by Oxhart on 21/01/2019.
  */
-public enum Humor {
-    INSTANCE;
+public class Humor {
     private Context mContext;
     private LinearLayout mHistoricLayout;
     private int mHeight;
@@ -36,7 +34,13 @@ public enum Humor {
     private TextView mHistoricLine;
     private List<String> mHumorList = new ArrayList<>();
 
-    Humor(){
+    public Humor(TextView historicLine, LinearLayout layout, Context context, int height, int width){
+        this.mHistoricLayout = layout;
+        this.mHeight = height;
+        this.mWidth = width;
+        this.mHistoricLine = historicLine;
+        this.mContext = context;
+
         this.mHumorList.add("setSadSmiley");
         this.mHumorList.add("setDisappointedSmiley");
         this.mHumorList.add("setNormalSmiley");
@@ -44,15 +48,8 @@ public enum Humor {
         this.mHumorList.add("setSuperHappySmiley");
     }
 
-    public void setHistoricLayout(TextView historicLine, LinearLayout layout, Context context, int height, int width){
-        this.mHistoricLayout = layout;
-        this.mHeight = height;
-        this.mWidth = width;
-        this.mHistoricLine = historicLine;
-        this.mContext = context;
-    }
 
-    public void createHistoricLine(int index){
+    public void createHistoricLine(int index, String commentTxt){
         int width = 1;
         Class reflectClass;
         try {
@@ -84,7 +81,7 @@ public enum Humor {
         set.connect(this.mHistoricLine.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM,0);
         set.connect(this.mHistoricLine.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
         set.applyTo(constraintLayout);
-        createHistoricCommentButton(constraintLayout, width);
+        if(commentTxt != null) createHistoricCommentButton(constraintLayout, width);
     }
 
 

@@ -7,8 +7,6 @@ import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public enum AppStartDriver {
@@ -33,6 +31,7 @@ public enum AppStartDriver {
         this.mHistoricMessgesList.add("Il y a six jours");
         this.mHistoricMessgesList.add("Il y a une semaine");
     }
+
 
 
     public int getIndex(){
@@ -61,9 +60,19 @@ public enum AppStartDriver {
 
     public String getArchiveDir() {return ARCHIVE_DIR;}
 
+    public void setIndex(int index){
+        this.mIndex = index;
+    }
+
+    public void setCommentTxt(String commentTxt){
+        this.mCommentTxt = commentTxt;
+    }
     public void setCurrentDayForHistoric(int currentDayForHistoric){
         this.mCurrentDayForHistoric = currentDayForHistoric;
     }
+
+
+
     public String getHistoricMessage(int index){
         return this.mHistoricMessgesList.get(index);
     }
@@ -84,7 +93,5 @@ public enum AppStartDriver {
             this.mCommentTxt = null;
             this.mCurrentDayForHistoric = 1;
         }
-        MainController smileyStarter = MainController.INSTANCE;
-        smileyStarter.getMethodName(mIndex);
     }
 }

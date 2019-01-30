@@ -76,9 +76,8 @@ public class HistoricActivity extends AppCompatActivity {
         TextView historicLine = new TextView(this);
         historicLine.setId(View.generateViewId());
         historicLine.setText(mAdayMessage);
-        Humor humor = Humor.INSTANCE;
-        humor.setHistoricLayout(historicLine, mLayout, this, mHeight, mWidth);
-        humor.createHistoricLine(mIndex);
+        Humor humor = new Humor(historicLine, mLayout, this, mHeight, mWidth);
+        humor.createHistoricLine(mIndex, mCommentTxt);
         Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
                 + " " + mCommentTxt);
         --index;
