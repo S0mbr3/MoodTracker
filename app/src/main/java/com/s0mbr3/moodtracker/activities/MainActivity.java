@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         if(commentInput.getText().toString().length() == 0) mCommentTxt = null;
                         else mCommentTxt = commentInput.getText().toString();
                         Log.d("addComment", mCommentTxt + " " + mIndex);
+                        appStartDriver.setCommentTxt(mCommentTxt);
                         mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex,
                                 mCommentTxt, mCurrentDayForHistoric, mDirPath + mFilePath);
                     }

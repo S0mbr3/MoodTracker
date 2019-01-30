@@ -92,6 +92,12 @@ public enum AppStartDriver {
             this.mIndex = 3;
             this.mCommentTxt = null;
             this.mCurrentDayForHistoric = 1;
+            SerialiazedHumorFileWriter humorFileWriter = new SerialiazedHumorFileWriter();
+            humorFileWriter.SerializedHumorFileWriting(
+                    mIndex,
+                    mCommentTxt,
+                    mCurrentDayForHistoric,
+                    mDirPath + USER_CHOSEN_HUMOR_FILE);
         }
     }
 }

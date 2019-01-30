@@ -1,12 +1,15 @@
 package com.s0mbr3.moodtracker.activities;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.core.controllers.AppStartDriver;
@@ -20,7 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class HistoricActivity extends AppCompatActivity {
+public class HistoricActivity extends AppCompatActivity implements View.OnClickListener {
     private String mMainDir;
     private String mHistoricDir;
     private int mIndex;
@@ -30,8 +33,10 @@ public class HistoricActivity extends AppCompatActivity {
     private LinearLayout mLayout;
     private AppStartDriver configs;
     private DisplayMetrics mDisplayMetrics;
+    private Button mCommentButton;
     private int mHeight;
     private int mWidth;
+    private List<String> mCommentList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +56,22 @@ public class HistoricActivity extends AppCompatActivity {
             files = Arrays.asList(new File(mMainDir + mHistoricDir).listFiles());
             Log.d("siz", String.valueOf(files.size()));
             Collections.sort(files, new MyComparator());
-            for(File file : files){
-                Log.d("ala", file.getName());
-            }
             files = listReverser(files);
-            historicLiner(files, files.size() - 1);
+            for(int index = files.size() -1; index >= 0; --index) {
+                historicLiner(files, index);
+                mCommentButton.setTag(index);
+                mCommentButton.setOnClickListener(this);
+                if(mCommentTxt != null)mCommentList.add(mCommentTxt);
+            }
+            if(mCommentList.size() != 0)mCommentList = listReverser(mCommentList);
+            for(File file : files){
+                Log.d("alarmi", file + " " + mCommentButton.getTag());
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
     }
+
 
     public void historicLiner(List<File> filesList, int index){
         String aDayFile = filesList.get(index).getName();
@@ -73,23 +85,31 @@ public class HistoricActivity extends AppCompatActivity {
         mAdayMessage = configs.getHistoricMessage(index);
 
 
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
         TextView historicLine = new TextView(this);
+        mCommentButton = new Button(this);
         historicLine.setId(View.generateViewId());
         historicLine.setText(mAdayMessage);
-        Humor humor = new Humor(historicLine, mLayout, this, mHeight, mWidth);
-        humor.createHistoricLine(mIndex, mCommentTxt);
+        Humor humor = new Humor(historicLine, mLayout, constraintLayout, mHeight, mWidth);
+        if(mCommentTxt == null)humor.createHistoricLine(mIndex);
+        else humor.createHistoricLine(mIndex, mCommentButton);
         Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
                 + " " + mCommentTxt);
-        --index;
-        if (index >= 0) historicLiner(filesList, index);
     }
 
-    public List<File> listReverser(List<File> historyFiles){
-        List<File> reversed = new ArrayList<File>();
+
+    public <T> List<T> listReverser(List<T> historyFiles){
+        List<T> reversed = new ArrayList<T>();
         for(int i = historyFiles.size() - 1 ; i >= 0; i--){
             reversed.add(historyFiles.get(i));
         }
         return reversed;
     }
 
+    @Override
+    public void onClick(View v) {
+        int commentIndex = (int) v.getTag();
+        Toast.makeText(this, mCommentList.get(commentIndex), Toast.LENGTH_SHORT).show();
+
+    }
 }
