@@ -21,7 +21,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HistoricActivity extends AppCompatActivity implements View.OnClickListener {
     private String mMainDir;
@@ -36,7 +38,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     private Button mCommentButton;
     private int mHeight;
     private int mWidth;
-    private List<String> mCommentList = new ArrayList<String>();
+    private Map<Integer, String> mCommentHash = new HashMap<Integer, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +56,17 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         try {
             List<File> files = new ArrayList<File>();
             files = Arrays.asList(new File(mMainDir + mHistoricDir).listFiles());
-            Log.d("siz", String.valueOf(files.size()));
             Collections.sort(files, new MyComparator());
             files = listReverser(files);
             for(int index = files.size() -1; index >= 0; --index) {
                 historicLiner(files, index);
-                mCommentButton.setTag(index);
-                mCommentButton.setOnClickListener(this);
-                if(mCommentTxt != null)mCommentList.add(mCommentTxt);
+                if (mCommentTxt != null){
+                    mCommentButton.setTag(index);
+                    mCommentButton.setOnClickListener(this);
+                    mCommentHash.put(index, mCommentTxt);
+                    Log.d("alarmist", String.valueOf(mCommentButton.getTag()));
+                }
             }
-            if(mCommentList.size() != 0)mCommentList = listReverser(mCommentList);
             for(File file : files){
                 Log.d("alarmi", file + " " + mCommentButton.getTag());
             }
@@ -109,7 +112,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         int commentIndex = (int) v.getTag();
-        Toast.makeText(this, mCommentList.get(commentIndex), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, mCommentHash.get(commentIndex), Toast.LENGTH_SHORT).show();
 
     }
 }

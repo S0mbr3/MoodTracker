@@ -4,7 +4,6 @@ public class HumorUpdater {
     private UpdateAfterAlarm mUpdaterListener;
 
     private HumorUpdater() {
-        this.mUpdaterListener = null;
     }
 
     public interface UpdateAfterAlarm{
