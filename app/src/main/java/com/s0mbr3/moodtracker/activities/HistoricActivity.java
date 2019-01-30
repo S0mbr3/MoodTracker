@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -73,6 +74,7 @@ public class HistoricActivity extends AppCompatActivity {
 
 
         TextView historicLine = new TextView(this);
+        historicLine.setId(View.generateViewId());
         historicLine.setText(mAdayMessage);
         Humor humor = Humor.INSTANCE;
         humor.setHistoricLayout(historicLine, mLayout, this, mHeight, mWidth);

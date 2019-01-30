@@ -29,7 +29,7 @@ public enum AppStartDriver {
         this.mHistoricMessgesList.add("Avant-hier");
         this.mHistoricMessgesList.add("Il y a trois jours");
         this.mHistoricMessgesList.add("Il y a quatre jours");
-        this.mHistoricMessgesList.add("Il y a cinqu jours");
+        this.mHistoricMessgesList.add("Il y a cinq jours");
         this.mHistoricMessgesList.add("Il y a six jours");
         this.mHistoricMessgesList.add("Il y a une semaine");
     }

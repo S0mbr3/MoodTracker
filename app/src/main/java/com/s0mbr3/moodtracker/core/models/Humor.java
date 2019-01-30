@@ -2,7 +2,10 @@ package com.s0mbr3.moodtracker.core.models;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -66,25 +69,37 @@ public enum Humor {
             e.printStackTrace();
         }
 
-        RelativeLayout relativeLayout = new RelativeLayout(mContext);
-        RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(width, mHeight/7);
+        ConstraintLayout constraintLayout = new ConstraintLayout(mContext);
+        constraintLayout.setId(View.generateViewId());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, mHeight/7);
-        relativeLayout.setLayoutParams(lp);
-        this.mHistoricLine.setLayoutParams(rlp);
-        this.mHistoricLayout.addView(relativeLayout);
-        relativeLayout.addView(this.mHistoricLine);
-        createHistoricCommentButton(relativeLayout, width);
+        constraintLayout.setLayoutParams(lp);
+        this.mHistoricLayout.addView(constraintLayout);
+        constraintLayout.addView(this.mHistoricLine);
+        ConstraintSet set = new ConstraintSet();
+        set.clone(constraintLayout);
+        set.constrainHeight(this.mHistoricLine.getId(), 0);
+        set.constrainWidth(this.mHistoricLine.getId(), 0);
+        set.connect(this.mHistoricLine.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
+        set.connect(this.mHistoricLine.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
+        set.connect(this.mHistoricLine.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM,0);
+        set.connect(this.mHistoricLine.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+        set.applyTo(constraintLayout);
+        createHistoricCommentButton(constraintLayout, width);
     }
 
 
-    private void createHistoricCommentButton(RelativeLayout relativeLayout, int width){
+    private void createHistoricCommentButton(ConstraintLayout constraintLayout, int width){
         final Button commentButton = new Button(mContext);
+        commentButton.setId(View.generateViewId());
         commentButton.setBackgroundResource(R.drawable.ic_comment_black_48px);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mWidth / 16, mHeight/26);
-        lp.leftMargin = width - 80;
-        lp.topMargin = pxToDp(100);
-        commentButton.setLayoutParams(lp);
-        relativeLayout.addView(commentButton);
+        constraintLayout.addView(commentButton);
+        ConstraintSet set = new ConstraintSet();
+        set.clone(constraintLayout);
+        set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,40);
+        set.constrainHeight(commentButton.getId(), 40);
+        set.constrainWidth(commentButton.getId(), 40);
+        set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);
+        set.applyTo(constraintLayout);
 
     }
     public int setSadSmiley() {
