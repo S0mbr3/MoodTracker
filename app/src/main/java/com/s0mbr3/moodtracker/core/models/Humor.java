@@ -81,12 +81,12 @@ public class Humor {
         this.mConstraintLayout.addView(this.mHistoricLine);
         ConstraintSet set = new ConstraintSet();
         set.clone(this.mConstraintLayout);
-        set.constrainHeight(this.mHistoricLine.getId(), 0);
-        set.constrainWidth(this.mHistoricLine.getId(), 0);
-        set.connect(this.mHistoricLine.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
+        set.constrainHeight(this.mHistoricLine.getId(),ConstraintSet.WRAP_CONTENT);
+        set.constrainWidth(this.mHistoricLine.getId(),ConstraintSet.WRAP_CONTENT);
+        /*set.connect(this.mHistoricLine.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
         set.connect(this.mHistoricLine.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
         set.connect(this.mHistoricLine.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,ConstraintSet.BOTTOM,0);
-        set.connect(this.mHistoricLine.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+        set.connect(this.mHistoricLine.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);*/
         set.applyTo(this.mConstraintLayout);
     }
 
@@ -104,31 +104,31 @@ public class Humor {
         set.applyTo(this.mConstraintLayout);
     }
     public int setSadSmiley() {
-        this.mHistoricLine.setBackgroundResource(R.color.faded_red);
+        this.mConstraintLayout.setBackgroundResource(R.color.faded_red);
         int width=  this.mWidth * 20/100;
         return width;
     }
 
     public int setDisappointedSmiley(){
-        this.mHistoricLine.setBackgroundResource(R.color.warm_grey);
+        this.mConstraintLayout.setBackgroundResource(R.color.warm_grey);
         int width = this.mWidth * 40/100;
         return width;
     }
 
     public int setNormalSmiley(){
-        this.mHistoricLine.setBackgroundResource(R.color.cornflower_blue_65);
+        this.mConstraintLayout.setBackgroundResource(R.color.cornflower_blue_65);
         int width = this.mWidth * 60/100;
         return width;
     }
 
     public int setHappySmiley(){
-        this.mHistoricLine.setBackgroundResource(R.color.light_sage);
+        this.mConstraintLayout.setBackgroundResource(R.color.light_sage);
         int width = this.mWidth*80/100;
         return width;
     }
 
     public int setSuperHappySmiley(){
-        this.mHistoricLine.setBackgroundResource(R.color.banana_yellow);
+        this.mConstraintLayout.setBackgroundResource(R.color.banana_yellow);
         int width = mWidth;
         return width;
     }
