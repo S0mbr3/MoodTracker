@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentDayForHistoric;
     private String mDirPath;
     private String mFilePath;
-    private boolean mCommentTester;
     private SharedPreferences mPreferences;
     private AppStartDriver appStartDriver;
     private Calendar mCalendar;
@@ -88,15 +87,15 @@ public class MainActivity extends AppCompatActivity {
 
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 03);
-        mCalendar.set(Calendar.MINUTE, 12);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 17);
+        mCalendar.set(Calendar.MINUTE, 11);
         mCalendar.set(Calendar.SECOND,0);
         mCalendar.set(Calendar.MILLISECOND,0);
 
         mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         //dev purpose i will remove the FLAG_UPDATE_CURRENT flag of the pending intent
-        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, 0);
+        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent,PendingIntent.FLAG_CANCEL_CURRENT);
         mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
 
         mPreferences = getPreferences(MODE_PRIVATE);
@@ -141,8 +140,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void getIndex(int index) {
                 Log.d("getIndex", String.valueOf(index) +  " " + mCommentTxt + " " + mCurrentDayForHistoric);
-                beep.start();
                 mIndex = index;
+                beep.start();
                 mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
                 mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex, mCommentTxt,
                         mCurrentDayForHistoric, mDirPath + mFilePath);

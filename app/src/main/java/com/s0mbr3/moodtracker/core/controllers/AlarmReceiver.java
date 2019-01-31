@@ -53,6 +53,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 currentDayForHistoric, mDirPath + currenntHumorFilePath);
 
         boolean f = new File(mDirPath + currenntHumorFilePath).exists();
-        //Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + currentDayForHistoric + " " + f);
+        Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + currentDayForHistoric + " " + f);
     }
 }

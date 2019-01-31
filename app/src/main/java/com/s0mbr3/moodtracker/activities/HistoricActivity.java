@@ -53,14 +53,18 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
         int hIndex= appStartDriver.getCurrentDayForHistoric()-1;
         if (hIndex >= 7) hIndex-=7;
+        else hIndex-=hIndex-1;
+        Log.d("alarmister", String.valueOf(hIndex));
         try {
             Map<Integer, File> commentHash = new HashMap<Integer, File>();
 
-            for(int index = hIndex ; index > hIndex; index--){
+            for(int index = appStartDriver.getCurrentDayForHistoric()-1 ; index > hIndex; index--){
                 commentHash.put(index, new File(mMainDir + mHistoricDir + index));
+                Log.d("alarmisterr", String.valueOf(commentHash.get(index)));
             }
-            for(int index = hIndex-6, dIndex = commentHash.size() - 1; dIndex >= 0; index++, dIndex--) {
-                //Log.d("alarmist", String.valueOf(index));
+            for(int index = appStartDriver.getCurrentDayForHistoric()-commentHash.size()
+                , dIndex = commentHash.size() - 1; dIndex >= 0; index++, dIndex--) {
+                Log.d("alarmist", String.valueOf(index));
                 historicLiner(commentHash, index, dIndex);
                 if (mCommentTxt != null){
                     mCommentButton.setTag(index);
@@ -105,8 +109,8 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         Humor humor = new Humor(historicLine, mLayout, constraintLayout, mHeight, mWidth);
         if(mCommentTxt == null)humor.createHistoricLine(mIndex);
         else humor.createHistoricLine(mIndex, mCommentButton);
-        /*Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
-                + " " + mCommentTxt);*/
+        Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
+                + " " + mCommentTxt);
     }
 
     @Override

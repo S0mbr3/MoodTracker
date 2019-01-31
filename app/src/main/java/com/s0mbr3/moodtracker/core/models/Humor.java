@@ -97,9 +97,9 @@ public class Humor {
         this.mConstraintLayout.addView(commentButton);
         ConstraintSet set = new ConstraintSet();
         set.clone(this.mConstraintLayout);
-        set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,40);
-        set.constrainHeight(commentButton.getId(), 40);
-        set.constrainWidth(commentButton.getId(), 40);
+        set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,dpToPx(12));
+        set.constrainHeight(commentButton.getId(),dpToPx(20));
+        set.constrainWidth(commentButton.getId(), dpToPx(20));
         set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);
         set.applyTo(this.mConstraintLayout);
     }
@@ -133,9 +133,9 @@ public class Humor {
         return width;
     }
 
-    private static int pxToDp(int px)
+    private static int dpToPx(int dp)
     {
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
 }
