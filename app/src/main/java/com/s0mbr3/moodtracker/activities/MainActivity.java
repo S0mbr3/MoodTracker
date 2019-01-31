@@ -85,18 +85,23 @@ public class MainActivity extends AppCompatActivity {
         mFilePath = appStartDriver.getHumorFilePath();
         mCommentTxt = appStartDriver.getmCommentTxt();
 
+        mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+
+
+        //bug on the day 4 with the sad humor, it's recovered by the comment logo
+        //to get next midnight use 24
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 17);
-        mCalendar.set(Calendar.MINUTE, 11);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 24);
+        mCalendar.set(Calendar.MINUTE, 0);
         mCalendar.set(Calendar.SECOND,0);
         mCalendar.set(Calendar.MILLISECOND,0);
 
-        mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         //dev purpose i will remove the FLAG_UPDATE_CURRENT flag of the pending intent
-        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent,PendingIntent.FLAG_CANCEL_CURRENT);
-        mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
+        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent,0);
+        mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), 3600*24*1000, mAlarmIntent);
+
 
         mPreferences = getPreferences(MODE_PRIVATE);
 

@@ -53,7 +53,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
         int hIndex= appStartDriver.getCurrentDayForHistoric()-1;
         if (hIndex >= 7) hIndex-=7;
-        else hIndex-=hIndex-1;
+        else hIndex-=hIndex;
         Log.d("alarmister", String.valueOf(hIndex));
         try {
             Map<Integer, File> commentHash = new HashMap<Integer, File>();
