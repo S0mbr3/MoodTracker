@@ -52,10 +52,11 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
 
         AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
         int hIndex= appStartDriver.getCurrentDayForHistoric()-1;
+        if (hIndex >= 7) hIndex-=7;
         try {
             Map<Integer, File> commentHash = new HashMap<Integer, File>();
 
-            for(int index = hIndex ; index > hIndex-7; index--){
+            for(int index = hIndex ; index > hIndex; index--){
                 commentHash.put(index, new File(mMainDir + mHistoricDir + index));
             }
             for(int index = hIndex-6, dIndex = commentHash.size() - 1; dIndex >= 0; index++, dIndex--) {
