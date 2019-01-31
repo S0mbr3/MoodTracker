@@ -86,7 +86,7 @@ public enum AppStartDriver {
             this.mCommentTxt = humorData.getCommentTxt();
             //if(mCurrentDayForHistoric >= 8) mCurrentDayForHistoric = 1;
             this.mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
-            Log.d("add", String.valueOf(mIndex + " " + mCurrentDayForHistoric));
+            //Log.d("add", String.valueOf(mIndex + " " + mCurrentDayForHistoric));
             //new File(mDirPath + HISTORIC_DIR + "8").delete();
         } else {
             this.mIndex = 3;

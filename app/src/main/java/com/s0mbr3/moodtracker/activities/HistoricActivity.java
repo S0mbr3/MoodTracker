@@ -1,5 +1,6 @@
 package com.s0mbr3.moodtracker.activities;
 
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,16 +14,12 @@ import android.widget.Toast;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.core.controllers.AppStartDriver;
-import com.s0mbr3.moodtracker.core.controllers.MyComparator;
+import com.s0mbr3.moodtracker.core.controllers.HumorUpdater;
 import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
 import com.s0mbr3.moodtracker.core.models.Humor;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HistoricActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,7 +38,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     private Map<Integer, String> mCommentHash = new HashMap<Integer, String>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) throws OutOfMemoryError {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historic);
 
@@ -53,30 +50,41 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
 
+        AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
+        int hIndex= appStartDriver.getCurrentDayForHistoric()-1;
         try {
-            List<File> files = new ArrayList<File>();
-            files = Arrays.asList(new File(mMainDir + mHistoricDir).listFiles());
-            Collections.sort(files, new MyComparator());
-            files = listReverser(files);
-            for(int index = files.size() -1; index >= 0; --index) {
-                historicLiner(files, index);
+            Map<Integer, File> commentHash = new HashMap<Integer, File>();
+
+            for(int index = hIndex ; index > hIndex-7; index--){
+                commentHash.put(index, new File(mMainDir + mHistoricDir + index));
+            }
+            for(int index = hIndex-6, dIndex = commentHash.size() - 1; dIndex >= 0; index++, dIndex--) {
+                //Log.d("alarmist", String.valueOf(index));
+                historicLiner(commentHash, index, dIndex);
                 if (mCommentTxt != null){
                     mCommentButton.setTag(index);
                     mCommentButton.setOnClickListener(this);
                     mCommentHash.put(index, mCommentTxt);
-                    Log.d("alarmist", String.valueOf(mCommentButton.getTag()));
                 }
-            }
-            for(File file : files){
-                Log.d("alarmi", file + " " + mCommentButton.getTag());
             }
         } catch (Exception e){
             e.printStackTrace();
         }
+        HumorUpdater humorUpdater = HumorUpdater.getInstance();
+
+        humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
+            @Override
+            public void updaterAfterAlarm() {
+                //Log.d("ala", "bigTest");
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        });
     }
 
 
-    public void historicLiner(List<File> filesList, int index){
+    public void historicLiner(Map<Integer, File> filesList, int index, int dIndex){
         String aDayFile = filesList.get(index).getName();
 
         mLayout = findViewById(R.id.activity_historic_layout);
@@ -85,7 +93,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         mIndex = aDayHumor.getIndex();
         mCommentTxt = aDayHumor.getCommentTxt();
         mCurrentDayForHistoric = aDayHumor.getCurrentDayForHistoric();
-        mAdayMessage = configs.getHistoricMessage(index);
+        mAdayMessage = configs.getHistoricMessage(dIndex);
 
 
         ConstraintLayout constraintLayout = new ConstraintLayout(this);
@@ -96,17 +104,8 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         Humor humor = new Humor(historicLine, mLayout, constraintLayout, mHeight, mWidth);
         if(mCommentTxt == null)humor.createHistoricLine(mIndex);
         else humor.createHistoricLine(mIndex, mCommentButton);
-        Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
-                + " " + mCommentTxt);
-    }
-
-
-    public <T> List<T> listReverser(List<T> historyFiles){
-        List<T> reversed = new ArrayList<T>();
-        for(int i = historyFiles.size() - 1 ; i >= 0; i--){
-            reversed.add(historyFiles.get(i));
-        }
-        return reversed;
+        /*Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
+                + " " + mCommentTxt);*/
     }
 
     @Override

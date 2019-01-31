@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
@@ -87,15 +88,15 @@ public class MainActivity extends AppCompatActivity {
 
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 12);
-        mCalendar.set(Calendar.MINUTE, 51);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 03);
+        mCalendar.set(Calendar.MINUTE, 12);
         mCalendar.set(Calendar.SECOND,0);
         mCalendar.set(Calendar.MILLISECOND,0);
 
         mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        //dev purpose i will remove the updat ecurrent flag of the pending intent
-        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //dev purpose i will remove the FLAG_UPDATE_CURRENT flag of the pending intent
+        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, 0);
         mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
 
         mPreferences = getPreferences(MODE_PRIVATE);
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         final MainController mainController = new MainController(mLayout, mSmiley);
+        final MediaPlayer beep = MediaPlayer.create(this, R.raw.beep);
         mainController.getMethodName(appStartDriver.getIndex());
         mCommentTxt = appStartDriver.getmCommentTxt();
         MyGestureListener myGestureListener = new MyGestureListener(mainController);
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void getIndex(int index) {
                 Log.d("getIndex", String.valueOf(index) +  " " + mCommentTxt + " " + mCurrentDayForHistoric);
+                beep.start();
                 mIndex = index;
                 mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
                 mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex, mCommentTxt,
@@ -152,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
             @Override
             public void updaterAfterAlarm() {
-                Log.d("ala", "bigTest");
+                //Log.d("ala", "bigTest");
                 mainController.getMethodName(appStartDriver.getIndex());
             }
         });
@@ -178,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         if(commentInput.getText().toString().length() == 0) mCommentTxt = null;
                         else mCommentTxt = commentInput.getText().toString();
-                        Log.d("addComment", mCommentTxt + " " + mIndex);
+                        //Log.d("addComment", mCommentTxt + " " + mIndex);
                         appStartDriver.setCommentTxt(mCommentTxt);
                         mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex,
                                 mCommentTxt, mCurrentDayForHistoric, mDirPath + mFilePath);
