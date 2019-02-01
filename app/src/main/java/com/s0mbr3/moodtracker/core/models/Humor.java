@@ -93,10 +93,12 @@ public class Humor {
         this.mConstraintLayout.addView(commentButton);
         ConstraintSet set = new ConstraintSet();
         set.clone(this.mConstraintLayout);
-        set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,dpToPx(12));
+        set.connect(this.mHistoricLine.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+        set.connect(this.mHistoricLine.getId(), ConstraintSet.BOTTOM, commentButton.getId(), ConstraintSet.TOP,dpToPx(5));
+        set.connect(commentButton.getId(), ConstraintSet.TOP, this.mHistoricLine.getId(), ConstraintSet.BOTTOM, dpToPx(2));
+        set.connect(commentButton.getId(),ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dpToPx(5));
         set.constrainHeight(commentButton.getId(),dpToPx(20));
         set.constrainWidth(commentButton.getId(), dpToPx(20));
-        set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);
         set.applyTo(this.mConstraintLayout);
     }
     public int setSadSmiley() {
