@@ -1,36 +1,29 @@
-package com.s0mbr3.moodtracker.core.controllers;
+package com.s0mbr3.moodtracker.views;
 
 import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;
 
 import com.s0mbr3.moodtracker.R;
+import com.s0mbr3.moodtracker.models.AppStartDriver;
+import com.s0mbr3.moodtracker.controllers.MyGestureListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * MainController class control what humor to choose depending of an index to a built string list
+ * MainActivityView class control what humor to choose depending of an index to a built string list
  * containing names of methods to use
  *
  * Created by Oxhart on 21/01/2019.
  */
-public class MainController {
-    private List<String> mHumorsList = new ArrayList<>();
+public class MainActivityView {
     private Method mMethod;
     private ImageView mSmiley;
     private ConstraintLayout mLayout;
 
-    public MainController(ConstraintLayout layout, ImageView smiley) {
+    public MainActivityView(ConstraintLayout layout, ImageView smiley) {
         this.mSmiley = smiley;
         this.mLayout = layout;
-
-        this.mHumorsList.add("setSadSmiley");
-        this.mHumorsList.add("setDisappointedSmiley");
-        this.mHumorsList.add("setNormalSmiley");
-        this.mHumorsList.add("setHappySmiley");
-        this.mHumorsList.add("setSuperHappySmiley");
     }
 
 
@@ -44,8 +37,8 @@ public class MainController {
     public void getMethodName(int index) {
         Class c1;
         try {
-            c1 = Class.forName(MainController.class.getName());
-                this.mMethod = c1.getMethod(this.mHumorsList.get(index), (Class[]) null);
+            c1 = Class.forName(MainActivityView.class.getName());
+                this.mMethod = c1.getMethod(AppStartDriver.INSTANCE.getHumor(index), (Class[]) null);
                 this.mMethod.invoke(this, (Object[]) null);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

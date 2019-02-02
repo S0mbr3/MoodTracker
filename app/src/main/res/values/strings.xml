@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">MoodTracker</string>
-    <string name="main_smiley">ImageView containing the selected humor</string>
+    <string name="main_smiley">ImageView containing the selected historicActivityView</string>
 </resources>

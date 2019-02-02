@@ -1,7 +1,5 @@
-package com.s0mbr3.moodtracker.core.controllers;
+package com.s0mbr3.moodtracker.models;
 
-
-import com.s0mbr3.moodtracker.core.models.SelectedHumorSerializer;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -20,7 +18,6 @@ public class SerialiazedHumorFileWriter {
     private ObjectOutputStream objectOutputStream;
     private int mIndex;
     private String mCommentTxt;
-    private String mDirPath;
     private int mCurrentDayForHistoric;
 
     public SerialiazedHumorFileWriter() {

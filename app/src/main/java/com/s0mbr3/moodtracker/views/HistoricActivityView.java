@@ -1,10 +1,9 @@
-package com.s0mbr3.moodtracker.core.models;
+package com.s0mbr3.moodtracker.views;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -12,42 +11,35 @@ import android.widget.TextView;
 
 
 import com.s0mbr3.moodtracker.R;
+import com.s0mbr3.moodtracker.models.AppStartDriver;
 
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
- * Humor class is a set of setters/getters method to show on screen appropriate smileys
+ * HistoricActivityView class is a set of setters/getters method to show on screen appropriate smileys
  * and background colors by reflection
  *
  * Created by Oxhart on 21/01/2019.
  */
-public class Humor {
-    private Context mContext;
+public class HistoricActivityView {
     private LinearLayout mHistoricLayout;
     private int mHeight;
     private int mWidth;
     private TextView mHistoricLine;
-    private List<String> mHumorList = new ArrayList<>();
     private ConstraintLayout mConstraintLayout;
+    private float scale = Resources.getSystem().getDisplayMetrics().density;
 
-    public Humor(TextView historicLine, LinearLayout layout, ConstraintLayout constraintLayout, int height, int width){
+    public HistoricActivityView(TextView historicLine, LinearLayout layout, ConstraintLayout constraintLayout, int height, int width){
         this.mHistoricLayout = layout;
         this.mHeight = height;
         this.mWidth = width;
         this.mHistoricLine = historicLine;
         this.mConstraintLayout = constraintLayout;
-        this.mHumorList.add("setSadSmiley");
-        this.mHumorList.add("setDisappointedSmiley");
-        this.mHumorList.add("setNormalSmiley");
-        this.mHumorList.add("setHappySmiley");
-        this.mHumorList.add("setSuperHappySmiley");
+        if(scale < 1.5) this.mHistoricLine.setTextSize(14);
     }
-
 
     public void createHistoricLine(int index){
         createHistoricTextView(index);
@@ -61,8 +53,8 @@ public class Humor {
         int width = 1;
         Class reflectClass;
         try {
-            reflectClass = Class.forName(Humor.class.getName());
-            Method method = reflectClass.getMethod(this.mHumorList.get(index), (Class[]) null);
+            reflectClass = Class.forName(HistoricActivityView.class.getName());
+            Method method = reflectClass.getMethod(AppStartDriver.INSTANCE.getHumor(index), (Class[]) null);
             width = (int) method.invoke(this, (Object[]) null);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -75,7 +67,7 @@ public class Humor {
         }
 
         this.mConstraintLayout.setId(View.generateViewId());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, mHeight/7);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width,mHeight/7);
         this.mConstraintLayout.setLayoutParams(lp);
         this.mHistoricLayout.addView(this.mConstraintLayout);
         this.mConstraintLayout.addView(this.mHistoricLine);
@@ -94,9 +86,14 @@ public class Humor {
         ConstraintSet set = new ConstraintSet();
         set.clone(this.mConstraintLayout);
         set.connect(this.mHistoricLine.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
-        set.connect(this.mHistoricLine.getId(), ConstraintSet.BOTTOM, commentButton.getId(), ConstraintSet.TOP,dpToPx(5));
-        set.connect(commentButton.getId(), ConstraintSet.TOP, this.mHistoricLine.getId(), ConstraintSet.BOTTOM, dpToPx(2));
-        set.connect(commentButton.getId(),ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dpToPx(5));
+        //set.connect(this.mHistoricLine.getId(), ConstraintSet.BOTTOM, commentButton.getId(), ConstraintSet.TOP,dpToPx(5));
+        //set.connect(commentButton.getId(), ConstraintSet.TOP, this.mHistoricLine.getId(), ConstraintSet.BOTTOM, dpToPx(2));
+        set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dpToPx(5));
+        if(this.scale > 1.5) {
+            set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);
+        } else {
+            set.connect(commentButton.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, dpToPx(4));
+        }
         set.constrainHeight(commentButton.getId(),dpToPx(20));
         set.constrainWidth(commentButton.getId(), dpToPx(20));
         set.applyTo(this.mConstraintLayout);
@@ -131,9 +128,9 @@ public class Humor {
         return width;
     }
 
-    private static int dpToPx(int dp)
+    private int dpToPx(int dp)
     {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+        return (int) (dp * this.scale);
     }
 
 }

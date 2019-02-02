@@ -1,17 +1,17 @@
-package com.s0mbr3.moodtracker.core.controllers;
+package com.s0mbr3.moodtracker.models;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public enum AppStartDriver {
     INSTANCE;
 
+    private int mHeight;
     private int mIndex;
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
@@ -19,17 +19,23 @@ public enum AppStartDriver {
     private static final String HISTORIC_DIR = "/historicdir/";
     private static final String ARCHIVE_DIR = "/archive";
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
-    private List<String> mHistoricMessgesList = new ArrayList<>();
+    private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
+            "Hier",
+            "Avant-Hier",
+            "Il y a trois jours",
+            "Il y a quatre jours",
+            "Il y a cinq jours",
+            "Il y a six jours",
+            "Il y a une semaine"));
+    private static final List<String> HUMORS_LIST = new ArrayList<>(Arrays.asList(
+            "setSadSmiley",
+            "setDisappointedSmiley",
+            "setNormalSmiley",
+            "setHappySmiley",
+            "setSuperHappySmiley"));
 
 
     AppStartDriver(){
-        this.mHistoricMessgesList.add("Hier");
-        this.mHistoricMessgesList.add("Avant-hier");
-        this.mHistoricMessgesList.add("Il y a trois jours");
-        this.mHistoricMessgesList.add("Il y a quatre jours");
-        this.mHistoricMessgesList.add("Il y a cinq jours");
-        this.mHistoricMessgesList.add("Il y a six jours");
-        this.mHistoricMessgesList.add("Il y a une semaine");
     }
 
 
@@ -69,19 +75,28 @@ public enum AppStartDriver {
     }
     public void setCurrentDayForHistoric(int currentDayForHistoric){
         this.mCurrentDayForHistoric = currentDayForHistoric;
+
     }
 
+    public void setHeight(int height){
+        this.mHeight = height;
+    }
 
+    public int getHeight(){return this.mHeight;}
 
+    public String getHumor(int index){
+        return HUMORS_LIST.get(index);
+
+    }
     public String getHistoricMessage(int index){
-        return this.mHistoricMessgesList.get(index);
+        return HISTORIC_MESSAGES_LIST.get(index);
     }
 
     public void configurator(Context context){
         this.mDirPath = context.getFilesDir().getAbsolutePath();
         if(new File(this.mDirPath, USER_CHOSEN_HUMOR_FILE).exists()) {
-            DeserializedHumorFileReader humorData = new DeserializedHumorFileReader(mDirPath);
-            humorData.objectDeserializer(USER_CHOSEN_HUMOR_FILE);
+            DeserializedHumorFileReader humorData = new DeserializedHumorFileReader();
+            humorData.objectDeserializer(mDirPath + USER_CHOSEN_HUMOR_FILE);
             this.mIndex = humorData.getIndex();
             this.mCommentTxt = humorData.getCommentTxt();
             //if(mCurrentDayForHistoric >= 8) mCurrentDayForHistoric = 1;

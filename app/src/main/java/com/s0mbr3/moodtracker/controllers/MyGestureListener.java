@@ -1,8 +1,11 @@
-package com.s0mbr3.moodtracker.core.controllers;
+package com.s0mbr3.moodtracker.controllers;
 
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+
+import com.s0mbr3.moodtracker.views.MainActivityView;
+import com.s0mbr3.moodtracker.models.AppStartDriver;
 
 
 /**
@@ -12,12 +15,12 @@ import android.view.MotionEvent;
  */
 public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     private static final String DEBUG_TAG = "GESTURES";
-    private MainController mMainController;
+    private MainActivityView mMainActivityView;
     private boolean mChanged;
     private IndexGetter mIndexListener;
 
-    public MyGestureListener(MainController mainController){
-        this.mMainController = mainController;
+    public MyGestureListener(MainActivityView mainActivityView){
+        this.mMainActivityView = mainActivityView;
         this.mChanged = false;
         this.mIndexListener = null;
     }
@@ -40,7 +43,6 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 
     @Override
     public boolean onDown(MotionEvent e) {
-        //return super.onDown(e);
         Log.d(DEBUG_TAG, "onDown");
         return true;
     }
@@ -52,7 +54,7 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
      * incrementation/decrementation, indexListener is triggered to send the index to the
      * MainActivity
      *
-     * @see MainController
+     * @see MainActivityView
      * @param e1
      * @param e2
      * @param distanceX
@@ -61,20 +63,19 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
      */
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        AppStartDriver indexGetter = AppStartDriver.INSTANCE;
-        int index = indexGetter.getIndex();
+        int index = AppStartDriver.INSTANCE.getIndex();
         if (distanceY < 0 && !this.mChanged &&  index >= 0){
             this.mChanged = true;
             if (index != 0) index--;
-            mMainController.getMethodName(index);
+            mMainActivityView.getMethodName(index);
         } else if (distanceY > 0 && !this.mChanged && index <= 4){
             if (index != 4) index++;
-            mMainController.getMethodName(index);
+            mMainActivityView.getMethodName(index);
             this.mChanged = true;
         }
         if(mIndexListener != null) mIndexListener.getIndex(index);
         Log.d(DEBUG_TAG, "onScroll " + distanceX + " " + distanceY + " " + index);
-        indexGetter.setIndex(index);
+        AppStartDriver.INSTANCE.setIndex(index);
         return true;
     }
 

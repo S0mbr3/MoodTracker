@@ -1,11 +1,14 @@
-package com.s0mbr3.moodtracker.core.controllers;
+package com.s0mbr3.moodtracker.controllers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.s0mbr3.moodtracker.core.models.DeserializedHumorFileReader;
+import com.s0mbr3.moodtracker.models.AppStartDriver;
+import com.s0mbr3.moodtracker.models.DeserializedHumorFileReader;
+import com.s0mbr3.moodtracker.models.HumorUpdater;
+import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
 
 import java.io.File;
 
@@ -25,14 +28,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
-        String mDirPath = appStartDriver.getMainDirPath();
+        String dirPath = appStartDriver.getMainDirPath();
         String currenntHumorFilePath = appStartDriver.getHumorFilePath();
         String historicDir = appStartDriver.getHistoricDir();
         String archiveDir = appStartDriver.getArchiveDir();
-        new File(mDirPath + historicDir).mkdir();
+        new File(dirPath + historicDir).mkdir();
 
-        DeserializedHumorFileReader humorData = new DeserializedHumorFileReader(mDirPath);
-        humorData.objectDeserializer(currenntHumorFilePath);
+        DeserializedHumorFileReader humorData = new DeserializedHumorFileReader();
+        humorData.objectDeserializer(dirPath + currenntHumorFilePath);
 
         int mIndex = humorData.getIndex();
         String mCommentTxt = humorData.getCommentTxt();
@@ -41,7 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         SerialiazedHumorFileWriter mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
-                currentDayForHistoric,mDirPath + historicDir + String.valueOf(currentDayForHistoric));
+                currentDayForHistoric,dirPath + historicDir + String.valueOf(currentDayForHistoric));
 
         ++currentDayForHistoric;
 
@@ -50,9 +53,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         appStartDriver.setIndex(3);
         HumorUpdater.getInstance().updateTrigger();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(3, null,
-                currentDayForHistoric, mDirPath + currenntHumorFilePath);
+                currentDayForHistoric, dirPath + currenntHumorFilePath);
 
-        boolean f = new File(mDirPath + currenntHumorFilePath).exists();
+        boolean f = new File(dirPath + currenntHumorFilePath).exists();
         Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + currentDayForHistoric + " " + f);
     }
 }

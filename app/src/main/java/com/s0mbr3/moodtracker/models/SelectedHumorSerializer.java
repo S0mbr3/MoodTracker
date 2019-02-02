@@ -1,4 +1,6 @@
-package com.s0mbr3.moodtracker.core.models;
+package com.s0mbr3.moodtracker.models;
+
+import com.s0mbr3.moodtracker.controllers.MainActivity;
 
 import java.io.Serializable;
 
@@ -7,7 +9,7 @@ import java.io.Serializable;
  * method in the MainActivity the actual comment in the addComment method in the MainActivity
  * and the day that will be used to prepare the historic serialization
  *
- * @see com.s0mbr3.moodtracker.activities.MainActivity
+ * @see MainActivity
  */
 public class SelectedHumorSerializer implements Serializable {
     private int mIndex;

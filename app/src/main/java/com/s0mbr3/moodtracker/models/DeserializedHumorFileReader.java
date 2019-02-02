@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.core.models;
+package com.s0mbr3.moodtracker.models;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -18,18 +18,16 @@ public class DeserializedHumorFileReader {
     private int mIndex;
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
-    private String mDirPath;
 
-    public DeserializedHumorFileReader(String dirPath){
+    public DeserializedHumorFileReader(){
         mIndex = 3;
-        mDirPath = dirPath;
     }
     public void objectDeserializer(String filePath){
         try {
             mObjectInputStream = new ObjectInputStream(
                     new BufferedInputStream(
                             new FileInputStream(
-                                    new File(mDirPath, filePath))));
+                                    new File(filePath))));
 
             SelectedHumorSerializer deserializedHumor = (SelectedHumorSerializer) mObjectInputStream.readObject();
            mIndex = deserializedHumor.getIndex();

@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.activities;
+package com.s0mbr3.moodtracker.controllers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -15,18 +15,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.s0mbr3.moodtracker.R;
-import com.s0mbr3.moodtracker.core.controllers.AlarmReceiver;
-import com.s0mbr3.moodtracker.core.controllers.AppStartDriver;
-import com.s0mbr3.moodtracker.core.controllers.HumorUpdater;
-import com.s0mbr3.moodtracker.core.controllers.MainController;
-import com.s0mbr3.moodtracker.core.controllers.MyGestureListener;
-import com.s0mbr3.moodtracker.core.controllers.SerialiazedHumorFileWriter;
+import com.s0mbr3.moodtracker.models.AppStartDriver;
+import com.s0mbr3.moodtracker.models.HumorUpdater;
+import com.s0mbr3.moodtracker.views.MainActivityView;
+import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
 
 import java.util.Calendar;
 
@@ -56,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private SerialiazedHumorFileWriter mSerializedHumorFileWriter;
     public static final int  HISTORIC_ACTIVITY_REQUEST_CODE = 1337;
     public static final String PREF_KEY_COMMENT_TXT = "PREF_KEY_COMMENT_TXT";
-    public static final String BUNDLE_EXTRA_COMMENT_TXT = "BUNDLE_EXTRA_COMMENT_TXT";
-    public static final String BUNDLE_EXTRA_HUMORS_LIST_INDEX = "BUNDLE_HUMORS_LIST_INDEX";
 
     /**
      * onCreate events initialize members variables of the activities at it creation as their
@@ -88,23 +83,21 @@ public class MainActivity extends AppCompatActivity {
         mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
 
-
         //bug on the day 4 with the sad humor, it's recovered by the comment logo
         //to get next midnight use 24
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 24);
+        mCalendar.set(Calendar.HOUR_OF_DAY, 0);
         mCalendar.set(Calendar.MINUTE, 0);
         mCalendar.set(Calendar.SECOND,0);
         mCalendar.set(Calendar.MILLISECOND,0);
 
         //dev purpose i will remove the FLAG_UPDATE_CURRENT flag of the pending intent
-        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent,0);
-        mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), 3600*24*1000, mAlarmIntent);
-
+        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, 0);
+        //mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), 3600*24*1000, mAlarmIntent);
+        mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),AlarmManager.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
 
         mPreferences = getPreferences(MODE_PRIVATE);
-
 
         Log.d("index", String.valueOf(appStartDriver.getIndex()));
         mCommentBtn.setOnClickListener(new View.OnClickListener() {
@@ -114,8 +107,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         this.historic();
+        mLayout.post(new Runnable(){
+            public void run(){
 
-
+                int height = mLayout.getMeasuredHeight();
+                AppStartDriver.INSTANCE.setHeight(height);
+            }
+        });
     }
 
     /**
@@ -131,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        final MainController mainController = new MainController(mLayout, mSmiley);
+        final MainActivityView mainActivityView = new MainActivityView(mLayout, mSmiley);
         final MediaPlayer beep = MediaPlayer.create(this, R.raw.beep);
-        mainController.getMethodName(appStartDriver.getIndex());
+        mainActivityView.getMethodName(appStartDriver.getIndex());
         mCommentTxt = appStartDriver.getmCommentTxt();
-        MyGestureListener myGestureListener = new MyGestureListener(mainController);
+        MyGestureListener myGestureListener = new MyGestureListener(mainActivityView);
         myGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
             /**
              * getIndex is a custom listener to catch the index used to travel in the humorsList
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void updaterAfterAlarm() {
                 //Log.d("ala", "bigTest");
-                mainController.getMethodName(appStartDriver.getIndex());
+                mainActivityView.getMethodName(appStartDriver.getIndex());
             }
         });
         Log.d("alarmR", "Deretour");

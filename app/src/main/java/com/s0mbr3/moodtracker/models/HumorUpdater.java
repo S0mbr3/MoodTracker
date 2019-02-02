@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker.core.controllers;
+package com.s0mbr3.moodtracker.models;
 
 public class HumorUpdater {
     private UpdateAfterAlarm mUpdaterListener;
