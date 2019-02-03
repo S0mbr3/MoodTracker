@@ -1,8 +1,8 @@
 package com.s0mbr3.moodtracker.controllers;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
+import com.s0mbr3.moodtracker.models.MyAlarmManager;
 import com.s0mbr3.moodtracker.views.MainActivityView;
 import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
 
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private SerialiazedHumorFileWriter mSerializedHumorFileWriter;
     public static final int  HISTORIC_ACTIVITY_REQUEST_CODE = 1337;
     public static final String PREF_KEY_COMMENT_TXT = "PREF_KEY_COMMENT_TXT";
+    private NotificationManager mNotificationManager;
 
     /**
      * onCreate events initialize members variables of the activities at it creation as their
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mFilePath = appStartDriver.getHumorFilePath();
         mCommentTxt = appStartDriver.getmCommentTxt();
 
-        mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        /*mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
 
         //bug on the day 4 with the sad humor, it's recovered by the comment logo
@@ -95,7 +97,10 @@ public class MainActivity extends AppCompatActivity {
         //dev purpose i will remove the FLAG_UPDATE_CURRENT flag of the pending intent
         mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, 0);
         //mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), 3600*24*1000, mAlarmIntent);
-        mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),AlarmManager.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
+        mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
+        */
+        MyAlarmManager alarmManager = new MyAlarmManager();
+        alarmManager.setAlarm(MainActivity.this);
 
         mPreferences = getPreferences(MODE_PRIVATE);
 
@@ -114,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 AppStartDriver.INSTANCE.setHeight(height);
             }
         });
+
     }
 
     /**
@@ -161,7 +167,15 @@ public class MainActivity extends AppCompatActivity {
                 mainActivityView.getMethodName(appStartDriver.getIndex());
             }
         });
+        appStartDriver.setAlive();
         Log.d("alarmR", "Deretour");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        appStartDriver.unSetAlive();
+        Log.d("reset","ouloulou");
     }
 
     /**
@@ -213,5 +227,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

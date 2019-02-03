@@ -15,7 +15,7 @@ public class HumorUpdater {
     }
 
     public void updateTrigger(){
-        mUpdaterListener.updaterAfterAlarm();
+        if(mUpdaterListener !=null)mUpdaterListener.updaterAfterAlarm();
     }
 
     private static class HumorUpdaterHolder{

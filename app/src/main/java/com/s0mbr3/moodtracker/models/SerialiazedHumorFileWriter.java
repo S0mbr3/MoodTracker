@@ -1,6 +1,9 @@
 package com.s0mbr3.moodtracker.models;
 
 
+import android.app.NotificationManager;
+import android.support.v4.app.NotificationCompat;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,4 +51,5 @@ public class SerialiazedHumorFileWriter {
             }
         }
     }
+
 }

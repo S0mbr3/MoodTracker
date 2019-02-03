@@ -89,8 +89,15 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intent);
             }
         });
+
+        AppStartDriver.INSTANCE.setAlive();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AppStartDriver.INSTANCE.unSetAlive();
+    }
 
     public void historicLiner(Map<Integer, File> filesList, int index, int dIndex){
         String aDayFile = filesList.get(index).getName();
@@ -120,10 +127,5 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         int commentIndex = (int) v.getTag();
         Toast.makeText(this, mCommentHash.get(commentIndex), Toast.LENGTH_SHORT).show();
 
-    }
-
-    public View getContentView(Activity a) {
-        int id = a.getResources().getIdentifier("content", "id", "android");
-        return a.findViewById(id);
     }
 }

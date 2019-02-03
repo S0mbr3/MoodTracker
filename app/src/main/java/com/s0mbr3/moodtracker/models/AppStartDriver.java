@@ -1,6 +1,8 @@
 package com.s0mbr3.moodtracker.models;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.File;
@@ -11,6 +13,7 @@ import java.util.List;
 public enum AppStartDriver {
     INSTANCE;
 
+    private boolean mIsAlive = false;
     private int mHeight;
     private int mIndex;
     private String mCommentTxt;
@@ -19,6 +22,7 @@ public enum AppStartDriver {
     private static final String HISTORIC_DIR = "/historicdir/";
     private static final String ARCHIVE_DIR = "/archive";
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
+    public static final String NOTIFICATION_FILE = "/notificate.txt";
     private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
             "Hier",
             "Avant-Hier",
@@ -39,6 +43,15 @@ public enum AppStartDriver {
     }
 
 
+
+    public void unSetAlive(){
+        this.mIsAlive = false;
+    }
+    public void setAlive(){
+        this.mIsAlive = true;
+    }
+
+    public boolean isAlive(){return this.mIsAlive;}
 
     public int getIndex(){
         return this.mIndex;
