@@ -18,18 +18,12 @@ import java.io.ObjectOutputStream;
  * @see SelectedHumorSerializer
  */
 public class SerialiazedHumorFileWriter {
-    private ObjectOutputStream objectOutputStream;
-    private int mIndex;
-    private String mCommentTxt;
-    private int mCurrentDayForHistoric;
 
     public SerialiazedHumorFileWriter() {
     }
 
-    public void SerializedHumorFileWriting(int index, String commentTxt,int currentDayFprHistoric, String filePath) {
-        this.mIndex = index;
-        this.mCommentTxt = commentTxt;
-        this.mCurrentDayForHistoric = currentDayFprHistoric;
+    public <T> void SerializedHumorFileWriting(T serializer, String filePath) {
+        ObjectOutputStream objectOutputStream = null;
 
         try {
             objectOutputStream = new ObjectOutputStream(
@@ -37,8 +31,7 @@ public class SerialiazedHumorFileWriter {
                             new FileOutputStream(
                                     new File(filePath))));
 
-            objectOutputStream.writeObject(new SelectedHumorSerializer(this.mIndex,
-                    this.mCommentTxt, this.mCurrentDayForHistoric));
+            objectOutputStream.writeObject(serializer);
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         } catch(IOException e){

@@ -1,9 +1,6 @@
 package com.s0mbr3.moodtracker.models;
 
-import android.app.NotificationManager;
 import android.content.Context;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +17,7 @@ public enum AppStartDriver {
     private int mCurrentDayForHistoric;
     private String mDirPath;
     private static final String HISTORIC_DIR = "/historicdir/";
-    private static final String ARCHIVE_DIR = "/archive";
+    public static final String STATISTICS_DIR = "/statistics/";
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
     public static final String NOTIFICATION_FILE = "/notificate.txt";
     private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
@@ -76,8 +73,6 @@ public enum AppStartDriver {
     public String getMainDirPath(){
         return this.mDirPath;
     }
-
-    public String getArchiveDir() {return ARCHIVE_DIR;}
 
     public void setIndex(int index){
         this.mIndex = index;

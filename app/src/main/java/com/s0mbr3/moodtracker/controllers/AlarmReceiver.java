@@ -13,7 +13,10 @@ import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.DeserializedHumorFileReader;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
+import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
 import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
+import com.s0mbr3.moodtracker.models.StatisticsSerializer;
+import com.s0mbr3.moodtracker.models.StatisticsUnSerializer;
 
 import java.io.File;
 
@@ -26,6 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private NotificationManager mNotificationManager;
     private String mDirPath;
     private SerialiazedHumorFileWriter mSerializedHumorForHistoric;
+    private int mIndex;
 
     /**
      * onReceive event is triggered when the schedule task is fired, it read from a serialized
@@ -39,21 +43,23 @@ public class AlarmReceiver extends BroadcastReceiver {
         mDirPath = context.getFilesDir().getAbsolutePath();
         String currenntHumorFilePath = appStartDriver.getHumorFilePath();
         String historicDir = appStartDriver.getHistoricDir();
-        String archiveDir = appStartDriver.getArchiveDir();
         new File(mDirPath + historicDir).mkdir();
 
         DeserializedHumorFileReader humorData = new DeserializedHumorFileReader();
         humorData.objectDeserializer(mDirPath + currenntHumorFilePath);
 
-        int mIndex = humorData.getIndex();
+        mIndex = humorData.getIndex();
         String mCommentTxt = humorData.getCommentTxt();
         int currentDayForHistoric = humorData.getCurrentDayForHistoric();
 
 
 
         mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
-        mSerializedHumorForHistoric.SerializedHumorFileWriting(mIndex, mCommentTxt,
-                currentDayForHistoric,mDirPath + historicDir + String.valueOf(currentDayForHistoric));
+        mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
+                mIndex,
+                mCommentTxt,
+                currentDayForHistoric),
+                mDirPath + historicDir + String.valueOf(currentDayForHistoric));
 
         ++currentDayForHistoric;
 
@@ -61,8 +67,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         appStartDriver.setCommentTxt(null);
         appStartDriver.setIndex(3);
         HumorUpdater.getInstance().updateTrigger();
-        mSerializedHumorForHistoric.SerializedHumorFileWriting(3, null,
-                currentDayForHistoric, mDirPath + currenntHumorFilePath);
+        mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
+                mIndex,
+                mCommentTxt,
+                currentDayForHistoric),
+                mDirPath + currenntHumorFilePath );
+
+        statistics();
         if(!appStartDriver.isAlive()) {
             showNotification(context);
             Notification(context);
@@ -94,5 +105,16 @@ public class AlarmReceiver extends BroadcastReceiver {
             channel.setDescription("Alarm triggered");
             mNotificationManager.createNotificationChannel(channel);
         }
+    }
+
+    private void statistics(){
+        StatisticsUnSerializer humorDay = new StatisticsUnSerializer();
+        humorDay.objectUnserializer(mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
+        int dayHumor = humorDay.getDays();
+
+        mSerializedHumorForHistoric.SerializedHumorFileWriting(new StatisticsSerializer(
+                ++dayHumor),
+                mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
+
     }
 }

@@ -14,7 +14,6 @@ import java.io.ObjectInputStream;
  * @see SelectedHumorSerializer
  */
 public class DeserializedHumorFileReader {
-    private ObjectInputStream mObjectInputStream;
     private int mIndex;
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
@@ -23,13 +22,14 @@ public class DeserializedHumorFileReader {
         mIndex = 3;
     }
     public void objectDeserializer(String filePath){
+        ObjectInputStream objectInputStream = null;
         try {
-            mObjectInputStream = new ObjectInputStream(
+            objectInputStream = new ObjectInputStream(
                     new BufferedInputStream(
                             new FileInputStream(
                                     new File(filePath))));
 
-            SelectedHumorSerializer deserializedHumor = (SelectedHumorSerializer) mObjectInputStream.readObject();
+            SelectedHumorSerializer deserializedHumor = (SelectedHumorSerializer) objectInputStream.readObject();
            mIndex = deserializedHumor.getIndex();
            mCommentTxt = deserializedHumor.getCommentTxt();
            mCurrentDayForHistoric = deserializedHumor.getCurrentDayForHistoric();
@@ -40,9 +40,9 @@ public class DeserializedHumorFileReader {
         } catch (ClassNotFoundException e){
             e.printStackTrace();
         } finally {
-            if(mObjectInputStream != null){
+            if(objectInputStream != null){
                 try {
-                    mObjectInputStream.close();
+                    objectInputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

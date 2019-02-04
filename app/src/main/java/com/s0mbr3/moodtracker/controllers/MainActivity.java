@@ -23,6 +23,7 @@ import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
 import com.s0mbr3.moodtracker.models.MyAlarmManager;
+import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
 import com.s0mbr3.moodtracker.views.MainActivityView;
 import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
 
@@ -82,23 +83,6 @@ public class MainActivity extends AppCompatActivity {
         mFilePath = appStartDriver.getHumorFilePath();
         mCommentTxt = appStartDriver.getmCommentTxt();
 
-        /*mAlarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        mIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-
-        //bug on the day 4 with the sad humor, it's recovered by the comment logo
-        //to get next midnight use 24
-        mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
-        mCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        mCalendar.set(Calendar.MINUTE, 0);
-        mCalendar.set(Calendar.SECOND,0);
-        mCalendar.set(Calendar.MILLISECOND,0);
-
-        //dev purpose i will remove the FLAG_UPDATE_CURRENT flag of the pending intent
-        mAlarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0, mIntent, 0);
-        //mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), 3600*24*1000, mAlarmIntent);
-        mAlarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(),mAlarmMgr.INTERVAL_FIFTEEN_MINUTES, mAlarmIntent);
-        */
         MyAlarmManager alarmManager = new MyAlarmManager();
         alarmManager.setAlarm(MainActivity.this);
 
@@ -152,8 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 mIndex = index;
                 beep.start();
                 mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
-                mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex, mCommentTxt,
-                        mCurrentDayForHistoric, mDirPath + mFilePath);
+                mSerializedHumorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
+                        mIndex, mCommentTxt, mCurrentDayForHistoric),
+                        mDirPath + mFilePath);
             }
         });
         mDetector = new GestureDetectorCompat(this, myGestureListener);
@@ -199,8 +184,9 @@ public class MainActivity extends AppCompatActivity {
                         else mCommentTxt = commentInput.getText().toString();
                         //Log.d("addComment", mCommentTxt + " " + mIndex);
                         appStartDriver.setCommentTxt(mCommentTxt);
-                        mSerializedHumorFileWriter.SerializedHumorFileWriting(mIndex,
-                                mCommentTxt, mCurrentDayForHistoric, mDirPath + mFilePath);
+                        mSerializedHumorFileWriter.SerializedHumorFileWriting(
+                                new SelectedHumorSerializer(mIndex, mCommentTxt, mCurrentDayForHistoric),
+                                mDirPath + mFilePath);
                     }
                 })
                 .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
@@ -222,7 +208,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mPreferences.edit().putString(PREF_KEY_COMMENT_TXT, mCommentTxt).apply();
 
-                Intent historicActivityIntent = new Intent(MainActivity.this, HistoricActivity.class);
+                Intent historicActivityIntent = new Intent(
+                        MainActivity.this, HistoricActivity.class);
                 startActivityForResult(historicActivityIntent, HISTORIC_ACTIVITY_REQUEST_CODE);
             }
         });
