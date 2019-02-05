@@ -12,6 +12,7 @@ public enum AppStartDriver {
 
     private boolean mIsAlive = false;
     private int mHeight;
+    private int mWidth;
     private int mIndex;
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
@@ -92,6 +93,14 @@ public enum AppStartDriver {
 
     public int getHeight(){return this.mHeight;}
 
+    public void setWidth(int width){
+        this.mWidth = width;
+    }
+
+    public int getWidth(){
+        return this.mWidth;
+    }
+
     public String getHumor(int index){
         return HUMORS_LIST.get(index);
 
@@ -116,10 +125,10 @@ public enum AppStartDriver {
             this.mCommentTxt = null;
             this.mCurrentDayForHistoric = 1;
             SerialiazedHumorFileWriter humorFileWriter = new SerialiazedHumorFileWriter();
-            humorFileWriter.SerializedHumorFileWriting(
+            humorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
                     mIndex,
                     mCommentTxt,
-                    mCurrentDayForHistoric,
+                    mCurrentDayForHistoric),
                     mDirPath + USER_CHOSEN_HUMOR_FILE);
         }
     }

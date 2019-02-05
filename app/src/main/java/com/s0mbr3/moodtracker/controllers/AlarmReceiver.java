@@ -44,6 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String currenntHumorFilePath = appStartDriver.getHumorFilePath();
         String historicDir = appStartDriver.getHistoricDir();
         new File(mDirPath + historicDir).mkdir();
+        new File(mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR).mkdir();
 
         DeserializedHumorFileReader humorData = new DeserializedHumorFileReader();
         humorData.objectDeserializer(mDirPath + currenntHumorFilePath);
@@ -111,10 +112,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         StatisticsUnSerializer humorDay = new StatisticsUnSerializer();
         humorDay.objectUnserializer(mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
         int dayHumor = humorDay.getDays();
+        Log.d("humor", String.valueOf(dayHumor));
 
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new StatisticsSerializer(
                 ++dayHumor),
                 mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
+        Log.d("humor", String.valueOf(dayHumor));
 
     }
 }

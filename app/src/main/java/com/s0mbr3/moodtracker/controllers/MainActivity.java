@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.s0mbr3.moodtracker.R;
+import com.s0mbr3.moodtracker.StatisticsActivity;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
 import com.s0mbr3.moodtracker.models.MyAlarmManager;
@@ -51,11 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private String mFilePath;
     private SharedPreferences mPreferences;
     private AppStartDriver appStartDriver;
-    private Calendar mCalendar;
     private SerialiazedHumorFileWriter mSerializedHumorFileWriter;
     public static final int  HISTORIC_ACTIVITY_REQUEST_CODE = 1337;
     public static final String PREF_KEY_COMMENT_TXT = "PREF_KEY_COMMENT_TXT";
-    private NotificationManager mNotificationManager;
+    private Button mStatisticsButton;
 
     /**
      * onCreate events initialize members variables of the activities at it creation as their
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mStatisticsButton = findViewById(R.id.activity_main_statistics_btn);
         mSmiley = findViewById(R.id.activity_main_smiley_image);
         mLayout = findViewById(R.id.activity_main_layout);
         mCommentBtn = findViewById(R.id.activity_main_comment_btn);
@@ -96,11 +97,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         this.historic();
+        this.statistics();
         mLayout.post(new Runnable(){
             public void run(){
 
                 int height = mLayout.getMeasuredHeight();
-                AppStartDriver.INSTANCE.setHeight(height);
+                int width = mLayout.getMeasuredWidth();
+                appStartDriver.setHeight(height);
+                appStartDriver.setWidth(width);
             }
         });
 
@@ -213,6 +217,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(historicActivityIntent, HISTORIC_ACTIVITY_REQUEST_CODE);
             }
         });
+    }
+
+    private void statistics(){
+    	mStatisticsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent statisticsActivityIntent = new Intent(
+                        MainActivity.this, StatisticsActivity.class);
+               startActivity(statisticsActivityIntent);
+            }
+        });
+
     }
 
 

@@ -32,7 +32,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     private String mAdayMessage;
     private LinearLayout mLayout;
     private AppStartDriver configs;
-    private DisplayMetrics mDisplayMetrics;
     private Button mCommentButton;
     private int mHeight;
     private int mWidth;
@@ -44,11 +43,8 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_historic);
 
         mLayout = findViewById(R.id.activity_historic_layout);
-        mDisplayMetrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        //mHeight= mDisplayMetrics.heightPixels;
         mHeight = AppStartDriver.INSTANCE.getHeight();
-        mWidth = mDisplayMetrics.widthPixels;
+        mWidth = AppStartDriver.INSTANCE.getWidth();
         configs = AppStartDriver.INSTANCE;
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
