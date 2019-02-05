@@ -35,7 +35,7 @@ public class MainActivityView {
      * @param index
      */
     public void getMethodName(int index) {
-        Class c1;
+        Class<?> c1;
         try {
             c1 = Class.forName(MainActivityView.class.getName());
                 this.mMethod = c1.getMethod(AppStartDriver.INSTANCE.getHumor(index), (Class[]) null);

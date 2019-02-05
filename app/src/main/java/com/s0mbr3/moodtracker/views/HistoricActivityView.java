@@ -51,7 +51,7 @@ public class HistoricActivityView {
     }
     public void createHistoricTextView(int index){
         int width = 1;
-        Class reflectClass;
+        Class<?> reflectClass;
         try {
             reflectClass = Class.forName(HistoricActivityView.class.getName());
             Method method = reflectClass.getMethod(AppStartDriver.INSTANCE.getHumor(index), (Class[]) null);

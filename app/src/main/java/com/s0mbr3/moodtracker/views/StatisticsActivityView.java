@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.s0mbr3.moodtracker.R;
-import com.s0mbr3.moodtracker.StatisticsActivity;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +34,7 @@ public class StatisticsActivityView {
 
 	public void getMethodName(int index){
 		int height = 0;
-		Class c;
+		Class<?> c;
 		try {
 			c = Class.forName(StatisticsActivityView.class.getName());
 			Method method = c.getMethod(AppStartDriver.INSTANCE.getHumor(index), (Class[]) null);

@@ -153,7 +153,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void updaterAfterAlarm() {
                 //Log.d("ala", "bigTest");
-                mainActivityView.getMethodName(appStartDriver.getIndex());
+                //mainActivityView.getMethodName(appStartDriver.getIndex());
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
         });
         appStartDriver.setAlive();

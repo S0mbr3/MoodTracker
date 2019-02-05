@@ -69,8 +69,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         appStartDriver.setIndex(3);
         HumorUpdater.getInstance().updateTrigger();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                mIndex,
-                mCommentTxt,
+                3,
+                null,
                 currentDayForHistoric),
                 mDirPath + currenntHumorFilePath );
 
