@@ -50,7 +50,7 @@ public class StatisticsActivityView {
 		}
 
 		Log.d("hight", String.valueOf(height));
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mWidth/5, mHeight/4);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mWidth/5, mHeight/3);
 		this.mGraphLayout.setLayoutParams(lp);
 		mStatisticsLayout.addView(this.mGraphLayout);
 		this.mGraphLayout.addView(this.mGraphLine);
@@ -90,6 +90,6 @@ public class StatisticsActivityView {
 	private int graphLineHeight(){
 		int daysRatio = mHumorDays * 100 / mTotalUseDays;
 		Log.d("higgggggg", String.valueOf(daysRatio));
-	return daysRatio * (mHeight/2) / 100;
+	return daysRatio * (mHeight/3) / 100;
 	}
 }

@@ -3,7 +3,9 @@ package com.s0mbr3.moodtracker;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,6 +47,8 @@ public class StatisticsActivity extends AppCompatActivity {
 
 			TextView graphLine = new TextView(this);
 			graphLine.setId(View.generateViewId());
+			graphLine.setGravity(Gravity.CENTER | Gravity.BOTTOM);
+			graphLine.setText(String.valueOf(humorDay));
 			ConstraintLayout grapLayout = new ConstraintLayout(this);
 			grapLayout.setId(View.generateViewId());
 			StatisticsActivityView drawGraph = new StatisticsActivityView(mStatisticsLayout, graphLine,
@@ -55,7 +59,9 @@ public class StatisticsActivity extends AppCompatActivity {
 		++mIndex;
 
 		if(mIndex <= 4) graphDrawer();
+	}
 
+	public void scoreWriter(){
 
 	}
 }

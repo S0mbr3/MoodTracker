@@ -120,4 +120,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d("humor", String.valueOf(dayHumor));
 
     }
+
+    public void streak(){
+        if(mIndex >= 3){
+
+        }
+    }
 }
