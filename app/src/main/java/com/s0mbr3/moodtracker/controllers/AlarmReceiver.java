@@ -17,6 +17,8 @@ import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
 import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
 import com.s0mbr3.moodtracker.models.StatisticsSerializer;
 import com.s0mbr3.moodtracker.models.StatisticsUnSerializer;
+import com.s0mbr3.moodtracker.models.StreakSerializer;
+import com.s0mbr3.moodtracker.models.StreakUnserializer;
 
 import java.io.File;
 
@@ -57,9 +59,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                mIndex,
-                mCommentTxt,
-                currentDayForHistoric),
+                        mIndex,
+                        mCommentTxt,
+                        currentDayForHistoric),
                 mDirPath + historicDir + String.valueOf(currentDayForHistoric));
 
         ++currentDayForHistoric;
@@ -69,12 +71,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         appStartDriver.setIndex(3);
         HumorUpdater.getInstance().updateTrigger();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                3,
-                null,
-                currentDayForHistoric),
+                        3,
+                        null,
+                        currentDayForHistoric),
                 mDirPath + currenntHumorFilePath );
 
         statistics();
+        streak();
         if(!appStartDriver.isAlive()) {
             showNotification(context);
             Notification(context);
@@ -115,15 +118,37 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d("humor", String.valueOf(dayHumor));
 
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new StatisticsSerializer(
-                ++dayHumor),
+                        ++dayHumor),
                 mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
         Log.d("humor", String.valueOf(dayHumor));
 
     }
 
     public void streak(){
-        if(mIndex >= 3){
-
+        StreakUnserializer streakUnserializer = new StreakUnserializer();
+        streakUnserializer.objectUnserializer(mDirPath + AppStartDriver.INSTANCE.STREAK_FILE);
+        int totalStreak = streakUnserializer.getTotalStreak();
+        int currentStreak = streakUnserializer.getCurrentStreak();
+        int additionalScore = streakUnserializer.getAdditionalScore();
+        switch(mIndex) {
+            case 4:
+                additionalScore += 10;
+                ++currentStreak;
+                break;
+            case 3:
+                additionalScore += 5;
+                ++currentStreak;
+                break;
+            default:
+                currentStreak = 0;
         }
-    }
+
+        if(mIndex >= 3) ++currentStreak;
+        else currentStreak = 0;
+        if (currentStreak > totalStreak) totalStreak = currentStreak;
+
+        mSerializedHumorForHistoric.SerializedHumorFileWriting(new StreakSerializer(
+            totalStreak, currentStreak, additionalScore),
+    mDirPath + AppStartDriver.INSTANCE.STREAK_FILE);
+}
 }

@@ -21,6 +21,7 @@ public enum AppStartDriver {
     public static final String STATISTICS_DIR = "/statistics/";
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
     public static final String NOTIFICATION_FILE = "/notificate.txt";
+    public static final String STREAK_FILE = "/streak.txt";
     private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
             "Hier",
             "Avant-Hier",

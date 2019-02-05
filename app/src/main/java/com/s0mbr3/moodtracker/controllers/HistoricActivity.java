@@ -74,7 +74,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         } catch (Exception e){
             e.printStackTrace();
         }
-        HumorUpdater humorUpdater = HumorUpdater.getInstance();
+HumorUpdater humorUpdater = HumorUpdater.getInstance();
 
         humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
             @Override
