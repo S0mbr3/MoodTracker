@@ -160,14 +160,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         appStartDriver.setAlive();
-        Log.d("alarmR", "Deretour");
+        Log.d("isalive", "Deretour");
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         appStartDriver.unSetAlive();
-        Log.d("reset","ouloulou");
+        Log.d("isalive", "ouloulou");
     }
 
     /**

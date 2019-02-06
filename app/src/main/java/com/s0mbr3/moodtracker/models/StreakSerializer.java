@@ -24,5 +24,4 @@ public class StreakSerializer implements Serializable {
 	public int getAdditionalScore(){
 		return this.mAdditionalScore;
 	}
-
 }

@@ -79,6 +79,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         statistics();
         streak();
         if(!appStartDriver.isAlive()) {
+            Log.d("isalive", String.valueOf(appStartDriver.isAlive()));
             showNotification(context);
             Notification(context);
         }
@@ -140,15 +141,15 @@ public class AlarmReceiver extends BroadcastReceiver {
                 ++currentStreak;
                 break;
             default:
+            	additionalScore = 0;
                 currentStreak = 0;
         }
 
-        if(mIndex >= 3) ++currentStreak;
-        else currentStreak = 0;
         if (currentStreak > totalStreak) totalStreak = currentStreak;
 
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new StreakSerializer(
-            totalStreak, currentStreak, additionalScore),
-    mDirPath + AppStartDriver.INSTANCE.STREAK_FILE);
-}
+                        totalStreak, currentStreak, additionalScore),
+                mDirPath + AppStartDriver.INSTANCE.STREAK_FILE);
+    }
+
 }

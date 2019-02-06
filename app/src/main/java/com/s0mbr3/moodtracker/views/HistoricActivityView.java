@@ -86,8 +86,6 @@ public class HistoricActivityView {
         ConstraintSet set = new ConstraintSet();
         set.clone(this.mConstraintLayout);
         set.connect(this.mHistoricLine.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
-        //set.connect(this.mHistoricLine.getId(), ConstraintSet.BOTTOM, commentButton.getId(), ConstraintSet.TOP,dpToPx(5));
-        //set.connect(commentButton.getId(), ConstraintSet.TOP, this.mHistoricLine.getId(), ConstraintSet.BOTTOM, dpToPx(2));
         set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dpToPx(5));
         if(this.scale > 1.5) {
             set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);

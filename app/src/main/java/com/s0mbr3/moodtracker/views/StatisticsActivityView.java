@@ -20,9 +20,11 @@ public class StatisticsActivityView {
 	private int mWidth;
 	private int mTotalUseDays;
 	private int mHumorDays;
+	private TextView mGraphText;
 
 	public StatisticsActivityView(LinearLayout statisticsLayout, TextView graphLine, int height,
-								  int width, int totalUseDays, int humorDays, ConstraintLayout grapLayout){
+								  int width, int totalUseDays, int humorDays,
+								  ConstraintLayout grapLayout, TextView graphTExt){
 		this.mStatisticsLayout = statisticsLayout;
 		this.mGraphLine = graphLine;
 		this.mHeight = height;
@@ -30,6 +32,7 @@ public class StatisticsActivityView {
 		this.mTotalUseDays = totalUseDays;
 		this.mHumorDays = humorDays;
 		this.mGraphLayout = grapLayout;
+		this.mGraphText = graphTExt;
 	}
 
 	public void getMethodName(int index){
@@ -54,11 +57,20 @@ public class StatisticsActivityView {
 		this.mGraphLayout.setLayoutParams(lp);
 		mStatisticsLayout.addView(this.mGraphLayout);
 		this.mGraphLayout.addView(this.mGraphLine);
+		this.mGraphLayout.addView(this.mGraphText);
+
 		ConstraintSet set = new ConstraintSet();
 		set.clone(this.mGraphLayout);
 		set.constrainHeight(this.mGraphLine.getId(), height);
 		set.constrainWidth(this.mGraphLine.getId(), mWidth/5);
-		set.connect(this.mGraphLine.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+
+		set.constrainHeight(this.mGraphText.getId(), mHeight/3);
+		set.constrainWidth(this.mGraphText.getId(), mWidth/5);
+
+		set.connect(this.mGraphLine.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,
+				ConstraintSet.BOTTOM, 0);
+		set.connect(this.mGraphText.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,
+				ConstraintSet.BOTTOM, 0);
 		set.applyTo(this.mGraphLayout);
 	}
 

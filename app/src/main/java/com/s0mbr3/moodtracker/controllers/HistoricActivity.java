@@ -2,6 +2,7 @@ package com.s0mbr3.moodtracker.controllers;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,8 +44,14 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_historic);
 
         mLayout = findViewById(R.id.activity_historic_layout);
-        mHeight = AppStartDriver.INSTANCE.getHeight();
-        mWidth = AppStartDriver.INSTANCE.getWidth();
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mHeight = AppStartDriver.INSTANCE.getHeight();
+            mWidth = AppStartDriver.INSTANCE.getWidth();
+        } else {
+            mHeight = AppStartDriver.INSTANCE.getWidth();
+            mWidth = AppStartDriver.INSTANCE.getHeight();
+        }
         configs = AppStartDriver.INSTANCE;
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
@@ -74,7 +81,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         } catch (Exception e){
             e.printStackTrace();
         }
-HumorUpdater humorUpdater = HumorUpdater.getInstance();
+        HumorUpdater humorUpdater = HumorUpdater.getInstance();
 
         humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
             @Override
@@ -86,13 +93,13 @@ HumorUpdater humorUpdater = HumorUpdater.getInstance();
             }
         });
 
-        AppStartDriver.INSTANCE.setAlive();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        AppStartDriver.INSTANCE.unSetAlive();
+    protected void onResume() {
+        super.onResume();
+        AppStartDriver.INSTANCE.setAlive();
+        Log.d("isalive","historic");
     }
 
     public void historicLiner(Map<Integer, File> filesList, int index, int dIndex){
