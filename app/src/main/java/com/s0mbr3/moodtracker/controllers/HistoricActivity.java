@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -42,13 +43,14 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_historic);
 
         mLayout = findViewById(R.id.activity_historic_layout);
+        Map<String, Integer> sizeStorage = AppStartDriver.INSTANCE.getSize();
         int orientation = getResources().getConfiguration().orientation;
         if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mHeight = AppStartDriver.INSTANCE.getHeight();
-            mWidth = AppStartDriver.INSTANCE.getWidth();
+            mHeight = sizeStorage.get("portHeight");
+            mWidth = sizeStorage.get("portWidth");
         } else {
-            mHeight = AppStartDriver.INSTANCE.getWidth();
-            mWidth = AppStartDriver.INSTANCE.getHeight();
+            mHeight = sizeStorage.get("landHeight");
+            mWidth = sizeStorage.get("landWidth");
         }
         configs = AppStartDriver.INSTANCE;
         mMainDir = configs.getMainDirPath();
@@ -61,6 +63,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         Log.d("alarmister", String.valueOf(historicIndex));
         try {
             Map<Integer, File> commentHash = new HashMap<Integer, File>();
+            //Map<Integer, File> commentHash = (Map<Integer, File>) new SparseArray<File>();
 
             for(int index = currentHistoricDay-1 ; index > historicIndex; index--){
                 commentHash.put(index, new File(mMainDir + mHistoricDir + index));

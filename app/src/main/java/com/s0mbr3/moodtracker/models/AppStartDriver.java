@@ -2,17 +2,19 @@ package com.s0mbr3.moodtracker.models;
 
 import android.content.Context;
 
+import com.s0mbr3.moodtracker.R;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum AppStartDriver {
     INSTANCE;
 
     private boolean mIsAlive = false;
-    private int mHeight;
-    private int mWidth;
     private int mIndex;
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
@@ -22,6 +24,9 @@ public enum AppStartDriver {
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
     public static final String NOTIFICATION_FILE = "/notificate.txt";
     public static final String STREAK_FILE = "/streak.txt";
+    //private List<Integer> size = new ArrayList<Integer>();
+    private Map<String, Integer> mSize = new HashMap<>();
+    private Map<Integer, Integer> mSounds = new HashMap<Integer, Integer>();
     private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
             "Hier",
             "Avant-Hier",
@@ -39,10 +44,18 @@ public enum AppStartDriver {
 
 
     AppStartDriver(){
+        mSounds.put(0, R.raw.sad);
+        mSounds.put(1, R.raw.disappointed);
+        mSounds.put(2, R.raw.normal);
+        mSounds.put(3, R.raw.happy);
+        mSounds.put(4, R.raw.superhappy);
     }
 
 
 
+    public int getSound(int index){
+        return this.mSounds.get(index);
+    }
     public void unSetAlive(){
         this.mIsAlive = false;
     }
@@ -88,18 +101,23 @@ public enum AppStartDriver {
 
     }
 
-    public void setHeight(int height){
-        this.mHeight = height;
+    public void setDeviceSize(int width, int height){
+        this.mSize.put("deviceWidth", width);
+        this.mSize.put("deviceHeight", height);
     }
 
-    public int getHeight(){return this.mHeight;}
-
-    public void setWidth(int width){
-        this.mWidth = width;
+    public void setPortLayoutSize(int width, int height){
+        this.mSize.put("portWidth", width);
+        this.mSize.put("portHeight", height);
     }
 
-    public int getWidth(){
-        return this.mWidth;
+    public void setLandLayoutSize(int width, int height){
+        this.mSize.put("landWidth", width);
+        this.mSize.put("landHeight", height);
+    }
+
+    public Map<String, Integer> getSize(){
+        return this.mSize;
     }
 
     public String getHumor(int index){
@@ -127,9 +145,9 @@ public enum AppStartDriver {
             this.mCurrentDayForHistoric = 1;
             SerialiazedHumorFileWriter humorFileWriter = new SerialiazedHumorFileWriter();
             humorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                    mIndex,
-                    mCommentTxt,
-                    mCurrentDayForHistoric),
+                            mIndex,
+                            mCommentTxt,
+                            mCurrentDayForHistoric),
                     mDirPath + USER_CHOSEN_HUMOR_FILE);
         }
     }

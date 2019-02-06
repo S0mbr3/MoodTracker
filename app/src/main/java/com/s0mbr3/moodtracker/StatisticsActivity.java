@@ -3,6 +3,7 @@ package com.s0mbr3.moodtracker;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class StatisticsActivity extends AppCompatActivity {
 	private LinearLayout mStatisticsLayout;
@@ -42,6 +44,7 @@ public class StatisticsActivity extends AppCompatActivity {
 	private ConstraintLayout mMoodLayout;
 	private int mTotalScore;
 	private String mDirPath;
+	private static final float scale = Resources.getSystem().getDisplayMetrics().density;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +56,14 @@ public class StatisticsActivity extends AppCompatActivity {
 		mDirPath = this.getFilesDir().getName();
 		mIndex = 0;
 		mTotalUsageDays = AppStartDriver.INSTANCE.getCurrentDayForHistoric() - 1;
+		Map<String, Integer> sizeStorage = AppStartDriver.INSTANCE.getSize();
 		int orientation = getResources().getConfiguration().orientation;
 		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-			mHeight = AppStartDriver.INSTANCE.getHeight();
-			mWidth = AppStartDriver.INSTANCE.getWidth();
+			mHeight = sizeStorage.get("portHeight");
+			mWidth = sizeStorage.get("portWidth");
 		} else {
-			mHeight = AppStartDriver.INSTANCE.getWidth();
-			mWidth = AppStartDriver.INSTANCE.getHeight();
+			mHeight = sizeStorage.get("landHeight");
+			mWidth = sizeStorage.get("landWidth");
 		}
 		mLinearGraphLayout = new LinearLayout(this);
 		mLinearGraphLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -178,8 +182,8 @@ public class StatisticsActivity extends AppCompatActivity {
 		set.clone(mMoodLayout);
 		set.constrainWidth(smiley.getId(), mWidth/2);
 		set.constrainHeight(smiley.getId(), mHeight/2/3);
+		//set.centerHorizontally(smiley.getId(), ConstraintSet.PARENT_ID);
 		set.centerVertically(smiley.getId(), ConstraintSet.PARENT_ID);
-		set.centerHorizontally(smiley.getId(), ConstraintSet.PARENT_ID);
 		set.applyTo(mMoodLayout);
 		int index = 0;
 		if(mTotalScore < 200) index = 0;
@@ -203,9 +207,9 @@ public class StatisticsActivity extends AppCompatActivity {
 		set.clone(mMoodLayout);
 		set.constrainHeight(resetButton.getId(), ConstraintSet.WRAP_CONTENT);
 		set.constrainWidth(resetButton.getId(), ConstraintSet.WRAP_CONTENT);
-		set.connect(resetButton.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID,
-				ConstraintSet.BOTTOM, 3);
-		set.centerHorizontally(resetButton.getId(), ConstraintSet.PARENT_ID);
+		set.connect(resetButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID,
+				ConstraintSet.RIGHT, dpToPx(20));
+		set.centerVertically(resetButton.getId(), ConstraintSet.PARENT_ID);
 		set.applyTo(mMoodLayout);
 
 		resetButton.setText("RESET");
@@ -215,11 +219,8 @@ public class StatisticsActivity extends AppCompatActivity {
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final TextView resetView  = new TextView(StatisticsActivity.this);
-				resetView.setText("Êtes vous sûre ?");
 				new AlertDialog.Builder(StatisticsActivity.this)
 						.setTitle("Réinitialiser statistiques")
-						.setView(resetView)
 						.setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
@@ -260,6 +261,11 @@ public class StatisticsActivity extends AppCompatActivity {
 			} else file.delete();
 		}
 
+	}
+
+	private int dpToPx(int dp)
+	{
+		return (int) (dp * this.scale);
 	}
 }
 

@@ -1,5 +1,6 @@
 package com.s0mbr3.moodtracker.views;
 
+import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.util.Log;

@@ -1,20 +1,21 @@
 package com.s0mbr3.moodtracker.controllers;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,8 +28,6 @@ import com.s0mbr3.moodtracker.models.MyAlarmManager;
 import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
 import com.s0mbr3.moodtracker.views.MainActivityView;
 import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
-
-import java.util.Calendar;
 
 
 /**
@@ -44,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private GestureDetectorCompat mDetector;
     private String mCommentTxt;
     private int mIndex;
+    private MediaPlayer mSound;
+    private MediaPlayer mPreviousSound;
     private int mCurrentDayForHistoric;
     private String mDirPath;
     private String mFilePath;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         appStartDriver = AppStartDriver.INSTANCE;
         appStartDriver.configurator(MainActivity.this);
         mIndex = appStartDriver.getIndex();
+        mPreviousSound = MediaPlayer.create(this, appStartDriver.INSTANCE.getSound(mIndex));
         mDirPath = appStartDriver.getMainDirPath();
         mFilePath = appStartDriver.getHumorFilePath();
         mCommentTxt = appStartDriver.getmCommentTxt();
@@ -95,15 +97,7 @@ public class MainActivity extends AppCompatActivity {
         });
         this.historic();
         this.statistics();
-        mLayout.post(new Runnable(){
-            public void run(){
-
-                int height = mLayout.getMeasuredHeight();
-                int width = mLayout.getMeasuredWidth();
-                appStartDriver.setHeight(height);
-                appStartDriver.setWidth(width);
-            }
-        });
+        this.sizeManager();
 
     }
 
@@ -121,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         final MainActivityView mainActivityView = new MainActivityView(mLayout, mSmiley);
-        final MediaPlayer beep = MediaPlayer.create(this, R.raw.beep);
+        mainActivityView.constrainSet();
         mainActivityView.getMethodName(appStartDriver.getIndex());
         mCommentTxt = appStartDriver.getmCommentTxt();
         MyGestureListener myGestureListener = new MyGestureListener(mainActivityView);
@@ -133,12 +127,14 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void getIndex(int index) {
-                Log.d("getIndex", String.valueOf(index) +  " " + mCommentTxt + " " + mCurrentDayForHistoric);
                 mIndex = index;
-                beep.start();
+                mSound = MediaPlayer.create(MainActivity.this,
+                        appStartDriver.INSTANCE.getSound(mIndex));
+                indexTester();
+                mSound.start();
                 mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
                 mSerializedHumorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                        mIndex, mCommentTxt, mCurrentDayForHistoric),
+                                mIndex, mCommentTxt, mCurrentDayForHistoric),
                         mDirPath + mFilePath);
             }
         });
@@ -150,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
             @Override
             public void updaterAfterAlarm() {
-            	if(appStartDriver.isAlive()) {
+                if(appStartDriver.isAlive()) {
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
@@ -160,10 +156,22 @@ public class MainActivity extends AppCompatActivity {
         Log.d("isalive", "Deretour");
     }
 
+    public void indexTester(){
+    	if(mPreviousSound.isPlaying()){
+    	    mPreviousSound.stop();
+    	    mPreviousSound.reset();
+    	    mPreviousSound.release();
+        }
+    	mPreviousSound = mSound;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         appStartDriver.unSetAlive();
+        mSound.stop();
+        mSound.reset();
+        mSound.stop();
         Log.d("isalive", "ouloulou");
     }
 
@@ -220,15 +228,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void statistics(){
-    	mStatisticsButton.setOnClickListener(new View.OnClickListener() {
+        mStatisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent statisticsActivityIntent = new Intent(
                         MainActivity.this, StatisticsActivity.class);
-               startActivity(statisticsActivityIntent);
+                startActivity(statisticsActivityIntent);
             }
         });
 
+    }
+
+    public void sizeManager(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+        final int deviceWidth = displayMetrics.widthPixels;
+        final int deviceHeight = displayMetrics.heightPixels;
+        Log.d("deviceSize",deviceHeight + " " +  deviceWidth);
+        appStartDriver.setDeviceSize(deviceWidth, deviceHeight);
+        mLayout.post(new Runnable(){
+            public void run(){
+                int height = mLayout.getMeasuredHeight();
+                int width = mLayout.getMeasuredWidth();
+                Log.d("deviceLayoutSize",height + " " +  width);
+                int orientation = getResources().getConfiguration().orientation;
+                if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    appStartDriver.setPortLayoutSize(width, height);
+
+                    int widthDiff = deviceWidth - width;
+                    int heightDiff = deviceHeight - height;
+
+                    int landWidth = height + heightDiff - widthDiff;
+                    int landHeight = width - heightDiff + widthDiff;
+                    appStartDriver.setLandLayoutSize(landWidth, landHeight);
+                    Log.d("devicediff", heightDiff + " " + widthDiff);
+                } else {
+                    appStartDriver.setLandLayoutSize(width, height);
+
+                    int widthDiff = deviceWidth - width;
+                    int heightDiff = deviceHeight - height;
+
+                    int landWidth = height + heightDiff - widthDiff;
+                    int landHeight = width - heightDiff + widthDiff;
+                    appStartDriver.setPortLayoutSize(landWidth, landHeight);
+                }
+            }
+        });
     }
 
 

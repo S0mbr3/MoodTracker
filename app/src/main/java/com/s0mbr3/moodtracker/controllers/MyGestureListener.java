@@ -22,6 +22,7 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     public MyGestureListener(MainActivityView mainActivityView){
         this.mMainActivityView = mainActivityView;
         this.mChanged = false;
+
         this.mIndexListener = null;
     }
 
@@ -44,6 +45,7 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     @Override
     public boolean onDown(MotionEvent e) {
         Log.d(DEBUG_TAG, "onDown");
+        this.mChanged = false;
         return true;
     }
 
@@ -63,36 +65,23 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
      */
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+    	boolean isScrolling = false;
         int index = AppStartDriver.INSTANCE.getIndex();
-        if (distanceY < 0 && !this.mChanged &&  index >= 0){
+        if (distanceY < 0 && !this.mChanged &&  index > 0){
             this.mChanged = true;
-            if (index != 0) index--;
+            isScrolling = true;
+            --index;
             mMainActivityView.getMethodName(index);
-        } else if (distanceY > 0 && !this.mChanged && index <= 4){
-            if (index != 4) index++;
+        } else if (distanceY > 0 && !this.mChanged && index < 4){
+           ++index;
             mMainActivityView.getMethodName(index);
             this.mChanged = true;
+            isScrolling = true;
         }
-        if(mIndexListener != null) mIndexListener.getIndex(index);
-        Log.d(DEBUG_TAG, "onScroll " + distanceX + " " + distanceY + " " + index);
+        if(mIndexListener != null && isScrolling) mIndexListener.getIndex(index);
         AppStartDriver.INSTANCE.setIndex(index);
+        Log.d(DEBUG_TAG, "onScroll" + "\n1: " + e1 + "\n2: " + e2 + "\n3: " + distanceX + "\n4: " + distanceY + "\n5: " + this.mChanged);
         return true;
     }
 
-    /**
-     * onFling method is used to re arm the boolean and allow changing again the index inside
-     * humorList
-     * @param e1
-     * @param e2
-     * @param velocityX
-     * @param velocityY
-     * @return
-     */
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        this.mChanged = false;
-        Log.d(DEBUG_TAG, "onFling");
-
-        return true;
-    }
 }

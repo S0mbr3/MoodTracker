@@ -1,6 +1,5 @@
 package com.s0mbr3.moodtracker.views;
 
-import android.app.Activity;
 import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -30,7 +29,7 @@ public class HistoricActivityView {
     private int mWidth;
     private TextView mHistoricLine;
     private ConstraintLayout mConstraintLayout;
-    private float scale = Resources.getSystem().getDisplayMetrics().density;
+    private static final float scale = Resources.getSystem().getDisplayMetrics().density;
 
     public HistoricActivityView(TextView historicLine, LinearLayout layout, ConstraintLayout constraintLayout, int height, int width){
         this.mHistoricLayout = layout;
