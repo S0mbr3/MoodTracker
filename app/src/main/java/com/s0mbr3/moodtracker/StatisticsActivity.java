@@ -93,6 +93,13 @@ public class StatisticsActivity extends AppCompatActivity {
 		Log.d("isalive", String.valueOf(AppStartDriver.INSTANCE.isAlive()));
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		AppStartDriver.INSTANCE.unSetAlive();
+		Log.d("isalive", "ouloulou");
+	}
+
 	public void graphDrawer(){
 		if(new File(this.getFilesDir() + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex).exists()){
 			mHumorDayUnserializer.objectUnserializer(

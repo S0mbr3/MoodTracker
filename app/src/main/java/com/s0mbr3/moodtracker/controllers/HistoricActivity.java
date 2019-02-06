@@ -102,6 +102,13 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         Log.d("isalive","historic");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppStartDriver.INSTANCE.unSetAlive();
+        Log.d("isalive", "ouloulou");
+    }
+
     public void historicLiner(Map<Integer, File> filesList, int index, int dIndex){
         String aDayFile = filesList.get(index).getName();
 
