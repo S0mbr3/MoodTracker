@@ -1,12 +1,9 @@
 package com.s0mbr3.moodtracker.controllers;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -17,6 +14,7 @@ import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
 import com.s0mbr3.moodtracker.models.DeserializedHumorFileReader;
+import com.s0mbr3.moodtracker.models.SizeManager;
 import com.s0mbr3.moodtracker.views.HistoricActivityView;
 
 import java.io.File;
@@ -27,7 +25,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     private String mMainDir;
     private String mHistoricDir;
     private int mIndex;
-    private int mCurrentDayForHistoric;
     private String mCommentTxt;
     private String mAdayMessage;
     private LinearLayout mLayout;
@@ -43,15 +40,10 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_historic);
 
         mLayout = findViewById(R.id.activity_historic_layout);
-        Map<String, Integer> sizeStorage = AppStartDriver.INSTANCE.getSize();
-        int orientation = getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mHeight = sizeStorage.get("portHeight");
-            mWidth = sizeStorage.get("portWidth");
-        } else {
-            mHeight = sizeStorage.get("landHeight");
-            mWidth = sizeStorage.get("landWidth");
-        }
+        SizeManager sizeManager = new SizeManager();
+        Object[] obj = sizeManager.sizeManager(mHeight, mWidth);
+        mHeight = (int) obj[0];
+        mWidth = (int) obj[1];
         configs = AppStartDriver.INSTANCE;
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
@@ -60,34 +52,12 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         int currentHistoricDay = AppStartDriver.INSTANCE.getCurrentDayForHistoric();
         if (historicIndex >= 7) historicIndex-=7;
         else historicIndex-=historicIndex;
-        Log.d("alarmister", String.valueOf(historicIndex));
-        try {
-            Map<Integer, File> commentHash = new HashMap<Integer, File>();
-            //Map<Integer, File> commentHash = (Map<Integer, File>) new SparseArray<File>();
 
-            for(int index = currentHistoricDay-1 ; index > historicIndex; index--){
-                commentHash.put(index, new File(mMainDir + mHistoricDir + index));
-                Log.d("alarmisterr", String.valueOf(commentHash.get(index)));
-            }
-            for(int index = currentHistoricDay-commentHash.size()
-                , dIndex = commentHash.size() - 1; dIndex >= 0; index++, dIndex--) {
-                Log.d("alarmist", String.valueOf(index));
-                historicLiner(commentHash, index, dIndex);
-                if (mCommentTxt != null){
-                    mCommentButton.setTag(index);
-                    mCommentButton.setOnClickListener(this);
-                    mCommentHash.put(index, mCommentTxt);
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        this.historicBuilder(currentHistoricDay, historicIndex);
         HumorUpdater humorUpdater = HumorUpdater.getInstance();
-
         humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
             @Override
             public void updaterAfterAlarm() {
-                //Log.d("ala", "bigTest");
                 if(AppStartDriver.INSTANCE.isAlive()) {
                     Intent intent = getIntent();
                     finish();
@@ -98,20 +68,39 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         AppStartDriver.INSTANCE.setAlive();
-        Log.d("isalive","historic");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         AppStartDriver.INSTANCE.unSetAlive();
-        Log.d("isalive", "ouloulou");
     }
 
+    public void historicBuilder(int currentHistoricDay, int historicIndex){
+        try {
+            Map<Integer, File> commentHash = new HashMap<Integer, File>();
+
+            for(int index = currentHistoricDay-1 ; index > historicIndex; index--){
+                commentHash.put(index, new File(mMainDir + mHistoricDir + index));
+            }
+            for(int index = currentHistoricDay-commentHash.size()
+                , dIndex = commentHash.size() - 1; dIndex >= 0; index++, dIndex--) {
+                historicLiner(commentHash, index, dIndex);
+                if (mCommentTxt != null){
+                    mCommentButton.setTag(index);
+                    mCommentButton.setOnClickListener(this);
+                    mCommentHash.put(index, mCommentTxt);
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public void historicLiner(Map<Integer, File> filesList, int index, int dIndex){
         String aDayFile = filesList.get(index).getName();
 
@@ -119,7 +108,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         aDayHumor.objectDeserializer(mMainDir + mHistoricDir+ aDayFile);
         mIndex = aDayHumor.getIndex();
         mCommentTxt = aDayHumor.getCommentTxt();
-        mCurrentDayForHistoric = aDayHumor.getCurrentDayForHistoric();
         mAdayMessage = configs.getHistoricMessage(dIndex);
 
 
@@ -131,8 +119,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         HistoricActivityView historicActivityView = new HistoricActivityView(historicLine, mLayout, constraintLayout, mHeight, mWidth);
         if(mCommentTxt == null) historicActivityView.createHistoricLine(mIndex);
         else historicActivityView.createHistoricLine(mIndex, mCommentButton);
-        Log.d("ala", String.valueOf(mIndex) + " " + filesList.size() + " " + aDayFile + " " + mCurrentDayForHistoric
-                + " " + mCommentTxt);
     }
 
     @Override

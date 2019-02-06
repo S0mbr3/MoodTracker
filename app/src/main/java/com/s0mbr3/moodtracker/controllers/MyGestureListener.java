@@ -14,7 +14,6 @@ import com.s0mbr3.moodtracker.models.AppStartDriver;
  * Created by Oxhart on 21/01/2019.
  */
 public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-    private static final String DEBUG_TAG = "GESTURES";
     private MainActivityView mMainActivityView;
     private boolean mChanged;
     private IndexGetter mIndexListener;
@@ -44,7 +43,6 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 
     @Override
     public boolean onDown(MotionEvent e) {
-        Log.d(DEBUG_TAG, "onDown");
         this.mChanged = false;
         return true;
     }
@@ -56,12 +54,6 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
      * incrementation/decrementation, indexListener is triggered to send the index to the
      * MainActivity
      *
-     * @see MainActivityView
-     * @param e1
-     * @param e2
-     * @param distanceX
-     * @param distanceY
-     * @return
      */
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
@@ -80,7 +72,6 @@ public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         }
         if(mIndexListener != null && isScrolling) mIndexListener.getIndex(index);
         AppStartDriver.INSTANCE.setIndex(index);
-        Log.d(DEBUG_TAG, "onScroll" + "\n1: " + e1 + "\n2: " + e2 + "\n3: " + distanceX + "\n4: " + distanceY + "\n5: " + this.mChanged);
         return true;
     }
 

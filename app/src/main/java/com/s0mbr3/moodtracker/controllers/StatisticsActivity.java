@@ -1,4 +1,4 @@
-package com.s0mbr3.moodtracker;
+package com.s0mbr3.moodtracker.controllers;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,8 +19,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
+import com.s0mbr3.moodtracker.models.SizeManager;
 import com.s0mbr3.moodtracker.models.StatisticsUnSerializer;
 import com.s0mbr3.moodtracker.models.StreakUnserializer;
 import com.s0mbr3.moodtracker.views.MainActivityView;
@@ -56,21 +58,12 @@ public class StatisticsActivity extends AppCompatActivity {
 		mDirPath = this.getFilesDir().getName();
 		mIndex = 0;
 		mTotalUsageDays = AppStartDriver.INSTANCE.getCurrentDayForHistoric() - 1;
-		Map<String, Integer> sizeStorage = AppStartDriver.INSTANCE.getSize();
-		int orientation = getResources().getConfiguration().orientation;
-		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-			mHeight = sizeStorage.get("portHeight");
-			mWidth = sizeStorage.get("portWidth");
-		} else {
-			mHeight = sizeStorage.get("landHeight");
-			mWidth = sizeStorage.get("landWidth");
-		}
-		mLinearGraphLayout = new LinearLayout(this);
-		mLinearGraphLayout.setOrientation(LinearLayout.HORIZONTAL);
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		mLinearGraphLayout.setLayoutParams(lp);
-		mStatisticsLayout.addView(mLinearGraphLayout);
+		//SizeManager();
+		SizeManager sizeManager = new SizeManager();
+		Object[] obj = sizeManager.sizeManager(mHeight, mWidth);
+		mHeight = (int) obj[0];
+		mWidth = (int) obj[1];
+		setLinearGraphLayout();
 		graphDrawer();
 		scoreWriter();
 		moodDrawer();
@@ -81,7 +74,6 @@ public class StatisticsActivity extends AppCompatActivity {
 		humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
 			@Override
 			public void updaterAfterAlarm() {
-				//Log.d("ala", "bigTest");
 				if(AppStartDriver.INSTANCE.isAlive()) {
 					Intent intent = getIntent();
 					finish();
@@ -89,7 +81,6 @@ public class StatisticsActivity extends AppCompatActivity {
 				}
 			}
 		});
-
 	}
 
 	@Override
@@ -105,6 +96,16 @@ public class StatisticsActivity extends AppCompatActivity {
 		AppStartDriver.INSTANCE.unSetAlive();
 		Log.d("isalive", "ouloulou");
 	}
+
+	private void setLinearGraphLayout(){
+		mLinearGraphLayout = new LinearLayout(this);
+		mLinearGraphLayout.setOrientation(LinearLayout.HORIZONTAL);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		mLinearGraphLayout.setLayoutParams(lp);
+		mStatisticsLayout.addView(mLinearGraphLayout);
+	}
+
 
 	public void graphDrawer(){
 		if(new File(this.getFilesDir() + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex).exists()){

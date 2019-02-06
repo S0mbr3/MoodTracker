@@ -1,21 +1,15 @@
 package com.s0mbr3.moodtracker.controllers;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.DeserializedHumorFileReader;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
 import com.s0mbr3.moodtracker.models.Notifications;
 import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
-import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
+import com.s0mbr3.moodtracker.models.SerializedObjectFileWriter;
 import com.s0mbr3.moodtracker.models.StatisticsSerializer;
 import com.s0mbr3.moodtracker.models.StatisticsUnSerializer;
 import com.s0mbr3.moodtracker.models.StreakSerializer;
@@ -29,9 +23,8 @@ import java.io.File;
  * Created by Oxhart on 22/01/2019.
  */
 public class AlarmReceiver extends BroadcastReceiver {
-    private NotificationManager mNotificationManager;
     private String mDirPath;
-    private SerialiazedHumorFileWriter mSerializedHumorForHistoric;
+    private SerializedObjectFileWriter mSerializedHumorForHistoric;
     private int mIndex;
 
     /**
@@ -58,7 +51,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
 
-        mSerializedHumorForHistoric = new SerialiazedHumorFileWriter();
+        mSerializedHumorForHistoric = new SerializedObjectFileWriter();
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
                         mIndex,
                         mCommentTxt,
@@ -80,14 +73,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         statistics();
         streak();
         if(!appStartDriver.isAlive()) {
-            Log.d("isalive", String.valueOf(appStartDriver.isAlive()));
             Notifications notificate = new Notifications(context);
             notificate.showNotification();
             notificate.Notification();
         }
 
         boolean f = new File(mDirPath + currenntHumorFilePath).exists();
-        Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + currentDayForHistoric + " " + f);
     }
 
 
@@ -95,12 +86,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         StatisticsUnSerializer humorDay = new StatisticsUnSerializer();
         humorDay.objectUnserializer(mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
         int dayHumor = humorDay.getDays();
-        Log.d("humor", String.valueOf(dayHumor));
 
         mSerializedHumorForHistoric.SerializedHumorFileWriting(new StatisticsSerializer(
                         ++dayHumor),
                 mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
-        Log.d("humor", String.valueOf(dayHumor));
 
     }
 

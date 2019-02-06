@@ -17,9 +17,9 @@ import java.io.ObjectOutputStream;
  *
  * @see SelectedHumorSerializer
  */
-public class SerialiazedHumorFileWriter {
+public class SerializedObjectFileWriter {
 
-    public SerialiazedHumorFileWriter() {
+    public SerializedObjectFileWriter() {
     }
 
     public <T> void SerializedHumorFileWriting(T serializer, String filePath) {

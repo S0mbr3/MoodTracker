@@ -7,6 +7,6 @@
     android:orientation="vertical"
     android:background="#282828"
     android:id="@+id/statistics_activity_layout"
-    tools:context=".StatisticsActivity">
+    tools:context=".controllers.StatisticsActivity">
 
 </LinearLayout>

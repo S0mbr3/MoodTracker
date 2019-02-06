@@ -69,7 +69,7 @@ public enum AppStartDriver {
         return this.mIndex;
     }
 
-    public String getmCommentTxt(){
+    public String getCommentTxt(){
         return this.mCommentTxt;
     }
 
@@ -143,7 +143,7 @@ public enum AppStartDriver {
             this.mIndex = 3;
             this.mCommentTxt = null;
             this.mCurrentDayForHistoric = 1;
-            SerialiazedHumorFileWriter humorFileWriter = new SerialiazedHumorFileWriter();
+            SerializedObjectFileWriter humorFileWriter = new SerializedObjectFileWriter();
             humorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
                             mIndex,
                             mCommentTxt,
