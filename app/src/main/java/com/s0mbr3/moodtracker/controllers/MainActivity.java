@@ -169,9 +169,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         appStartDriver.unSetAlive();
-        mSound.stop();
-        mSound.reset();
-        mSound.stop();
+        if(mSound.isPlaying()) {
+            mSound.stop();
+            mSound.reset();
+            mSound.release();
+        }
         Log.d("isalive", "ouloulou");
     }
 
