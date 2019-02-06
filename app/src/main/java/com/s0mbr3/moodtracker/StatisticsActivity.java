@@ -78,9 +78,11 @@ public class StatisticsActivity extends AppCompatActivity {
 			@Override
 			public void updaterAfterAlarm() {
 				//Log.d("ala", "bigTest");
-				Intent intent = getIntent();
-				finish();
-				startActivity(intent);
+				if(AppStartDriver.INSTANCE.isAlive()) {
+					Intent intent = getIntent();
+					finish();
+					startActivity(intent);
+				}
 			}
 		});
 

@@ -1,12 +1,10 @@
 package com.s0mbr3.moodtracker.controllers;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -87,9 +85,11 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void updaterAfterAlarm() {
                 //Log.d("ala", "bigTest");
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+                if(AppStartDriver.INSTANCE.isAlive()) {
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
             }
         });
 

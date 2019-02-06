@@ -37,9 +37,6 @@ import java.util.Calendar;
  * and watch their weekly humor historic
  */
 public class MainActivity extends AppCompatActivity {
-    private AlarmManager mAlarmMgr;
-    private PendingIntent mAlarmIntent;
-    private Intent mIntent;
     private ImageView mSmiley;
     private Button mCommentBtn;
     private Button mHistoricBtn;
@@ -147,19 +144,19 @@ public class MainActivity extends AppCompatActivity {
         });
         mDetector = new GestureDetectorCompat(this, myGestureListener);
 
+        appStartDriver.setAlive();
         HumorUpdater humorUpdater = HumorUpdater.getInstance();
 
         humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
             @Override
             public void updaterAfterAlarm() {
-                //Log.d("ala", "bigTest");
-                //mainActivityView.getMethodName(appStartDriver.getIndex());
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+            	if(appStartDriver.isAlive()) {
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
             }
         });
-        appStartDriver.setAlive();
         Log.d("isalive", "Deretour");
     }
 
