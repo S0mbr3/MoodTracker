@@ -13,6 +13,7 @@ import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.DeserializedHumorFileReader;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
+import com.s0mbr3.moodtracker.models.Notifications;
 import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
 import com.s0mbr3.moodtracker.models.SerialiazedHumorFileWriter;
 import com.s0mbr3.moodtracker.models.StatisticsSerializer;
@@ -80,37 +81,15 @@ public class AlarmReceiver extends BroadcastReceiver {
         streak();
         if(!appStartDriver.isAlive()) {
             Log.d("isalive", String.valueOf(appStartDriver.isAlive()));
-            showNotification(context);
-            Notification(context);
+            Notifications notificate = new Notifications(context);
+            notificate.showNotification();
+            notificate.Notification();
         }
 
         boolean f = new File(mDirPath + currenntHumorFilePath).exists();
         Log.d("AlarmReceiver", mCommentTxt + " " + mIndex + " " + currentDayForHistoric + " " + f);
     }
 
-    private void Notification(Context context){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Une nouvelle journée commence")
-                .setContentText("N'oubliez pas de venir suivre votre humeur")
-                .setAutoCancel(true);
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(context, 1, intent, 0);
-        builder.setContentIntent(pi);
-        mNotificationManager.notify(1, builder.build());
-    }
-
-    private void showNotification(Context context) {
-        mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("default",
-                    "default",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("Alarm triggered");
-            mNotificationManager.createNotificationChannel(channel);
-        }
-    }
 
     private void statistics(){
         StatisticsUnSerializer humorDay = new StatisticsUnSerializer();
