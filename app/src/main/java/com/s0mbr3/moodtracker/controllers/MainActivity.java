@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         appStartDriver = AppStartDriver.INSTANCE;
         appStartDriver.configurator(MainActivity.this);
         mIndex = appStartDriver.getIndex();
-        mPreviousSound = MediaPlayer.create(this, appStartDriver.INSTANCE.getSound(mIndex));
         mDirPath = appStartDriver.getMainDirPath();
         mFilePath = appStartDriver.getHumorFilePath();
         mCommentTxt = appStartDriver.getCommentTxt();
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         final MainActivityView mainActivityView = new MainActivityView(mLayout, mSmiley);
         mainActivityView.constrainSet();
         mainActivityView.getMethodName(appStartDriver.getIndex());
+        mPreviousSound = MediaPlayer.create(this, appStartDriver.INSTANCE.getSound(mIndex));
         mCommentTxt = appStartDriver.getCommentTxt();
         MyGestureListener myGestureListener = new MyGestureListener(mainActivityView);
         myGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
@@ -148,23 +148,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void indexTester(){
-    	if(mPreviousSound.isPlaying()){
-    	    mPreviousSound.stop();
-    	    mPreviousSound.reset();
-    	    mPreviousSound.release();
+    	try {
+            if (mPreviousSound.isPlaying()) {
+                mPreviousSound.stop();
+                mPreviousSound.reset();
+                mPreviousSound.release();
+            }
+            mPreviousSound = mSound;
+        } catch (IllegalStateException e){
+    	    e.printStackTrace();
         }
-    	mPreviousSound = mSound;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         appStartDriver.unSetAlive();
-        /*if(mSound.isPlaying()) {
-            mSound.stop();
-            mSound.reset();
-            mSound.release();
-        }*/
+        try {
+            if (mSound != null) {
+                if (mSound.isPlaying())
+                    mSound.stop();
+                mSound.reset();
+                mSound.release();
+                mSound = null;
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     /**

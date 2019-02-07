@@ -24,7 +24,6 @@ public enum AppStartDriver {
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
     public static final String NOTIFICATION_FILE = "/notificate.txt";
     public static final String STREAK_FILE = "/streak.txt";
-    //private List<Integer> size = new ArrayList<Integer>();
     private Map<String, Integer> mSize = new HashMap<>();
     private Map<Integer, Integer> mSounds = new HashMap<Integer, Integer>();
     private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
@@ -135,10 +134,7 @@ public enum AppStartDriver {
             humorData.objectDeserializer(mDirPath + USER_CHOSEN_HUMOR_FILE);
             this.mIndex = humorData.getIndex();
             this.mCommentTxt = humorData.getCommentTxt();
-            //if(mCurrentDayForHistoric >= 8) mCurrentDayForHistoric = 1;
             this.mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
-            //Log.d("add", String.valueOf(mIndex + " " + mCurrentDayForHistoric));
-            //new File(mDirPath + HISTORIC_DIR + "8").delete();
         } else {
             this.mIndex = 3;
             this.mCommentTxt = null;
