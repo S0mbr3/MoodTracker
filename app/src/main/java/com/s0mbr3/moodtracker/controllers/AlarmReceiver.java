@@ -35,50 +35,49 @@ public class AlarmReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
-        mDirPath = context.getFilesDir().getAbsolutePath();
-        String currenntHumorFilePath = appStartDriver.getHumorFilePath();
-        String historicDir = appStartDriver.getHistoricDir();
-        new File(mDirPath + historicDir).mkdir();
-        new File(mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR).mkdir();
+            AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
+            mDirPath = context.getFilesDir().getAbsolutePath();
+            String currenntHumorFilePath = appStartDriver.getHumorFilePath();
+            String historicDir = appStartDriver.getHistoricDir();
+            new File(mDirPath + historicDir).mkdir();
+            new File(mDirPath + AppStartDriver.INSTANCE.STATISTICS_DIR).mkdir();
 
-        DeserializedHumorFileReader humorData = new DeserializedHumorFileReader();
-        humorData.objectDeserializer(mDirPath + currenntHumorFilePath);
+            DeserializedHumorFileReader humorData = new DeserializedHumorFileReader();
+            humorData.objectDeserializer(mDirPath + currenntHumorFilePath);
 
-        mIndex = humorData.getIndex();
-        String mCommentTxt = humorData.getCommentTxt();
-        int currentDayForHistoric = humorData.getCurrentDayForHistoric();
+            mIndex = humorData.getIndex();
+            String mCommentTxt = humorData.getCommentTxt();
+            int currentDayForHistoric = humorData.getCurrentDayForHistoric();
 
 
+            mSerializedHumorForHistoric = new SerializedObjectFileWriter();
+            mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
+                            mIndex,
+                            mCommentTxt,
+                            currentDayForHistoric),
+                    mDirPath + historicDir + String.valueOf(currentDayForHistoric));
 
-        mSerializedHumorForHistoric = new SerializedObjectFileWriter();
-        mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                        mIndex,
-                        mCommentTxt,
-                        currentDayForHistoric),
-                mDirPath + historicDir + String.valueOf(currentDayForHistoric));
+            ++currentDayForHistoric;
 
-        ++currentDayForHistoric;
+            appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
+            appStartDriver.setCommentTxt(null);
+            appStartDriver.setIndex(3);
+            HumorUpdater.getInstance().updateTrigger();
+            mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
+                            3,
+                            null,
+                            currentDayForHistoric),
+                    mDirPath + currenntHumorFilePath);
 
-        appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
-        appStartDriver.setCommentTxt(null);
-        appStartDriver.setIndex(3);
-        HumorUpdater.getInstance().updateTrigger();
-        mSerializedHumorForHistoric.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                        3,
-                        null,
-                        currentDayForHistoric),
-                mDirPath + currenntHumorFilePath );
+            statistics();
+            streak();
+            if (!appStartDriver.isAlive()) {
+                Notifications notificate = new Notifications(context);
+                notificate.showNotification();
+                notificate.Notification();
+            }
 
-        statistics();
-        streak();
-        if(!appStartDriver.isAlive()) {
-            Notifications notificate = new Notifications(context);
-            notificate.showNotification();
-            notificate.Notification();
-        }
-
-        boolean f = new File(mDirPath + currenntHumorFilePath).exists();
+            boolean f = new File(mDirPath + currenntHumorFilePath).exists();
     }
 
 

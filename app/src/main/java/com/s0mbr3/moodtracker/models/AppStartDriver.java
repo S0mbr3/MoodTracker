@@ -1,5 +1,6 @@
 package com.s0mbr3.moodtracker.models;
 
+import android.app.PendingIntent;
 import android.content.Context;
 
 import com.s0mbr3.moodtracker.R;
@@ -14,6 +15,7 @@ import java.util.Map;
 public enum AppStartDriver {
     INSTANCE;
 
+    private PendingIntent mIntent;
     private boolean mIsAlive = false;
     private int mIndex;
     private String mCommentTxt;
@@ -122,6 +124,12 @@ public enum AppStartDriver {
     public String getHumor(int index){
         return HUMORS_LIST.get(index);
 
+    }
+    public boolean pendingTester(PendingIntent intent){
+        boolean test = false;
+        if (mIntent != null)  test = mIntent.equals(intent);
+        mIntent = intent;
+        return test;
     }
     public String getHistoricMessage(int index){
         return HISTORIC_MESSAGES_LIST.get(index);

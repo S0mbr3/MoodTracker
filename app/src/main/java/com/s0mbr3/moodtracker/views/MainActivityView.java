@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.controllers.MyGestureListener;
+import com.s0mbr3.moodtracker.models.SizeManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,10 +59,15 @@ public class MainActivityView {
     }
 
     public void constrainSet(){
+        SizeManager getSize = new SizeManager();
+        Object[] sizes = getSize.sizeManager();
+        int height = (int) sizes[0];
+        int width = (int) sizes[1];
+        double ratio = 1.6 + (double) sizes[2];
         ConstraintSet set = new ConstraintSet();
         set.clone(mLayout);
-        set.constrainWidth(this.mSmiley.getId(),dpToPx(200));
-        set.constrainHeight(this.mSmiley.getId(),dpToPx(200));
+        set.constrainWidth(this.mSmiley.getId(), (int) (width/ratio));
+        set.constrainHeight(this.mSmiley.getId(), (int) (height/ratio));
         set.centerVertically(this.mSmiley.getId(), ConstraintSet.PARENT_ID);
         set.centerHorizontally(this.mSmiley.getId(), ConstraintSet.PARENT_ID);
         set.applyTo(mLayout);

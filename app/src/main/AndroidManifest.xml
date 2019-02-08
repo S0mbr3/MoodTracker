@@ -25,8 +25,9 @@
             android:name=".controllers.AlarmReceiver"
             android:enabled="true"
             android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <intent-filter >
+                <action android:name="com.s0mbr3.moodtracker.MoodTrackerAlarm42"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
         <receiver

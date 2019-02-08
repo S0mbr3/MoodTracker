@@ -60,7 +60,7 @@ public class StatisticsActivity extends AppCompatActivity {
 		mTotalUsageDays = AppStartDriver.INSTANCE.getCurrentDayForHistoric() - 1;
 		//SizeManager();
 		SizeManager sizeManager = new SizeManager();
-		Object[] obj = sizeManager.sizeManager(mHeight, mWidth);
+		Object[] obj = sizeManager.sizeManager();
 		mHeight = (int) obj[0];
 		mWidth = (int) obj[1];
 		setLinearGraphLayout();

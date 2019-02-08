@@ -41,7 +41,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
 
         mLayout = findViewById(R.id.activity_historic_layout);
         SizeManager sizeManager = new SizeManager();
-        Object[] obj = sizeManager.sizeManager(mHeight, mWidth);
+        Object[] obj = sizeManager.sizeManager();
         mHeight = (int) obj[0];
         mWidth = (int) obj[1];
         configs = AppStartDriver.INSTANCE;

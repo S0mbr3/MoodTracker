@@ -1,18 +1,23 @@
 package com.s0mbr3.moodtracker.controllers;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
+import android.provider.Settings;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mCommentTxt = appStartDriver.getCommentTxt();
 
         MyAlarmManager alarmManager = new MyAlarmManager();
-        alarmManager.setAlarm(MainActivity.this);
+        alarmManager.setAlarm(this);
 
 
         mCommentBtn.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
         });
         this.historic();
         this.statistics();
-        this.sizeManager();
+        //this.sizeManager();
+        this.getSize();
+
 
     }
 
@@ -102,12 +109,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private boolean checkIfPendingIntentIsRegistered() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        // Build the exact same pending intent you want to check.
+        // Everything has to match except extras.
+        return (PendingIntent.getBroadcast(this.getApplicationContext(), 42, intent, PendingIntent.FLAG_NO_CREATE) != null);
+    }
     @Override
     protected void onResume() {
         super.onResume();
         final MainActivityView mainActivityView = new MainActivityView(mLayout, mSmiley);
-        mainActivityView.constrainSet();
-        mainActivityView.getMethodName(appStartDriver.getIndex());
+        mLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mainActivityView.constrainSet();
+                mainActivityView.getMethodName(appStartDriver.getIndex());
+            }
+        });
         mPreviousSound = MediaPlayer.create(this, appStartDriver.INSTANCE.getSound(mIndex));
         mCommentTxt = appStartDriver.getCommentTxt();
         MyGestureListener myGestureListener = new MyGestureListener(mainActivityView);
@@ -273,5 +291,44 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void getSize(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+        final int deviceWidth = displayMetrics.widthPixels;
+        final int deviceHeight = displayMetrics.heightPixels;
+        mLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        int height = mLayout.getMeasuredHeight();
+                        int width = mLayout.getMeasuredWidth();
+                        int orientation = getResources().getConfiguration().orientation;
+                        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            appStartDriver.setPortLayoutSize(width, height);
+
+                            int widthDiff = deviceWidth - width;
+                            int heightDiff = deviceHeight - height;
+
+                            int landWidth = height + heightDiff - widthDiff;
+                            int landHeight = width - heightDiff + widthDiff;
+                            appStartDriver.setLandLayoutSize(landWidth, landHeight);
+                        } else {
+                            appStartDriver.setLandLayoutSize(width, height);
+
+                            int widthDiff = deviceWidth - width;
+                            int heightDiff = deviceHeight - height;
+
+                            int landWidth = height + heightDiff - widthDiff;
+                            int landHeight = width - heightDiff + widthDiff;
+                            appStartDriver.setPortLayoutSize(landWidth, landHeight);
+                        }
+                        mLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        //mLayout.setVisibility(View.GONE);
+
+                    }
+                }
+        );
+    }
 
 }

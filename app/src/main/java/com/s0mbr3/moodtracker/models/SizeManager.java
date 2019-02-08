@@ -9,7 +9,9 @@ public class SizeManager {
 
 	public SizeManager(){}
 
-	public Object[] sizeManager(int height, int width){
+	public Object[] sizeManager(){
+		int height, width;
+		double ratio =0;
 		Map<String, Integer> sizeStorage = AppStartDriver.INSTANCE.getSize();
 		int orientation = Resources.getSystem().getConfiguration().orientation;
 		if(orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -18,7 +20,8 @@ public class SizeManager {
 		} else {
 			height = sizeStorage.get("landHeight");
 			width = sizeStorage.get("landWidth");
+			ratio = 0.3;
 		}
-		return new Object[] {height, width};
+		return new Object[] {height, width, ratio};
 	}
 }
