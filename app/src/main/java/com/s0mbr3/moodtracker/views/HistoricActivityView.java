@@ -3,6 +3,8 @@ package com.s0mbr3.moodtracker.views;
 import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -37,7 +39,7 @@ public class HistoricActivityView {
         this.mWidth = width;
         this.mHistoricLine = historicLine;
         this.mConstraintLayout = constraintLayout;
-        if(scale < 1.5) this.mHistoricLine.setTextSize(14);
+        //if(scale < 1.5) this.mHistoricLine.setTextSize(14);
     }
 
     public void createHistoricLine(int index){

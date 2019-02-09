@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="historic_text_size">18sp</dimen>
+    <dimen name="statistics_reset_button">18sp</dimen>
+</resources>

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -116,6 +118,9 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         mCommentButton = new Button(this);
         historicLine.setId(View.generateViewId());
         historicLine.setText(mAdayMessage);
+        Float size = getResources().getDimension(R.dimen.historic_text_size);
+        historicLine.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        Log.d("popo", String.valueOf(size));
         HistoricActivityView historicActivityView = new HistoricActivityView(historicLine, mLayout, constraintLayout, mHeight, mWidth);
         if(mCommentTxt == null) historicActivityView.createHistoricLine(mIndex);
         else historicActivityView.createHistoricLine(mIndex, mCommentButton);

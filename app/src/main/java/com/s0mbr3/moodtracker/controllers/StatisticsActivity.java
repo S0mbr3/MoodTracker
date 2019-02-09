@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,6 +204,11 @@ public class StatisticsActivity extends AppCompatActivity {
 	public void resetButton(){
 		Button resetButton = new Button(this);
 		resetButton.setId(View.generateViewId());
+		resetButton.setText("RESET");
+		Float size = getResources().getDimension(R.dimen.statistics_reset_button);
+		resetButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+		resetButton.setTextColor(Color.parseColor("#FFFFFF"));
+		resetButton.setBackgroundColor(Color.parseColor("#282828"));
 		mMoodLayout.addView(resetButton);
 		ConstraintSet set = new ConstraintSet();
 		set.clone(mMoodLayout);
@@ -213,9 +219,6 @@ public class StatisticsActivity extends AppCompatActivity {
 		set.centerVertically(resetButton.getId(), ConstraintSet.PARENT_ID);
 		set.applyTo(mMoodLayout);
 
-		resetButton.setText("RESET");
-		resetButton.setTextColor(Color.parseColor("#FFFFFF"));
-		resetButton.setBackgroundColor(Color.parseColor("#282828"));
 
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			@Override
