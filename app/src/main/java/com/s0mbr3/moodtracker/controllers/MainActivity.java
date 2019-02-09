@@ -1,20 +1,17 @@
 package com.s0mbr3.moodtracker.controllers;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
-import android.provider.Settings;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -30,6 +27,7 @@ import com.s0mbr3.moodtracker.models.MyAlarmManager;
 import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
 import com.s0mbr3.moodtracker.views.MainActivityView;
 import com.s0mbr3.moodtracker.models.SerializedObjectFileWriter;
+
 
 
 /**
