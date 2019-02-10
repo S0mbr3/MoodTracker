@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -85,7 +86,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
 
     public void historicBuilder(int currentHistoricDay, int historicIndex){
         try {
-            Map<Integer, File> commentHash = new HashMap<Integer, File>();
+			SparseArray commentHash = new SparseArray<File>();
 
             for(int index = currentHistoricDay-1 ; index > historicIndex; index--){
                 commentHash.put(index, new File(mMainDir + mHistoricDir + index));
@@ -103,7 +104,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
     }
-    public void historicLiner(Map<Integer, File> filesList, int index, int dIndex){
+    public void historicLiner(SparseArray<File> filesList, int index, int dIndex){
         String aDayFile = filesList.get(index).getName();
 
         DeserializedHumorFileReader aDayHumor = new DeserializedHumorFileReader();

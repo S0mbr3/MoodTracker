@@ -2,6 +2,8 @@ package com.s0mbr3.moodtracker.models;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.util.ArrayMap;
+import android.util.SparseArray;
 
 import com.s0mbr3.moodtracker.R;
 
@@ -26,8 +28,8 @@ public enum AppStartDriver {
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
     public static final String NOTIFICATION_FILE = "/notificate.txt";
     public static final String STREAK_FILE = "/streak.txt";
-    private Map<String, Integer> mSize = new HashMap<>();
-    private Map<Integer, Integer> mSounds = new HashMap<Integer, Integer>();
+    private ArrayMap<String, Integer> mSize = new ArrayMap<String, Integer>();
+    private SparseArray<Integer> mSounds = new SparseArray<Integer>();
     private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
             "Hier",
             "Avant-Hier",
