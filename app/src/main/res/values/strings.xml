@@ -1,4 +1,22 @@
 <resources>
-    <string name="app_name">MoodTracker</string>
-    <string name="main_smiley">ImageView containing the selected historicActivityView</string>
+    <string name="app_name" translatable="false">MoodTracker</string>
+    <string name="main_smiley" translatable="false">ImageView containing the selected historicActivityView</string>
+    <string name="historicDayKey" translatable="false">historicDay</string>
+    <string name="indexKey" translatable="false">index</string>
+    <string name="commentKey" translatable="false">commentTxt</string>
+    <string name="commentTxt" translatable="false"></string>
+    <string name="selectedHumor" translatable="false">selectedHumor</string>
+    <string name="totalStreakKey" translatable="false">totalStreak</string>
+    <string name="currentStreakKey" translatable="false">currentStreak</string>
+    <string name="additonalScoreKey" translatable="false">additionalScore</string>
+    <string name="daysPerHumorKey" translatable="false">daysPerHumor</string>
+
+    <string name="VALIDATE">VALIDER</string>
+    <string name="CANCEL">ANNULER</string>
+    <string name="commentary">Commentaire</string>
+    <string name="commentaryHint">Commentez votre humeur !</string>
+
+    <string name="statisticButton">C\'est votre premier jour accordez vous un peu temps avant de
+    regarder vos statistiques</string>
+
 </resources>

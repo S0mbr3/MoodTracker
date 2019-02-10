@@ -1,5 +1,6 @@
 package com.s0mbr3.moodtracker.models;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.util.ArrayMap;
@@ -28,8 +29,10 @@ public enum AppStartDriver {
     private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
     public static final String NOTIFICATION_FILE = "/notificate.txt";
     public static final String STREAK_FILE = "/streak.txt";
-    private ArrayMap<String, Integer> mSize = new ArrayMap<String, Integer>();
-    private SparseArray<Integer> mSounds = new SparseArray<Integer>();
+    private ArrayMap<String, Integer> mSize = new ArrayMap<>();
+    @SuppressLint("UseSparseArrays")
+    private SparseArray<Integer> mSounds = new SparseArray<>();
+    private boolean mSet;
     private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
             "Hier",
             "Avant-Hier",
@@ -52,6 +55,7 @@ public enum AppStartDriver {
         mSounds.put(2, R.raw.normal);
         mSounds.put(3, R.raw.happy);
         mSounds.put(4, R.raw.superhappy);
+        this.mSet = false;
     }
 
 
@@ -137,6 +141,19 @@ public enum AppStartDriver {
         return HISTORIC_MESSAGES_LIST.get(index);
     }
 
+    public void init(String filepath, int index, int historicDay, String commentTxt){
+        this.mDirPath = filepath;
+        this.mIndex = index;
+        this.mCurrentDayForHistoric = historicDay;
+        this.mCommentTxt = commentTxt;
+    }
+    public boolean isSet(){
+        return this.mSet;
+    }
+
+    public void set(){
+        this.mSet = true;
+    }
     public void configurator(Context context){
         this.mDirPath = context.getFilesDir().getAbsolutePath();
         if(new File(this.mDirPath, USER_CHOSEN_HUMOR_FILE).exists()) {

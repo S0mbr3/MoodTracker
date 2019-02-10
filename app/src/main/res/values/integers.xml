@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="historicDay">1</integer>
+    <integer name="index">3</integer>
+    <integer name="totalStreak">0</integer>
+    <integer name="currentStreak">0</integer>
+    <integer name="additionalScore">0</integer>
+    <integer name="daysPerHumor">0</integer>
+</resources>

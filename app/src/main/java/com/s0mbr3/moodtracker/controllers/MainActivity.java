@@ -4,8 +4,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,12 +21,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
 import com.s0mbr3.moodtracker.models.MyAlarmManager;
 import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
+import com.s0mbr3.moodtracker.models.SharedPreferencesManager;
 import com.s0mbr3.moodtracker.views.MainActivityView;
 import com.s0mbr3.moodtracker.models.SerializedObjectFileWriter;
 
@@ -36,297 +40,326 @@ import com.s0mbr3.moodtracker.models.SerializedObjectFileWriter;
  * and watch their weekly humor historic
  */
 public class MainActivity extends AppCompatActivity {
-    private ImageView mSmiley;
-    private Button mCommentBtn;
-    private Button mHistoricBtn;
-    private ConstraintLayout mLayout;
-    private GestureDetectorCompat mDetector;
-    private String mCommentTxt;
-    private int mIndex;
-    private MediaPlayer mSound;
-    private MediaPlayer mPreviousSound;
-    private int mCurrentDayForHistoric;
-    private String mDirPath;
-    private String mFilePath;
-    private AppStartDriver appStartDriver;
-    private SerializedObjectFileWriter mSerializedHumorFileWriter;
-    private Button mStatisticsButton;
+	private ImageView mSmiley;
+	private Button mCommentBtn;
+	private Button mHistoricBtn;
+	private ConstraintLayout mLayout;
+	private GestureDetectorCompat mDetector;
+	private String mCommentTxt;
+	private int mIndex;
+	private MediaPlayer mSound;
+	private MediaPlayer mPreviousSound;
+	private int mCurrentDayForHistoric;
+	private String mDirPath;
+	private String mFilePath;
+	private AppStartDriver appStartDriver;
+	private SerializedObjectFileWriter mSerializedHumorFileWriter;
+	private Button mStatisticsButton;
+	private SharedPreferences mPreferences;
+	private SharedPreferences.Editor mEditor;
 
-    /**
-     * onCreate events initialize members variables of the activities at it creation as their
-     * widgets view screens (smiley, comment button, historic button)
-     * Instanciation of the Alarm manager to schedule daily saving of humor and comment at midnight
-     * Instanciation of the MyGestureListener to catch screen gestures of the user
-     * Instanciation of  the  comment button click listener mCommentBtn
-     * Instanciation of the historic  button click listener by this historic method
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+	/**
+	 * onCreate events initialize members variables of the activities at it creation as their
+	 * widgets view screens (smiley, comment button, historic button)
+	 * Instanciation of the Alarm manager to schedule daily saving of humor and comment at midnight
+	 * Instanciation of the MyGestureListener to catch screen gestures of the user
+	 * Instanciation of  the  comment button click listener mCommentBtn
+	 * Instanciation of the historic  button click listener by this historic method
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-        mStatisticsButton = findViewById(R.id.activity_main_statistics_btn);
-        mSmiley = findViewById(R.id.activity_main_smiley_image);
-        mLayout = findViewById(R.id.activity_main_layout);
-        mCommentBtn = findViewById(R.id.activity_main_comment_btn);
-        mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
+		//mPreferences = MainActivity.this.getSharedPreferences(getString(R.string.selectedHumor)
+		//,Context.MODE_PRIVATE);
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+		mEditor = mPreferences.edit();
+		mStatisticsButton = findViewById(R.id.activity_main_statistics_btn);
+		mSmiley = findViewById(R.id.activity_main_smiley_image);
+		mLayout = findViewById(R.id.activity_main_layout);
+		mCommentBtn = findViewById(R.id.activity_main_comment_btn);
+		mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
 
-        mSerializedHumorFileWriter = new SerializedObjectFileWriter();
-        appStartDriver = AppStartDriver.INSTANCE;
-        appStartDriver.configurator(MainActivity.this);
-        mIndex = appStartDriver.getIndex();
-        mDirPath = appStartDriver.getMainDirPath();
-        mFilePath = appStartDriver.getHumorFilePath();
-        mCommentTxt = appStartDriver.getCommentTxt();
+		mSerializedHumorFileWriter = new SerializedObjectFileWriter();
+		appStartDriver = AppStartDriver.INSTANCE;
+		this.starter();
+		//appStartDriver.configurator(MainActivity.this);
+		mIndex = appStartDriver.getIndex();
+		mDirPath = appStartDriver.getMainDirPath();
+		mFilePath = appStartDriver.getHumorFilePath();
+		mCommentTxt = appStartDriver.getCommentTxt();
 
-        MyAlarmManager alarmManager = new MyAlarmManager();
-        alarmManager.setAlarm(this);
-
-
-        mCommentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addComment();
-            }
-        });
-        this.historic();
-        this.statistics();
-        //this.sizeManager();
-        this.getSize();
+		if(!appStartDriver.isSet()) {
+			MyAlarmManager alarmManager = new MyAlarmManager();
+			alarmManager.setAlarm(this);
+			appStartDriver.set();
+		}
 
 
-    }
+		mCommentBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				addComment();
+			}
+		});
+		this.historic();
+		this.statistics();
+		//this.sizeManager();
+		this.getSize();
 
-    /**
-     * Event to catch screen gestures
-     */
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
 
-    }
+	}
+	private void starter(){
+		SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(MainActivity.this);
+		Object[] data = sharedPreferencesManager.getSelectedHumor();
+		mIndex = (int) data[0];
+		mCurrentDayForHistoric = (int) data[1];
+		mCommentTxt = (String) data[2];
+		appStartDriver.init(this.getFilesDir().getAbsolutePath(),
+				mIndex, mCurrentDayForHistoric, mCommentTxt);
+	}
 
-    private boolean checkIfPendingIntentIsRegistered() {
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        // Build the exact same pending intent you want to check.
-        // Everything has to match except extras.
-        return (PendingIntent.getBroadcast(this.getApplicationContext(), 42, intent, PendingIntent.FLAG_NO_CREATE) != null);
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        final MainActivityView mainActivityView = new MainActivityView(mLayout, mSmiley);
-        mLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mainActivityView.constrainSet();
-                mainActivityView.getMethodName(appStartDriver.getIndex());
-            }
-        });
-        mPreviousSound = MediaPlayer.create(this, appStartDriver.INSTANCE.getSound(mIndex));
-        mCommentTxt = appStartDriver.getCommentTxt();
-        MyGestureListener myGestureListener = new MyGestureListener(mainActivityView);
-        myGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
-            /**
-             * getIndex is a custom listener to catch the index used to travel in the humorsList
-             * serialize the weekly day, index  and comment and write it into a dedicated file
-             * @param index
-             */
-            @Override
-            public void getIndex(int index) {
-                mIndex = index;
-                mSound = MediaPlayer.create(MainActivity.this,
-                        appStartDriver.INSTANCE.getSound(mIndex));
-                indexTester();
-                mSound.start();
-                mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
-                mSerializedHumorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                                mIndex, mCommentTxt, mCurrentDayForHistoric),
-                        mDirPath + mFilePath);
-            }
-        });
-        mDetector = new GestureDetectorCompat(this, myGestureListener);
+	/**
+	 * Event to catch screen gestures
+	 */
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		mDetector.onTouchEvent(event);
+		return super.onTouchEvent(event);
 
-        appStartDriver.setAlive();
-        HumorUpdater humorUpdater = HumorUpdater.getInstance();
+	}
 
-        humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
-            @Override
-            public void updaterAfterAlarm() {
-                if(appStartDriver.isAlive()) {
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            }
-        });
-    }
+	private boolean checkIfPendingIntentIsRegistered() {
+		Intent intent = new Intent(this, AlarmReceiver.class);
+		// Build the exact same pending intent you want to check.
+		// Everything has to match except extras.
+		return (PendingIntent.getBroadcast(this.getApplicationContext(), 42, intent, PendingIntent.FLAG_NO_CREATE) != null);
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		final MainActivityView mainActivityView = new MainActivityView(mLayout, mSmiley);
+		mLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				mainActivityView.constrainSet();
+				mainActivityView.getMethodName(appStartDriver.getIndex());
+			}
+		});
+		mPreviousSound = MediaPlayer.create(this, appStartDriver.INSTANCE.getSound(mIndex));
+		mCommentTxt = appStartDriver.getCommentTxt();
+		MyGestureListener myGestureListener = new MyGestureListener(mainActivityView);
+		myGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
+			/**
+			 * getIndex is a custom listener to catch the index used to travel in the humorsList
+			 * serialize the weekly day, index  and comment and write it into a dedicated file
+			 * @param index
+			 */
+			@Override
+			public void getIndex(int index) {
+				mIndex = index;
+				mSound = MediaPlayer.create(MainActivity.this,
+						appStartDriver.INSTANCE.getSound(mIndex));
+				indexTester();
+				mSound.start();
+				//mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
+				//mSerializedHumorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
+				//mIndex, mCommentTxt, mCurrentDayForHistoric),
+				//mDirPath + mFilePath);
+				mEditor.putInt(getString(R.string.indexKey), mIndex);
+				mEditor.apply();
+			}
+		});
+		mDetector = new GestureDetectorCompat(this, myGestureListener);
 
-    public void indexTester(){
-    	try {
-            if (mPreviousSound.isPlaying()) {
-                mPreviousSound.stop();
-                mPreviousSound.reset();
-                mPreviousSound.release();
-            }
-            mPreviousSound = mSound;
-        } catch (IllegalStateException e){
-    	    e.printStackTrace();
-        }
-    }
+		appStartDriver.setAlive();
+		HumorUpdater humorUpdater = HumorUpdater.getInstance();
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        appStartDriver.unSetAlive();
-        try {
-            if (mSound != null) {
-                if (mSound.isPlaying())
-                    mSound.stop();
-                mSound.reset();
-                mSound.release();
-                mSound = null;
-            }
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        }
-    }
+		humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
+			@Override
+			public void updaterAfterAlarm() {
+				if(appStartDriver.isAlive()) {
+					Intent intent = getIntent();
+					finish();
+					startActivity(intent);
+				}
+			}
+		});
+	}
 
-    /**
-     * addComment method manage the mCommentBtn and show an AlertDialog to let the user comment is
-     * daily humor, then serialize the index, comment and weekly day and write the object into a
-     * dedicated file
-     */
-    private void addComment(){
-        mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
-        final EditText commentInput = new EditText(this);
-        commentInput.setText(mCommentTxt);
-        if(mCommentTxt != null) commentInput.setSelection(mCommentTxt.length());
-        commentInput.setHint("Commentez votre Humeur!");
-        new AlertDialog.Builder(this)
-                .setTitle("Commentaire")
-                .setView(commentInput)
-                .setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if(commentInput.getText().toString().length() == 0) mCommentTxt = null;
-                        else mCommentTxt = commentInput.getText().toString();
-                        appStartDriver.setCommentTxt(mCommentTxt);
-                        mSerializedHumorFileWriter.SerializedHumorFileWriting(
-                                new SelectedHumorSerializer(mIndex, mCommentTxt, mCurrentDayForHistoric),
-                                mDirPath + mFilePath);
-                    }
-                })
-                .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                })
-                .show();
+	public void indexTester(){
+		try {
+			if (mPreviousSound.isPlaying()) {
+				mPreviousSound.stop();
+				mPreviousSound.reset();
+				mPreviousSound.release();
+			}
+			mPreviousSound = mSound;
+		} catch (IllegalStateException e){
+			e.printStackTrace();
+		}
+	}
 
-    }
+	@Override
+	protected void onPause() {
+		super.onPause();
+		appStartDriver.unSetAlive();
+		try {
+			if (mSound != null) {
+				if (mSound.isPlaying())
+					mSound.stop();
+				mSound.reset();
+				mSound.release();
+				mSound = null;
+			}
+		} catch (NullPointerException e){
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * the historic method contain manage the historic button activity when triggered it send
-     * the user to the historic activity
-     */
-    private void historic(){
-        mHistoricBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent historicActivityIntent = new Intent(
-                        MainActivity.this, HistoricActivity.class);
-                startActivity(historicActivityIntent);
-            }
-        });
-    }
+	/**
+	 * addComment method manage the mCommentBtn and show an AlertDialog to let the user comment is
+	 * daily humor, then serialize the index, comment and weekly day and write the object into a
+	 * dedicated file
+	 */
+	private void addComment(){
+		mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
+		final EditText commentInput = new EditText(this);
+		commentInput.setText(mCommentTxt);
+		if(mCommentTxt != null) commentInput.setSelection(mCommentTxt.length());
+		commentInput.setHint(getString(R.string.commentaryHint));
+		new AlertDialog.Builder(this)
+				.setTitle(getString(R.string.commentary))
+				.setView(commentInput)
+				.setPositiveButton(getString(R.string.VALIDATE), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton) {
+						if(commentInput.getText().toString().length() == 0) mCommentTxt = null;
+						else mCommentTxt = commentInput.getText().toString();
+						appStartDriver.setCommentTxt(mCommentTxt);
+						//mSerializedHumorFileWriter.SerializedHumorFileWriting(
+						//new SelectedHumorSerializer(mIndex, mCommentTxt, mCurrentDayForHistoric),
+						//mDirPath + mFilePath);
+						mEditor.putString(getString(R.string.commentKey), mCommentTxt);
+						mEditor.apply();
+					}
+				})
+				.setNegativeButton(getString(R.string.CANCEL), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton) {
+					}
+				})
+				.show();
 
-    private void statistics(){
-        mStatisticsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent statisticsActivityIntent = new Intent(
-                        MainActivity.this, StatisticsActivity.class);
-                startActivity(statisticsActivityIntent);
-            }
-        });
+	}
 
-    }
+	/**
+	 * the historic method contain manage the historic button activity when triggered it send
+	 * the user to the historic activity
+	 */
+	private void historic(){
+		mHistoricBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent historicActivityIntent = new Intent(
+						MainActivity.this, HistoricActivity.class);
+				startActivity(historicActivityIntent);
+			}
+		});
+	}
 
-    public void sizeManager(){
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-        final int deviceWidth = displayMetrics.widthPixels;
-        final int deviceHeight = displayMetrics.heightPixels;
-        appStartDriver.setDeviceSize(deviceWidth, deviceHeight);
-        mLayout.post(new Runnable(){
-            public void run(){
-                int height = mLayout.getMeasuredHeight();
-                int width = mLayout.getMeasuredWidth();
-                int orientation = getResources().getConfiguration().orientation;
-                if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    appStartDriver.setPortLayoutSize(width, height);
+	private void statistics(){
+		mStatisticsButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(mCurrentDayForHistoric > 1) {
+					Intent statisticsActivityIntent = new Intent(
+							MainActivity.this, StatisticsActivity.class);
+					startActivity(statisticsActivityIntent);
+				} else {
+					Toast.makeText(MainActivity.this,getString(R.string.statisticButton),
+							Toast.LENGTH_SHORT).show();
 
-                    int widthDiff = deviceWidth - width;
-                    int heightDiff = deviceHeight - height;
+				}
+			}
+		});
 
-                    int landWidth = height + heightDiff - widthDiff;
-                    int landHeight = width - heightDiff + widthDiff;
-                    appStartDriver.setLandLayoutSize(landWidth, landHeight);
-                } else {
-                    appStartDriver.setLandLayoutSize(width, height);
+	}
 
-                    int widthDiff = deviceWidth - width;
-                    int heightDiff = deviceHeight - height;
+	public void sizeManager(){
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+		windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+		final int deviceWidth = displayMetrics.widthPixels;
+		final int deviceHeight = displayMetrics.heightPixels;
+		appStartDriver.setDeviceSize(deviceWidth, deviceHeight);
+		mLayout.post(new Runnable(){
+			public void run(){
+				int height = mLayout.getMeasuredHeight();
+				int width = mLayout.getMeasuredWidth();
+				int orientation = getResources().getConfiguration().orientation;
+				if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+					appStartDriver.setPortLayoutSize(width, height);
 
-                    int landWidth = height + heightDiff - widthDiff;
-                    int landHeight = width - heightDiff + widthDiff;
-                    appStartDriver.setPortLayoutSize(landWidth, landHeight);
-                }
-            }
-        });
-    }
+					int widthDiff = deviceWidth - width;
+					int heightDiff = deviceHeight - height;
 
-    public void getSize(){
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-        final int deviceWidth = displayMetrics.widthPixels;
-        final int deviceHeight = displayMetrics.heightPixels;
-        mLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        int height = mLayout.getMeasuredHeight();
-                        int width = mLayout.getMeasuredWidth();
-                        int orientation = getResources().getConfiguration().orientation;
-                        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            appStartDriver.setPortLayoutSize(width, height);
+					int landWidth = height + heightDiff - widthDiff;
+					int landHeight = width - heightDiff + widthDiff;
+					appStartDriver.setLandLayoutSize(landWidth, landHeight);
+				} else {
+					appStartDriver.setLandLayoutSize(width, height);
 
-                            int widthDiff = deviceWidth - width;
-                            int heightDiff = deviceHeight - height;
+					int widthDiff = deviceWidth - width;
+					int heightDiff = deviceHeight - height;
 
-                            int landWidth = height + heightDiff - widthDiff;
-                            int landHeight = width - heightDiff + widthDiff;
-                            appStartDriver.setLandLayoutSize(landWidth, landHeight);
-                        } else {
-                            appStartDriver.setLandLayoutSize(width, height);
+					int landWidth = height + heightDiff - widthDiff;
+					int landHeight = width - heightDiff + widthDiff;
+					appStartDriver.setPortLayoutSize(landWidth, landHeight);
+				}
+			}
+		});
+	}
 
-                            int widthDiff = deviceWidth - width;
-                            int heightDiff = deviceHeight - height;
+	public void getSize(){
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+		windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+		final int deviceWidth = displayMetrics.widthPixels;
+		final int deviceHeight = displayMetrics.heightPixels;
+		mLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+					@Override
+					public void onGlobalLayout() {
+						int height = mLayout.getMeasuredHeight();
+						int width = mLayout.getMeasuredWidth();
+						int orientation = getResources().getConfiguration().orientation;
+						if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+							appStartDriver.setPortLayoutSize(width, height);
 
-                            int landWidth = height + heightDiff - widthDiff;
-                            int landHeight = width - heightDiff + widthDiff;
-                            appStartDriver.setPortLayoutSize(landWidth, landHeight);
-                        }
-                        mLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        //mLayout.setVisibility(View.GONE);
+							int widthDiff = deviceWidth - width;
+							int heightDiff = deviceHeight - height;
 
-                    }
-                }
-        );
-    }
+							int landWidth = height + heightDiff - widthDiff;
+							int landHeight = width - heightDiff + widthDiff;
+							appStartDriver.setLandLayoutSize(landWidth, landHeight);
+						} else {
+							appStartDriver.setLandLayoutSize(width, height);
+
+							int widthDiff = deviceWidth - width;
+							int heightDiff = deviceHeight - height;
+
+							int landWidth = height + heightDiff - widthDiff;
+							int landHeight = width - heightDiff + widthDiff;
+							appStartDriver.setPortLayoutSize(landWidth, landHeight);
+						}
+						mLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+						//mLayout.setVisibility(View.GONE);
+
+					}
+				}
+		);
+	}
 
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 public class Notifications {
 	private Context mContext;
 	private NotificationManager mNotificationManager;
-	private SparseArray<String> mNotifications = new SparseArray<String>();
+	private SparseArray<String> mNotifications = new SparseArray<>();
 
 	public Notifications(Context context) {
 		this.mContext = context;

@@ -17,11 +17,14 @@ import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
 import com.s0mbr3.moodtracker.models.DeserializedHumorFileReader;
+import com.s0mbr3.moodtracker.models.SharedPreferencesManager;
 import com.s0mbr3.moodtracker.models.SizeManager;
 import com.s0mbr3.moodtracker.views.HistoricActivityView;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HistoricActivity extends AppCompatActivity implements View.OnClickListener {
@@ -35,7 +38,10 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     private Button mCommentButton;
     private int mHeight;
     private int mWidth;
-    private Map<Integer, String> mCommentHash = new HashMap<Integer, String>();
+    //private Map<Integer, String> mCommentHash = new HashMap<Integer, String>();
+    private SparseArray<String> mCommentHash = new SparseArray<>();
+    private SharedPreferencesManager mPreferencesManager;
+    private List<String> mDaysMessages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) throws OutOfMemoryError {
@@ -50,6 +56,9 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         configs = AppStartDriver.INSTANCE;
         mMainDir = configs.getMainDirPath();
         mHistoricDir = configs.getHistoricDir();
+        mPreferencesManager = new SharedPreferencesManager(this.getApplicationContext());
+        mDaysMessages = Arrays.asList(getResources().getStringArray(R.array.days));
+
 
         int historicIndex= AppStartDriver.INSTANCE.getCurrentDayForHistoric()-1;
         int currentHistoricDay = AppStartDriver.INSTANCE.getCurrentDayForHistoric();
@@ -86,10 +95,11 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
 
     public void historicBuilder(int currentHistoricDay, int historicIndex){
         try {
-			SparseArray commentHash = new SparseArray<File>();
+			SparseArray<Object[]> commentHash = new SparseArray<>();
 
             for(int index = currentHistoricDay-1 ; index > historicIndex; index--){
-                commentHash.put(index, new File(mMainDir + mHistoricDir + index));
+                Object[] history = mPreferencesManager.getHistoricDay(index);
+                commentHash.put(index, history);
             }
             for(int index = currentHistoricDay-commentHash.size()
                 , dIndex = commentHash.size() - 1; dIndex >= 0; index++, dIndex--) {
@@ -104,14 +114,14 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
     }
-    public void historicLiner(SparseArray<File> filesList, int index, int dIndex){
-        String aDayFile = filesList.get(index).getName();
+    public void historicLiner(SparseArray<Object[]> filesList, int index, int dIndex){
+        //String aDayFile = filesList.get(index).getName();
 
-        DeserializedHumorFileReader aDayHumor = new DeserializedHumorFileReader();
-        aDayHumor.objectDeserializer(mMainDir + mHistoricDir+ aDayFile);
-        mIndex = aDayHumor.getIndex();
-        mCommentTxt = aDayHumor.getCommentTxt();
-        mAdayMessage = configs.getHistoricMessage(dIndex);
+        //DeserializedHumorFileReader aDayHumor = new DeserializedHumorFileReader();
+        //aDayHumor.objectDeserializer(mMainDir + mHistoricDir+ aDayFile);
+        mIndex = (int) filesList.get(index)[0];
+        mCommentTxt = (String) filesList.get(index)[1];
+        mAdayMessage = mDaysMessages.get(dIndex);
 
 
         ConstraintLayout constraintLayout = new ConstraintLayout(this);

@@ -101,6 +101,6 @@ public class StatisticsActivityView {
 
 	private int graphLineHeight(){
 		int daysRatio = mHumorDays * 100 / mTotalUseDays;
-	return daysRatio * (mHeight/3) / 100;
+		return daysRatio * (mHeight/3) / 100;
 	}
 }

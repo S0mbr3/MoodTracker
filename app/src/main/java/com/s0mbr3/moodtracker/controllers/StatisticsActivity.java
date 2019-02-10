@@ -1,10 +1,12 @@
 package com.s0mbr3.moodtracker.controllers;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
+import com.s0mbr3.moodtracker.models.SharedPreferencesManager;
 import com.s0mbr3.moodtracker.models.SizeManager;
 import com.s0mbr3.moodtracker.models.StatisticsUnSerializer;
 import com.s0mbr3.moodtracker.models.StreakUnserializer;
@@ -48,12 +51,14 @@ public class StatisticsActivity extends AppCompatActivity {
 	private int mTotalScore;
 	private String mDirPath;
 	private static final float scale = Resources.getSystem().getDisplayMetrics().density;
+	private SharedPreferencesManager mSharedPreferencesManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_statistics);
 
+		mSharedPreferencesManager = new SharedPreferencesManager(this);
 		mStatisticsLayout = findViewById(R.id.statistics_activity_layout);
 		mHumorDayUnserializer = new StatisticsUnSerializer();
 		mDirPath = this.getFilesDir().getName();
@@ -109,11 +114,11 @@ public class StatisticsActivity extends AppCompatActivity {
 
 
 	public void graphDrawer(){
-		if(new File(this.getFilesDir() + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex).exists()){
-			mHumorDayUnserializer.objectUnserializer(
-					this.getFilesDir() + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
-			int humorDay = mHumorDayUnserializer.getDays();
-			mSumScore += humorDay * mIndex;
+		for(int i = 0; i <= 4; i++){
+			//mHumorDayUnserializer.objectUnserializer(
+					//this.getFilesDir() + AppStartDriver.INSTANCE.STATISTICS_DIR + mIndex);
+			int humorDay = mSharedPreferencesManager.getDaysPerHumor(i);
+			mSumScore += humorDay * i;
 
 			TextView graphLine = new TextView(this);
 			graphLine.setId(View.generateViewId());
@@ -125,25 +130,28 @@ public class StatisticsActivity extends AppCompatActivity {
 			graphText.setText(String.valueOf(humorDay));
 			ConstraintLayout grapLayout = new ConstraintLayout(this);
 			grapLayout.setId(View.generateViewId());
-			StatisticsActivityView drawGraph = new StatisticsActivityView(mLinearGraphLayout, graphLine,
-					mHeight, mWidth, mTotalUsageDays, humorDay, grapLayout, graphText);
-			drawGraph.getMethodName(mIndex);
-
+			if(humorDay != 0) {
+				StatisticsActivityView drawGraph = new StatisticsActivityView(mLinearGraphLayout, graphLine,
+						mHeight, mWidth, mTotalUsageDays, humorDay, grapLayout, graphText);
+				drawGraph.getMethodName(i);
+			}
 		}
-		++mIndex;
-
-		if(mIndex <= 4) graphDrawer();
 	}
 
 
 	public void scoreWriter(){
 
-		StreakUnserializer streakUnserializer = new StreakUnserializer();
+		/*StreakUnserializer streakUnserializer = new StreakUnserializer();
 		streakUnserializer.objectUnserializer(
 				this.getFilesDir() + AppStartDriver.INSTANCE.STREAK_FILE);
 		int totalStreak = streakUnserializer.getTotalStreak();
 		int currentStreak = streakUnserializer.getCurrentStreak();
 		int additionalScore = streakUnserializer.getAdditionalScore();
+		*/
+		Object[] streaks = mSharedPreferencesManager.getStreaks();
+		int totalStreak = (int) streaks[0];
+		int currentStreak = (int) streaks[1];
+		int additionalScore = (int) streaks[2];
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.WRAP_CONTENT, mHeight / 4 / 3);
 
@@ -228,7 +236,7 @@ public class StatisticsActivity extends AppCompatActivity {
 						.setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								deleteFolders();
+								deletePreferences();
 								AppStartDriver.INSTANCE.configurator(StatisticsActivity.this);
 								Intent intent = getIntent();
 								finish();
@@ -246,6 +254,18 @@ public class StatisticsActivity extends AppCompatActivity {
 
 	}
 
+	private void deletePreferences(){
+		Context context = getApplicationContext();
+		for(int i = AppStartDriver.INSTANCE.getCurrentDayForHistoric()-1; i >= 1; i++){
+			context.getSharedPreferences(String.valueOf(i), 0).edit().clear().apply();
+		}
+		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
+				R.string.totalStreakKey)).apply();
+		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
+				R.string.currentStreakKey)).apply();
+		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
+				R.string.additonalScoreKey)).apply();
+	}
 	public void deleteFolders(){
 		List<File> files = new ArrayList<File>();
 		Log.d("dele", new File(this.getFilesDir() + AppStartDriver.INSTANCE.STATISTICS_DIR).getAbsolutePath());

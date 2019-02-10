@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="days">
+        <item>Hier</item>
+        <item>Avant-hier</item>
+        <item>Il y a trois jours</item>
+        <item>Il y a quatre jours</item>
+        <item>Il y a cinq jours</item>
+        <item>Il y a six jour</item>
+        <item>Il y a une semaine</item>
+    </string-array>
+
+    <string-array name="notifications">
+        <item>Faire de l\'exercice permet de se sentir mieux dans son corps et d\'être de meilleur
+            humeur.</item>
+        <item>Prenez du temps pour vous. Pratiquer une activité que l\'on
+        affectionne fait baisser le stress.</item>
+        <item>Une petite balade en plein air ? La nature est source d\'apaisement.</item>
+        <item>La pratique de la méditation au quotidien est une clé efficace
+        pour se recentrer, percevoir le monde différemment, augmenter sa concentration
+            , mieux gérer ses émotions et bien d\'autres vertus!</item>
+        <item>Tentez de nouvelles expériences, la routine est source de stress
+        , d\'ennuie et de dépression.</item>
+        <item>Passez du temps avec des proches. Ces connections sont  inestimable pour votre
+            bien être !</item>
+        <item>Faites de nouvelles rencontres, échangez, partagez.
+        Le monde est vaste et chaque personne est unique!</item>
+        <item>Une alimentation saine et varié est la clé d\'une santé durable,
+        physiquement et mentalement !!!</item>
+        <item>Accordez vous du repos, le surmenage accompagne fatigue et saute d\'humeur</item>
+        <item>Fixez vous des objectifs, quelle joie immense de les accomplir !</item>
+        <item>Jetez votre réveil aux oubliettes, une nuit de sommeil complète
+         est un allier de choix pour une journée débordante</item>
+        <item>Rendez-vous utile. Aider les autres emplit de satisfaction, chaque geste compte.</item>
+        <item>Soyez curieux, le cerveau est avide d\'apprendre, et vous découvrirez de nouvelles
+            acitivités passionnante</item>
+        <item>À peine debout et déjà démotivé de votre journée ? Si ça arrive trop souvent il est
+            peut être temps de faire le point, il n\'est jamais trop tard pour changer de vie !!! </item>
+        <item>Et si je vous dis maintenant que pour être heureux il suffit de le vouloir ?
+        Facile à dire je sais !</item>
+        <item>l\'auto suggestions est une arme redoutable pour déprogrammer de mauvais comportements
+            ou des pensées néfaste à votre bien être.</item>
+        <item>les Excitants tel la caféine, théine, nicotine… Font monter le cortisol et donc le
+            stress.</item>
+        <item>Faites vous plaisir, les resctrictions sont catastrophique sur votre équilibre. Aucun
+            excès \'est bon qu\'ils soient abusif ou restrictif.</item>
+        <item></item>
+    </string-array>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MoodTracker</string>
+    <string name="VALIDATE">VALIDATE</string>
+    <string name="CANCEL">CANCEL</string>
+
+    <string name="commentary">Commentary</string>
+    <string name="commentaryHint">Comment your mood !</string>
+
+    <string name="statisticButton">It\'s your first day wait a little bit more before
+    glancing at your statistics</string>
+</resources>
