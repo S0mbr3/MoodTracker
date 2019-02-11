@@ -19,4 +19,12 @@
     <string name="statisticButton">C\'est votre premier jour accordez vous un peu temps avant de
     regarder vos statistiques</string>
 
+    <string name="notificate">Une nouvelle journée commence</string>
+
+    <string name="totalDays">Jours total: </string>
+    <string name="maxStreak">Série de bonne humeurs maximal: </string>
+    <string name="currentStreak">Série de bonne humeurs en cour: </string>
+    <string name="statsReset">Réinitialiser les statistiques ?</string>
+    <string name="moodScore">MoodScore: </string>
+
 </resources>

@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 
 import com.s0mbr3.moodtracker.controllers.AlarmReceiver;
@@ -27,10 +26,8 @@ public class MyAlarmManager {
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		PendingIntent alarmIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent,0);
-		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 3600*24*1000, alarmIntent);
 
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);
-		Log.d("ezez1", String.valueOf(AppStartDriver.INSTANCE.pendingTester(alarmIntent)) + " " + calendar.getTime());
 
 	}
 }

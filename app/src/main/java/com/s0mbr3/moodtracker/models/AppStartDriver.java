@@ -2,16 +2,13 @@ package com.s0mbr3.moodtracker.models;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.util.ArrayMap;
 import android.util.SparseArray;
 
 import com.s0mbr3.moodtracker.R;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,24 +20,10 @@ public enum AppStartDriver {
     private int mIndex;
     private String mCommentTxt;
     private int mCurrentDayForHistoric;
-    private String mDirPath;
-    private static final String HISTORIC_DIR = "/historicdir/";
-    public static final String STATISTICS_DIR = "/statistics/";
-    private static final String USER_CHOSEN_HUMOR_FILE = "/selectedhumor.txt";
-    public static final String NOTIFICATION_FILE = "/notificate.txt";
-    public static final String STREAK_FILE = "/streak.txt";
     private ArrayMap<String, Integer> mSize = new ArrayMap<>();
     @SuppressLint("UseSparseArrays")
     private SparseArray<Integer> mSounds = new SparseArray<>();
     private boolean mSet;
-    private static final List<String> HISTORIC_MESSAGES_LIST = new ArrayList<>(Arrays.asList(
-            "Hier",
-            "Avant-Hier",
-            "Il y a trois jours",
-            "Il y a quatre jours",
-            "Il y a cinq jours",
-            "Il y a six jours",
-            "Il y a une semaine"));
     private static final List<String> HUMORS_LIST = new ArrayList<>(Arrays.asList(
             "setSadSmiley",
             "setDisappointedSmiley",
@@ -84,17 +67,6 @@ public enum AppStartDriver {
         return this.mCurrentDayForHistoric;
     }
 
-    public String getHistoricDir(){
-        return HISTORIC_DIR;
-    }
-
-    public String getHumorFilePath(){
-        return USER_CHOSEN_HUMOR_FILE;
-    }
-
-    public String getMainDirPath(){
-        return this.mDirPath;
-    }
 
     public void setIndex(int index){
         this.mIndex = index;
@@ -106,11 +78,6 @@ public enum AppStartDriver {
     public void setCurrentDayForHistoric(int currentDayForHistoric){
         this.mCurrentDayForHistoric = currentDayForHistoric;
 
-    }
-
-    public void setDeviceSize(int width, int height){
-        this.mSize.put("deviceWidth", width);
-        this.mSize.put("deviceHeight", height);
     }
 
     public void setPortLayoutSize(int width, int height){
@@ -137,12 +104,8 @@ public enum AppStartDriver {
         mIntent = intent;
         return test;
     }
-    public String getHistoricMessage(int index){
-        return HISTORIC_MESSAGES_LIST.get(index);
-    }
 
-    public void init(String filepath, int index, int historicDay, String commentTxt){
-        this.mDirPath = filepath;
+    public void init(int index, int historicDay, String commentTxt){
         this.mIndex = index;
         this.mCurrentDayForHistoric = historicDay;
         this.mCommentTxt = commentTxt;
@@ -153,25 +116,5 @@ public enum AppStartDriver {
 
     public void set(){
         this.mSet = true;
-    }
-    public void configurator(Context context){
-        this.mDirPath = context.getFilesDir().getAbsolutePath();
-        if(new File(this.mDirPath, USER_CHOSEN_HUMOR_FILE).exists()) {
-            DeserializedHumorFileReader humorData = new DeserializedHumorFileReader();
-            humorData.objectDeserializer(mDirPath + USER_CHOSEN_HUMOR_FILE);
-            this.mIndex = humorData.getIndex();
-            this.mCommentTxt = humorData.getCommentTxt();
-            this.mCurrentDayForHistoric = humorData.getCurrentDayForHistoric();
-        } else {
-            this.mIndex = 3;
-            this.mCommentTxt = null;
-            this.mCurrentDayForHistoric = 1;
-            SerializedObjectFileWriter humorFileWriter = new SerializedObjectFileWriter();
-            humorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
-                            mIndex,
-                            mCommentTxt,
-                            mCurrentDayForHistoric),
-                    mDirPath + USER_CHOSEN_HUMOR_FILE);
-        }
     }
 }

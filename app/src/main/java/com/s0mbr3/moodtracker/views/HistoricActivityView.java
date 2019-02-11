@@ -1,8 +1,10 @@
 package com.s0mbr3.moodtracker.views;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -39,15 +41,14 @@ public class HistoricActivityView {
         this.mWidth = width;
         this.mHistoricLine = historicLine;
         this.mConstraintLayout = constraintLayout;
-        //if(scale < 1.5) this.mHistoricLine.setTextSize(14);
     }
 
     public void createHistoricLine(int index){
         createHistoricTextView(index);
     }
-    public void createHistoricLine(int index, Button commentButton){
-       createHistoricTextView(index);
-       createHistoricCommentButton(commentButton);
+    public void createHistoricLine(int index, Button commentButton, float buttonSize){
+        createHistoricTextView(index);
+        createHistoricCommentButton(commentButton, buttonSize);
 
     }
     public void createHistoricTextView(int index){
@@ -80,7 +81,7 @@ public class HistoricActivityView {
     }
 
 
-    private void createHistoricCommentButton(Button commentButton){
+    private void createHistoricCommentButton(Button commentButton, float size) {
         commentButton.setId(View.generateViewId());
         commentButton.setBackgroundResource(R.drawable.ic_comment_black_48px);
         this.mConstraintLayout.addView(commentButton);
@@ -88,15 +89,16 @@ public class HistoricActivityView {
         set.clone(this.mConstraintLayout);
         set.connect(this.mHistoricLine.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
         set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dpToPx(5));
-        if(this.scale > 1.5) {
-            set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);
-        } else {
-            set.connect(commentButton.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, dpToPx(4));
-        }
-        set.constrainHeight(commentButton.getId(),dpToPx(20));
-        set.constrainWidth(commentButton.getId(), dpToPx(20));
-        set.applyTo(this.mConstraintLayout);
+        set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);
+		set.constrainHeight(commentButton.getId(), (int) size);
+		set.constrainWidth(commentButton.getId(), (int) size);
+		set.applyTo(this.mConstraintLayout);
+		Configuration configuration = Resources.getSystem().getConfiguration();
+		DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+		float screenWidthdp = displayMetrics.widthPixels / displayMetrics.density;
+		Log.d("scree", "loool" + String.valueOf(screenWidthdp) + " " + size + " " + this.scale);
     }
+
     public int setSadSmiley() {
         this.mConstraintLayout.setBackgroundResource(R.color.faded_red);
         int width=  this.mWidth * 20/100;

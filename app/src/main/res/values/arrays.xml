@@ -6,7 +6,7 @@
         <item>Il y a trois jours</item>
         <item>Il y a quatre jours</item>
         <item>Il y a cinq jours</item>
-        <item>Il y a six jour</item>
+        <item>Il y a six jours</item>
         <item>Il y a une semaine</item>
     </string-array>
 
@@ -44,6 +44,5 @@
             stress.</item>
         <item>Faites vous plaisir, les resctrictions sont catastrophique sur votre équilibre. Aucun
             excès \'est bon qu\'ils soient abusif ou restrictif.</item>
-        <item></item>
     </string-array>
 </resources>

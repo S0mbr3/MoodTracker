@@ -1,6 +1,5 @@
 package com.s0mbr3.moodtracker.controllers;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,11 +26,8 @@ import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
 import com.s0mbr3.moodtracker.models.MyAlarmManager;
-import com.s0mbr3.moodtracker.models.SelectedHumorSerializer;
 import com.s0mbr3.moodtracker.models.SharedPreferencesManager;
 import com.s0mbr3.moodtracker.views.MainActivityView;
-import com.s0mbr3.moodtracker.models.SerializedObjectFileWriter;
-
 
 
 /**
@@ -50,10 +46,7 @@ public class MainActivity extends AppCompatActivity {
 	private MediaPlayer mSound;
 	private MediaPlayer mPreviousSound;
 	private int mCurrentDayForHistoric;
-	private String mDirPath;
-	private String mFilePath;
 	private AppStartDriver appStartDriver;
-	private SerializedObjectFileWriter mSerializedHumorFileWriter;
 	private Button mStatisticsButton;
 	private SharedPreferences mPreferences;
 	private SharedPreferences.Editor mEditor;
@@ -71,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//mPreferences = MainActivity.this.getSharedPreferences(getString(R.string.selectedHumor)
-		//,Context.MODE_PRIVATE);
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 		mEditor = mPreferences.edit();
 		mStatisticsButton = findViewById(R.id.activity_main_statistics_btn);
@@ -81,14 +72,8 @@ public class MainActivity extends AppCompatActivity {
 		mCommentBtn = findViewById(R.id.activity_main_comment_btn);
 		mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
 
-		mSerializedHumorFileWriter = new SerializedObjectFileWriter();
 		appStartDriver = AppStartDriver.INSTANCE;
 		this.starter();
-		//appStartDriver.configurator(MainActivity.this);
-		mIndex = appStartDriver.getIndex();
-		mDirPath = appStartDriver.getMainDirPath();
-		mFilePath = appStartDriver.getHumorFilePath();
-		mCommentTxt = appStartDriver.getCommentTxt();
 
 		if(!appStartDriver.isSet()) {
 			MyAlarmManager alarmManager = new MyAlarmManager();
@@ -105,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
 		});
 		this.historic();
 		this.statistics();
-		//this.sizeManager();
 		this.getSize();
 
 
@@ -116,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
 		mIndex = (int) data[0];
 		mCurrentDayForHistoric = (int) data[1];
 		mCommentTxt = (String) data[2];
-		appStartDriver.init(this.getFilesDir().getAbsolutePath(),
-				mIndex, mCurrentDayForHistoric, mCommentTxt);
+		appStartDriver.init(mIndex, mCurrentDayForHistoric, mCommentTxt);
 	}
 
 	/**
@@ -130,12 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-	private boolean checkIfPendingIntentIsRegistered() {
-		Intent intent = new Intent(this, AlarmReceiver.class);
-		// Build the exact same pending intent you want to check.
-		// Everything has to match except extras.
-		return (PendingIntent.getBroadcast(this.getApplicationContext(), 42, intent, PendingIntent.FLAG_NO_CREATE) != null);
-	}
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -163,10 +140,6 @@ public class MainActivity extends AppCompatActivity {
 						appStartDriver.INSTANCE.getSound(mIndex));
 				indexTester();
 				mSound.start();
-				//mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
-				//mSerializedHumorFileWriter.SerializedHumorFileWriting(new SelectedHumorSerializer(
-				//mIndex, mCommentTxt, mCurrentDayForHistoric),
-				//mDirPath + mFilePath);
 				mEditor.putInt(getString(R.string.indexKey), mIndex);
 				mEditor.apply();
 			}
@@ -238,9 +211,6 @@ public class MainActivity extends AppCompatActivity {
 						if(commentInput.getText().toString().length() == 0) mCommentTxt = null;
 						else mCommentTxt = commentInput.getText().toString();
 						appStartDriver.setCommentTxt(mCommentTxt);
-						//mSerializedHumorFileWriter.SerializedHumorFileWriting(
-						//new SelectedHumorSerializer(mIndex, mCommentTxt, mCurrentDayForHistoric),
-						//mDirPath + mFilePath);
 						mEditor.putString(getString(R.string.commentKey), mCommentTxt);
 						mEditor.apply();
 					}
@@ -287,41 +257,6 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-	public void sizeManager(){
-		DisplayMetrics displayMetrics = new DisplayMetrics();
-		WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-		windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-		final int deviceWidth = displayMetrics.widthPixels;
-		final int deviceHeight = displayMetrics.heightPixels;
-		appStartDriver.setDeviceSize(deviceWidth, deviceHeight);
-		mLayout.post(new Runnable(){
-			public void run(){
-				int height = mLayout.getMeasuredHeight();
-				int width = mLayout.getMeasuredWidth();
-				int orientation = getResources().getConfiguration().orientation;
-				if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-					appStartDriver.setPortLayoutSize(width, height);
-
-					int widthDiff = deviceWidth - width;
-					int heightDiff = deviceHeight - height;
-
-					int landWidth = height + heightDiff - widthDiff;
-					int landHeight = width - heightDiff + widthDiff;
-					appStartDriver.setLandLayoutSize(landWidth, landHeight);
-				} else {
-					appStartDriver.setLandLayoutSize(width, height);
-
-					int widthDiff = deviceWidth - width;
-					int heightDiff = deviceHeight - height;
-
-					int landWidth = height + heightDiff - widthDiff;
-					int landHeight = width - heightDiff + widthDiff;
-					appStartDriver.setPortLayoutSize(landWidth, landHeight);
-				}
-			}
-		});
-	}
-
 	public void getSize(){
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
@@ -355,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
 							appStartDriver.setPortLayoutSize(landWidth, landHeight);
 						}
 						mLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-						//mLayout.setVisibility(View.GONE);
 
 					}
 				}

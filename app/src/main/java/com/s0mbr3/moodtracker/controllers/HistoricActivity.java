@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.View;
@@ -16,20 +15,14 @@ import android.widget.Toast;
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
 import com.s0mbr3.moodtracker.models.HumorUpdater;
-import com.s0mbr3.moodtracker.models.DeserializedHumorFileReader;
 import com.s0mbr3.moodtracker.models.SharedPreferencesManager;
 import com.s0mbr3.moodtracker.models.SizeManager;
 import com.s0mbr3.moodtracker.views.HistoricActivityView;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HistoricActivity extends AppCompatActivity implements View.OnClickListener {
-    private String mMainDir;
-    private String mHistoricDir;
     private int mIndex;
     private String mCommentTxt;
     private String mAdayMessage;
@@ -38,7 +31,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     private Button mCommentButton;
     private int mHeight;
     private int mWidth;
-    //private Map<Integer, String> mCommentHash = new HashMap<Integer, String>();
     private SparseArray<String> mCommentHash = new SparseArray<>();
     private SharedPreferencesManager mPreferencesManager;
     private List<String> mDaysMessages;
@@ -54,8 +46,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         mHeight = (int) obj[0];
         mWidth = (int) obj[1];
         configs = AppStartDriver.INSTANCE;
-        mMainDir = configs.getMainDirPath();
-        mHistoricDir = configs.getHistoricDir();
         mPreferencesManager = new SharedPreferencesManager(this.getApplicationContext());
         mDaysMessages = Arrays.asList(getResources().getStringArray(R.array.days));
 
@@ -77,9 +67,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         });
-
     }
-
 
     @Override
     protected void onResume() {
@@ -115,10 +103,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         }
     }
     public void historicLiner(SparseArray<Object[]> filesList, int index, int dIndex){
-        //String aDayFile = filesList.get(index).getName();
-
-        //DeserializedHumorFileReader aDayHumor = new DeserializedHumorFileReader();
-        //aDayHumor.objectDeserializer(mMainDir + mHistoricDir+ aDayFile);
         mIndex = (int) filesList.get(index)[0];
         mCommentTxt = (String) filesList.get(index)[1];
         mAdayMessage = mDaysMessages.get(dIndex);
@@ -127,14 +111,14 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         ConstraintLayout constraintLayout = new ConstraintLayout(this);
         TextView historicLine = new TextView(this);
         mCommentButton = new Button(this);
+        float buttonSize = this.getResources().getDimension(R.dimen.historyCmtBtn);
         historicLine.setId(View.generateViewId());
         historicLine.setText(mAdayMessage);
-        Float size = getResources().getDimension(R.dimen.historic_text_size);
+        float size = getResources().getDimension(R.dimen.historic_text_size);
         historicLine.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-        Log.d("popo", String.valueOf(size));
         HistoricActivityView historicActivityView = new HistoricActivityView(historicLine, mLayout, constraintLayout, mHeight, mWidth);
         if(mCommentTxt == null) historicActivityView.createHistoricLine(mIndex);
-        else historicActivityView.createHistoricLine(mIndex, mCommentButton);
+        else historicActivityView.createHistoricLine(mIndex, mCommentButton, buttonSize);
     }
 
     @Override

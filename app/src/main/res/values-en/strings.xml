@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MoodTracker</string>
     <string name="VALIDATE">VALIDATE</string>
     <string name="CANCEL">CANCEL</string>
 
@@ -9,4 +8,11 @@
 
     <string name="statisticButton">It\'s your first day wait a little bit more before
     glancing at your statistics</string>
+
+    <string name="notificate">A new day is starting</string>
+    <string name="statsReset">Erase statistics ?</string>
+    <string name="totalDays">"Total days: </string>
+    <string name="maxStreak">"Good mood maximal streak: </string>
+    <string name="currentStreak">"Good mood current streak: </string>
+    <string name="moodScore">"MoodScore: "</string>
 </resources>
