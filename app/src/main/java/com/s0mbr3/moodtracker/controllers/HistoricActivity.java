@@ -27,7 +27,6 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
     private String mCommentTxt;
     private String mAdayMessage;
     private LinearLayout mLayout;
-    private AppStartDriver configs;
     private Button mCommentButton;
     private int mHeight;
     private int mWidth;
@@ -45,17 +44,17 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         Object[] obj = sizeManager.sizeManager();
         mHeight = (int) obj[0];
         mWidth = (int) obj[1];
-        configs = AppStartDriver.INSTANCE;
         mPreferencesManager = new SharedPreferencesManager(this.getApplicationContext());
         mDaysMessages = Arrays.asList(getResources().getStringArray(R.array.days));
 
 
-        int historicIndex= AppStartDriver.INSTANCE.getCurrentDayForHistoric()-1;
-        int currentHistoricDay = AppStartDriver.INSTANCE.getCurrentDayForHistoric();
+        int historicIndex = mPreferencesManager.getHistoryDay() - 1;
+        int currentHistoricDay = mPreferencesManager.getHistoryDay();
         if (historicIndex >= 7) historicIndex-=7;
         else historicIndex-=historicIndex;
 
         this.historicBuilder(currentHistoricDay, historicIndex);
+        //custom event to refresh the activity when the alarm manager ring
         HumorUpdater humorUpdater = HumorUpdater.getInstance();
         humorUpdater.setUpdaterListener(new HumorUpdater.UpdateAfterAlarm() {
             @Override
@@ -69,24 +68,27 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    //notify to the driver the user is front of the application
     @Override
     protected void onResume() {
         super.onResume();
         AppStartDriver.INSTANCE.setAlive();
     }
 
+    //notify to the driver the application is not used by the user
     @Override
     protected void onPause() {
         super.onPause();
         AppStartDriver.INSTANCE.unSetAlive();
     }
 
+    //Prepare the Line builder before drawing the history
     public void historicBuilder(int currentHistoricDay, int historicIndex){
         try {
 			SparseArray<Object[]> commentHash = new SparseArray<>();
 
             for(int index = currentHistoricDay-1 ; index > historicIndex; index--){
-                Object[] history = mPreferencesManager.getHistoricDay(index);
+                Object[] history = mPreferencesManager.getHistoricHumor(index);
                 commentHash.put(index, history);
             }
             for(int index = currentHistoricDay-commentHash.size()
@@ -102,6 +104,7 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
     }
+    //draw the history dynamically
     public void historicLiner(SparseArray<Object[]> filesList, int index, int dIndex){
         mIndex = (int) filesList.get(index)[0];
         mCommentTxt = (String) filesList.get(index)[1];
@@ -116,11 +119,13 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         historicLine.setText(mAdayMessage);
         float size = getResources().getDimension(R.dimen.historic_text_size);
         historicLine.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        //the major drawing
         HistoricActivityView historicActivityView = new HistoricActivityView(historicLine, mLayout, constraintLayout, mHeight, mWidth);
         if(mCommentTxt == null) historicActivityView.createHistoricLine(mIndex);
         else historicActivityView.createHistoricLine(mIndex, mCommentButton, buttonSize);
     }
 
+    //Linking the comments buttons to their messages
     @Override
     public void onClick(View v) {
         int commentIndex = (int) v.getTag();

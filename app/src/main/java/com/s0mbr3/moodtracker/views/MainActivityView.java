@@ -33,13 +33,6 @@ public class MainActivityView {
     }
 
 
-    /**
-     * getMethodName method invoke by reflection the according method stored in the humorsList String
-     * List depending of the index determined in the MyGestureListener class
-     *
-     * @see MyGestureListener
-     * @param index
-     */
     public void getMethodName(int index) {
         Class<?> c1;
         try {

@@ -5,6 +5,10 @@ import android.content.res.Resources;
 
 import java.util.Map;
 
+/**
+ * SizeManager class return the actual usable layout space to draw the activities depending of the
+ * device orientation
+ */
 public class SizeManager {
 
 	public SizeManager(){}

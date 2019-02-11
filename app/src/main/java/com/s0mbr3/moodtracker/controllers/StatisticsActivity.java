@@ -11,7 +11,6 @@ import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -29,6 +28,9 @@ import com.s0mbr3.moodtracker.models.SizeManager;
 import com.s0mbr3.moodtracker.views.MainActivityView;
 import com.s0mbr3.moodtracker.views.StatisticsActivityView;
 
+/**
+ * Statistics controller, compute, prepare, draw
+ */
 public class StatisticsActivity extends AppCompatActivity {
 	private LinearLayout mStatisticsLayout;
 	private int mSumScore;
@@ -48,7 +50,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
 		mSharedPreferencesManager = new SharedPreferencesManager(this);
 		mStatisticsLayout = findViewById(R.id.statistics_activity_layout);
-		mTotalUsageDays = AppStartDriver.INSTANCE.getCurrentDayForHistoric() - 1;
+		mTotalUsageDays = mSharedPreferencesManager.getHistoryDay() - 1;
 		SizeManager sizeManager = new SizeManager();
 		Object[] obj = sizeManager.sizeManager();
 		mHeight = (int) obj[0];
@@ -85,6 +87,7 @@ public class StatisticsActivity extends AppCompatActivity {
 		AppStartDriver.INSTANCE.unSetAlive();
 	}
 
+	//sub layout to handle graphs and texts graphs
 	private void setLinearGraphLayout(){
 		mLinearGraphLayout = new LinearLayout(this);
 		mLinearGraphLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -95,6 +98,10 @@ public class StatisticsActivity extends AppCompatActivity {
 	}
 
 
+	/**
+	 * Prepare the elements to draw the graphs, fetch the data and initliaze basic elements
+	 * @see StatisticsActivityView
+	 */
 	public void graphDrawer(){
 		for(int i = 0; i <= 4; i++){
 			int humorDay = mSharedPreferencesManager.getDaysPerHumor(i);
@@ -119,6 +126,7 @@ public class StatisticsActivity extends AppCompatActivity {
 	}
 
 
+	//draw the statistics elements to the user middle screen
 	public void scoreWriter(){
 		Object[] streaks = mSharedPreferencesManager.getStreaks();
 		int totalStreak = (int) streaks[0];
@@ -139,7 +147,6 @@ public class StatisticsActivity extends AppCompatActivity {
 		TextView textView = new TextView(this);
 		textView.setText(text);
 		float size = getResources().getDimension(R.dimen.historic_text_size);
-		Log.d("popo", String.valueOf(size));
 		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
 		textView.setTextColor(Color.parseColor("#FFFFFF"));
 		textView.setLayoutParams(lp);
@@ -153,6 +160,10 @@ public class StatisticsActivity extends AppCompatActivity {
 		return mTotalScore;
 	}
 
+	/**
+	 * Draw the actual mood corresponding to the score of the user
+	 * showing a reset button to erase the stats
+	 */
 	public void moodDrawer(){
 		mMoodLayout = new ConstraintLayout(this);
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mWidth, mHeight/3);
@@ -208,10 +219,8 @@ public class StatisticsActivity extends AppCompatActivity {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								deletePreferences();
-								Object[] humor = mSharedPreferencesManager.getSelectedHumor();
-								AppStartDriver.INSTANCE.init((int) humor[0], (int) humor[1],
-										(String) humor[2]);
-								Intent intent = getIntent();
+								Intent intent = new Intent(
+										StatisticsActivity.this, MainActivity.class);
 								finish();
 								startActivity(intent);
 							}
@@ -229,9 +238,11 @@ public class StatisticsActivity extends AppCompatActivity {
 
 	private void deletePreferences(){
 		Context context = getApplicationContext();
-		for(int i = AppStartDriver.INSTANCE.getCurrentDayForHistoric()-1; i >= 1; i++){
+		for(int i = mTotalUsageDays; i >= 0; i--){
 			context.getSharedPreferences(String.valueOf(i), 0).edit().clear().apply();
 		}
+		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
+				R.string.historicDayKey)).apply();
 		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
 				R.string.totalStreakKey)).apply();
 		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(

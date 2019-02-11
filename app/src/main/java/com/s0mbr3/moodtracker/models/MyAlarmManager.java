@@ -10,6 +10,10 @@ import com.s0mbr3.moodtracker.controllers.AlarmReceiver;
 
 import java.util.Calendar;
 
+/**
+ * class triggered by the MainActivity or the DeveiceRebootReceiver to initialize the calendar
+ * and start the schedule task via the AlarmManager
+ */
 public class MyAlarmManager {
 	public MyAlarmManager(){
 

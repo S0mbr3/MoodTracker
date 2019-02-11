@@ -23,14 +23,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     private int mIndex;
 
     /**
-     * onReceive event is triggered when the schedule task is fired, it read from a serialized
-     * humor object containing the index of the humors list and the comment associated if there is
-     * one. then it prepare another serialization task for the historic activity
+     * onReceive event is triggered when the schedule task is fired, it read from a the Shared
+     * Preferences containing the index of the humors list and the comment associated if there is
+     * one, prepare the history, the notifications, the streak and reload the eye focus activity
+     * by the user if he is on the application
      *
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-            AppStartDriver appStartDriver = AppStartDriver.INSTANCE;
             mDirPath = context.getFilesDir().getAbsolutePath();
 
             mPreferencesManager = new SharedPreferencesManager(context.getApplicationContext());
@@ -39,25 +39,22 @@ public class AlarmReceiver extends BroadcastReceiver {
             int currentDayForHistoric = (int) data[1];
             String mCommentTxt = (String) data[2];
 
-            mPreferencesManager.setHistoricDay(mIndex, mCommentTxt, currentDayForHistoric);
+            mPreferencesManager.setHistoricHumor(mIndex, mCommentTxt, currentDayForHistoric);
 
             ++currentDayForHistoric;
 
-            appStartDriver.setCurrentDayForHistoric(currentDayForHistoric);
-            appStartDriver.setCommentTxt(null);
-            appStartDriver.setIndex(3);
-            HumorUpdater.getInstance().updateTrigger();
             mPreferencesManager.setSelectedHumor(3, currentDayForHistoric, null);
 
             statistics();
             streak();
-            if (appStartDriver.isAlive()) {
+            if (AppStartDriver.INSTANCE.isAlive()) {
                 Notifications notificate = new Notifications(context,
                         Arrays.asList(context.getApplicationContext().getResources().getStringArray(
                                 R.array.notifications)));
                 notificate.showNotification();
                 notificate.Notification(context.getApplicationContext().getString(R.string.notificate));
             }
+        HumorUpdater.getInstance().updateTrigger();
     }
 
 

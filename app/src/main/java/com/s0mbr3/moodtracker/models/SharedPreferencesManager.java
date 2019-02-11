@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.s0mbr3.moodtracker.R;
 
+/**
+ * SharedPreferenceManager class is used to allow persistance of data across reboot and activities
+ */
 public class SharedPreferencesManager {
     private Context mContext;
     private SharedPreferences mPreferences;
@@ -14,8 +17,6 @@ public class SharedPreferencesManager {
 
     public SharedPreferencesManager(Context context){
         this.mContext = context;
-        //mPreferences = context.getSharedPreferences(context.getString(R.string.selectedHumor),
-				//Context.MODE_PRIVATE);
     }
     public Object[] getSelectedHumor(){
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -84,6 +85,18 @@ public class SharedPreferencesManager {
 
 	}
 
+	public int getHistoryDay(){
+    	mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    	return mPreferences.getInt(mContext.getString(R.string.historicDayKey),
+				mContext.getResources().getInteger(R.integer.historicDay));
+	}
+	public void resetHistoricDay(){
+    	mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    	mEditor = mPreferences.edit();
+    	mEditor.putInt(mContext.getString(R.string.historicDayKey), 1);
+    	mEditor.apply();
+	}
+
 	public void setDaysPerHumor(int daysPerHumor, int index){
 		mPreferences = mContext.getSharedPreferences(String.valueOf(index), Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
@@ -91,7 +104,7 @@ public class SharedPreferencesManager {
     	mEditor.apply();
 	}
 
-	public Object[] getHistoricDay(int historicDay){
+	public Object[] getHistoricHumor(int historicDay){
 		mPreferences = mContext.getSharedPreferences(String.valueOf(historicDay), Context.MODE_PRIVATE);
 		int index;
 		String commentTxt;
@@ -106,7 +119,7 @@ public class SharedPreferencesManager {
 		return new Object[] {index, commentTxt};
 	}
 
-	public void setHistoricDay(int index, String commentTxt, int historicDay){
+	public void setHistoricHumor(int index, String commentTxt, int historicDay){
 		mPreferences = mContext.getSharedPreferences(String.valueOf(historicDay), Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
 

@@ -6,14 +6,16 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.controllers.MainActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Instanciate by the AlarmReceiver class to send a notification when a new day is starting
+ * @see com.s0mbr3.moodtracker.controllers.AlarmReceiver
+ */
 public class Notifications {
 	private Context mContext;
 	private NotificationManager mNotificationManager;
@@ -22,7 +24,6 @@ public class Notifications {
 	public Notifications(Context context, List<String> notifications) {
 		this.mContext = context;
 		mNotifications = notifications;
-		Log.d("lalala", "ohhhhh" +  notifications.get(0));
 	}
 
 	public void Notification(String title) {

@@ -1,9 +1,7 @@
 package com.s0mbr3.moodtracker.views;
 
-import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +11,11 @@ import com.s0mbr3.moodtracker.models.AppStartDriver;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * StatisticsActivityView draw the graph of the statistics activity dynamically
+ * using reflection to select the corresponding size, color and numbers
+ * @see com.s0mbr3.moodtracker.controllers.StatisticsActivity
+ */
 public class StatisticsActivityView {
 	private LinearLayout mStatisticsLayout;
 	private ConstraintLayout mGraphLayout;
@@ -76,27 +79,27 @@ public class StatisticsActivityView {
 
 	public int setSadSmiley(){
 		this.mGraphLine.setBackgroundResource(R.color.faded_red);
-		return graphLineHeight() ;
+		return graphLineHeight();
 	}
 
 	public int setDisappointedSmiley(){
 		this.mGraphLine.setBackgroundResource(R.color.warm_grey);
-		return graphLineHeight() ;
+		return graphLineHeight();
 	}
 
 	public int setNormalSmiley(){
 		this.mGraphLine.setBackgroundResource(R.color.cornflower_blue_65);
-		return graphLineHeight() ;
+		return graphLineHeight();
 	}
 
 	public int setHappySmiley(){
 		this.mGraphLine.setBackgroundResource(R.color.light_sage);
-		return graphLineHeight() ;
+		return graphLineHeight();
 	}
 
 	public int setSuperHappySmiley(){
 		this.mGraphLine.setBackgroundResource(R.color.banana_yellow);
-		return graphLineHeight() ;
+		return graphLineHeight();
 	}
 
 	private int graphLineHeight(){

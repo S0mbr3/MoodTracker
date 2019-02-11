@@ -6,6 +6,9 @@ import android.content.Intent;
 
 import com.s0mbr3.moodtracker.models.MyAlarmManager;
 
+/**
+* Launch back the alarm manager if the user reboot the phone
+ */
 public class DeviceRebootReceive extends BroadcastReceiver {
 
     @Override

@@ -5,8 +5,6 @@ import android.content.res.Resources;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -22,8 +20,9 @@ import java.lang.reflect.Method;
 
 
 /**
- * HistoricActivityView class is a set of setters/getters method to show on screen appropriate smileys
- * and background colors by reflection
+ * HistoricActivityView draw dynamically the history using reflection to detect which line to draw
+ * depending of the history data contained in the SharedPreferences
+ *
  *
  * Created by Oxhart on 21/01/2019.
  */
@@ -96,7 +95,6 @@ public class HistoricActivityView {
 		Configuration configuration = Resources.getSystem().getConfiguration();
 		DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
 		float screenWidthdp = displayMetrics.widthPixels / displayMetrics.density;
-		Log.d("scree", "loool" + String.valueOf(screenWidthdp) + " " + size + " " + this.scale);
     }
 
     public int setSadSmiley() {

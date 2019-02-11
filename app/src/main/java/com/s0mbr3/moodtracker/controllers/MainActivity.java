@@ -33,7 +33,8 @@ import com.s0mbr3.moodtracker.views.MainActivityView;
 /**
  * MainActivity class is the first activity of the application
  * it allows user to select a smiley by swiping on the screen, add a comment to detail their humor
- * and watch their weekly humor historic
+ * watch their weekly humor historic, their statistics, and hearing a sweet sound when they do change
+ * humor
  */
 public class MainActivity extends AppCompatActivity {
 	private ImageView mSmiley;
@@ -52,12 +53,7 @@ public class MainActivity extends AppCompatActivity {
 	private SharedPreferences.Editor mEditor;
 
 	/**
-	 * onCreate events initialize members variables of the activities at it creation as their
-	 * widgets view screens (smiley, comment button, historic button)
-	 * Instanciation of the Alarm manager to schedule daily saving of humor and comment at midnight
-	 * Instanciation of the MyGestureListener to catch screen gestures of the user
-	 * Instanciation of  the  comment button click listener mCommentBtn
-	 * Instanciation of the historic  button click listener by this historic method
+	 * Initialisation of the main variables, and prepare for the other activities
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
 		appStartDriver = AppStartDriver.INSTANCE;
 		this.starter();
 
-		if(!appStartDriver.isSet()) {
+		if(!appStartDriver.isAlarmSet()) {
 			MyAlarmManager alarmManager = new MyAlarmManager();
 			alarmManager.setAlarm(this);
-			appStartDriver.set();
+			appStartDriver.setAlarm();
 		}
 
 
@@ -94,13 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 	}
+	//fetching saved data regarding the humor and in which day we are in
 	private void starter(){
 		SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(MainActivity.this);
 		Object[] data = sharedPreferencesManager.getSelectedHumor();
 		mIndex = (int) data[0];
 		mCurrentDayForHistoric = (int) data[1];
 		mCommentTxt = (String) data[2];
-		appStartDriver.init(mIndex, mCurrentDayForHistoric, mCommentTxt);
 	}
 
 	/**
@@ -113,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
+	/**
+	 * Launch the gestures catch, sound play, and save the index into the Shared preferences
+	 * custom even listener humorUpdater to refresh the activity if the user is infront of it
+	 * when the AlarmManager ring
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -121,17 +122,17 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void run() {
 				mainActivityView.constrainSet();
-				mainActivityView.getMethodName(appStartDriver.getIndex());
+				mainActivityView.getMethodName(mIndex);
 			}
 		});
 		mPreviousSound = MediaPlayer.create(this, appStartDriver.INSTANCE.getSound(mIndex));
-		mCommentTxt = appStartDriver.getCommentTxt();
-		MyGestureListener myGestureListener = new MyGestureListener(mainActivityView);
+		MyGestureListener myGestureListener = new MyGestureListener(mainActivityView, mIndex);
 		myGestureListener.setIndexListener(new MyGestureListener.IndexGetter() {
 			/**
 			 * getIndex is a custom listener to catch the index used to travel in the humorsList
 			 * serialize the weekly day, index  and comment and write it into a dedicated file
 			 * @param index
+			 * 		Bring the index needed to change the humor by reflection
 			 */
 			@Override
 			public void getIndex(int index) {
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
+	//little trick to cut the sound when swiping
 	public void indexTester(){
 		try {
 			if (mPreviousSound.isPlaying()) {
@@ -174,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
+	//reseting the MediaPlayer when quiting the activity
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -192,12 +195,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	/**
-	 * addComment method manage the mCommentBtn and show an AlertDialog to let the user comment is
-	 * daily humor, then serialize the index, comment and weekly day and write the object into a
-	 * dedicated file
+	 * Manage the comment button and the saving of it's messages
 	 */
 	private void addComment(){
-		mCurrentDayForHistoric = appStartDriver.getCurrentDayForHistoric();
 		final EditText commentInput = new EditText(this);
 		commentInput.setText(mCommentTxt);
 		if(mCommentTxt != null) commentInput.setSelection(mCommentTxt.length());
@@ -210,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						if(commentInput.getText().toString().length() == 0) mCommentTxt = null;
 						else mCommentTxt = commentInput.getText().toString();
-						appStartDriver.setCommentTxt(mCommentTxt);
 						mEditor.putString(getString(R.string.commentKey), mCommentTxt);
 						mEditor.apply();
 					}
@@ -239,6 +238,9 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
+	/**
+	 * Manage the statistics button and launch it's activity
+	 */
 	private void statistics(){
 		mStatisticsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -257,6 +259,10 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
+	/**
+	 * Grabbing the size of the screen width/height and calculate for both portrait/landscape
+	 * it's real layout size (required to draw the historic, statistics and adjust humor icon)
+	 */
 	public void getSize(){
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		WindowManager windowmanager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
