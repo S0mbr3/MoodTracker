@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <string-array name="days">
-            <item>Yesterday</item>
-            <item>Before Yesterday</item>
-            <item>Three days ago</item>
-            <item>Four days ago</item>
-            <item>Five days ago</item>
-            <item>Six days ago</item>
-            <item>Last week</item>
-</string-array>
+    <string-array name="days">
+        <item>Yesterday</item>
+        <item>Before Yesterday</item>
+        <item>Three days ago</item>
+        <item>Four days ago</item>
+        <item>Five days ago</item>
+        <item>Six days ago</item>
+        <item>Last week</item>
+    </string-array>
+
+    <string-array name="notifications">
+        <item>Doing excercice will make you feel better in your body and a better mood.</item>
+        <item>Take some time for you. Doing activities we like drop down the stress</item>
+        <item>A little outdoors trio ? Nature is source of appeasement</item>
+        <item >The daily practice of meditation is an efficient key to refocus, perceive the world
+        differently, rise your concentration, handling of your emotions and way more virtues !</item>
+        <item>Try to experiment new things, the routine is source of stress, boredom and depression.</item>
+        <item>Spend time with your loved ones, those connections are invaluable for your wellness.</item>
+        <item>Meet new people, exchange, share. The world is vast, and everyone is unique.</item>
+        <item>A wholesome and diversified nutrition is the key to a durable health, mentally and
+        physically.</item>
+        <item>Grant you some rest, the overwork accompanies fatigue and mood swings.</item>
+        <item>Set you some objectives, what an immense joy to accomplish them !</item>
+        <item>Throw away your alarm clocks, a complete night\'s sleep is an ally of choice
+        for full and rich day</item>
+        <item>Be curious, the brain is eager to learn, and you will discover new thrilling activities.</item>
+        <item>Barely woke up and already disengaged of your day ? If this happens to you too often,
+        perhaps it\'s time to take stock of yourself. It\'s never too late to change your life!</item>
+        <item>And what if i tell you the only thing you have to do to be happy is to wish it ?
+        Easier to say it, i know !</item>
+        <item>Self suggestions is a fearful weapon to unprogram bad habits or harmful thoughts.</item>
+        <item>Stimulants like caffeine, theine, nicotine… Rise the cortisol and so the stress.</item>
+        <item>Please yourself, restrictions are catastrophic on your balance. No excesses are good
+        as abusive or restrictive.</item>
+
+    </string-array>
 </resources>
