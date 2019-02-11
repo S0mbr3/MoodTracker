@@ -34,7 +34,7 @@ public class MyAlarmManager {
 				0, intent,0);
 
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-				3600*24*100, alarmIntent);
+				3600*24*1000, alarmIntent);
 
 	}
 }
