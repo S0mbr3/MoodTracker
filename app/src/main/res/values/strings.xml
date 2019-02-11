@@ -10,6 +10,7 @@
     <string name="currentStreakKey" translatable="false">currentStreak</string>
     <string name="additonalScoreKey" translatable="false">additionalScore</string>
     <string name="daysPerHumorKey" translatable="false">daysPerHumor</string>
+    <string name="isErasedKey" translatable="false">isErased</string>
 
     <string name="VALIDATE">VALIDER</string>
     <string name="CANCEL">ANNULER</string>

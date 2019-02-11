@@ -218,7 +218,7 @@ public class StatisticsActivity extends AppCompatActivity {
 						.setPositiveButton(R.string.VALIDATE, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								deletePreferences();
+                                mSharedPreferencesManager.deletePreferences();
 								Intent intent = new Intent(
 										StatisticsActivity.this, MainActivity.class);
 								finish();
@@ -236,20 +236,6 @@ public class StatisticsActivity extends AppCompatActivity {
 
 	}
 
-	private void deletePreferences(){
-		Context context = getApplicationContext();
-		for(int i = mTotalUsageDays; i >= 0; i--){
-			context.getSharedPreferences(String.valueOf(i), 0).edit().clear().apply();
-		}
-		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
-				R.string.historicDayKey)).apply();
-		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
-				R.string.totalStreakKey)).apply();
-		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
-				R.string.currentStreakKey)).apply();
-		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getString(
-				R.string.additonalScoreKey)).apply();
-	}
 
 	private int dpToPx(int dp)
 	{

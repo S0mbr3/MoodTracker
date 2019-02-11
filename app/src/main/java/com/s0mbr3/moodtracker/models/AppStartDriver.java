@@ -1,6 +1,8 @@
 package com.s0mbr3.moodtracker.models;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 import android.util.SparseArray;
 
@@ -20,13 +22,9 @@ public enum AppStartDriver {
     INSTANCE;
 
     private boolean mIsAlive = false;
-    private int mIndex;
-    private String mCommentTxt;
-    private int mCurrentDayForHistoric;
     private ArrayMap<String, Integer> mSize = new ArrayMap<>();
     @SuppressLint("UseSparseArrays")
     private SparseArray<Integer> mSounds = new SparseArray<>();
-    private boolean mSet;
     private static final List<String> HUMORS_LIST = new ArrayList<>(Arrays.asList(
             "setSadSmiley",
             "setDisappointedSmiley",
@@ -41,9 +39,7 @@ public enum AppStartDriver {
         mSounds.put(2, R.raw.normal);
         mSounds.put(3, R.raw.happy);
         mSounds.put(4, R.raw.superhappy);
-        this.mSet = false;
     }
-
 
 
     public int getSound(int index){
@@ -74,19 +70,5 @@ public enum AppStartDriver {
 
     public String getHumor(int index){
         return HUMORS_LIST.get(index);
-
-    }
-
-    public void init(int index, int historicDay, String commentTxt){
-        this.mIndex = index;
-        this.mCurrentDayForHistoric = historicDay;
-        this.mCommentTxt = commentTxt;
-    }
-    public boolean isAlarmSet(){
-        return this.mSet;
-    }
-
-    public void setAlarm(){
-        this.mSet = true;
     }
 }

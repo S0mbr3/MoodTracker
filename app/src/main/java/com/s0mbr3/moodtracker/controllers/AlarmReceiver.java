@@ -47,7 +47,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             statistics();
             streak();
-            if (AppStartDriver.INSTANCE.isAlive()) {
+            if (!AppStartDriver.INSTANCE.isAlive()) {
                 Notifications notificate = new Notifications(context,
                         Arrays.asList(context.getApplicationContext().getResources().getStringArray(
                                 R.array.notifications)));

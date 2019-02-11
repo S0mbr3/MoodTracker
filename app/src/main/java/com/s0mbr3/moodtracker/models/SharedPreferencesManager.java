@@ -3,7 +3,6 @@ package com.s0mbr3.moodtracker.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.s0mbr3.moodtracker.R;
 
@@ -23,8 +22,6 @@ public class SharedPreferencesManager {
     	int index;
     	int historicDay;
     	String commentTxt;
-    	Log.d("pref", mContext.getString(R.string.indexKey));
-    	Log.d("pref", String.valueOf(mContext.getResources().getInteger(R.integer.index)));
         index = mPreferences.getInt(
                 mContext.getString(R.string.indexKey),
                 mContext.getResources().getInteger(R.integer.index));
@@ -35,6 +32,37 @@ public class SharedPreferencesManager {
         null);
         return new Object[] {index, historicDay, commentTxt};
     }
+
+	public void deletePreferences(){
+    	PreferenceManager.getDefaultSharedPreferences(mContext).edit().remove(mContext.getString(
+    			R.string.isErasedKey)).commit();
+    	int days=1;
+    	mContext.getSharedPreferences(String.valueOf(days), 0).contains(mContext.getString(R.string.indexKey));
+    	while(mContext.getSharedPreferences(String.valueOf(days), 0).contains(mContext.getString(R.string.indexKey))) {
+    		++days;
+		}
+		while(days >= 0){
+			mContext.getSharedPreferences(String.valueOf(days), 0).edit().clear().commit();
+			days--;
+		}
+		PreferenceManager.getDefaultSharedPreferences(mContext).edit().remove(mContext.getString(
+				R.string.totalStreakKey)).commit();
+		PreferenceManager.getDefaultSharedPreferences(mContext).edit().remove(mContext.getString(
+				R.string.currentStreakKey)).commit();
+		PreferenceManager.getDefaultSharedPreferences(mContext).edit().remove(mContext.getString(
+				R.string.additonalScoreKey)).commit();
+		PreferenceManager.getDefaultSharedPreferences(mContext).edit().remove(mContext.getString(
+				R.string.historicDayKey)).commit();
+
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+		mEditor = mPreferences.edit();
+		mEditor.putBoolean(mContext.getString(R.string.isErasedKey), true).commit();
+	}
+    public boolean isErased(){
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+		boolean lol = mPreferences.contains(mContext.getString(R.string.isErasedKey));
+		return lol;
+	}
 
     public void setSelectedHumor(int index, int historicDay, String commentTxt){
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);

@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -69,14 +70,9 @@ public class MainActivity extends AppCompatActivity {
 		mHistoricBtn = findViewById(R.id.activity_main_historic_btn);
 
 		appStartDriver = AppStartDriver.INSTANCE;
-		this.starter();
 
-		if(!appStartDriver.isAlarmSet()) {
 			MyAlarmManager alarmManager = new MyAlarmManager();
 			alarmManager.setAlarm(this);
-			appStartDriver.setAlarm();
-		}
-
 
 		mCommentBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -87,16 +83,21 @@ public class MainActivity extends AppCompatActivity {
 		this.historic();
 		this.statistics();
 		this.getSize();
+		Log.d("on create", "ouioui");
 
 
 	}
 	//fetching saved data regarding the humor and in which day we are in
 	private void starter(){
-		SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(MainActivity.this);
+		SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(
+				MainActivity.this.getApplicationContext());
 		Object[] data = sharedPreferencesManager.getSelectedHumor();
 		mIndex = (int) data[0];
 		mCurrentDayForHistoric = (int) data[1];
 		mCommentTxt = (String) data[2];
+		if(!sharedPreferencesManager.isErased()){
+			sharedPreferencesManager.deletePreferences();
+		}
 	}
 
 	/**
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		this.starter();
 		final MainActivityView mainActivityView = new MainActivityView(mLayout, mSmiley);
 		mLayout.post(new Runnable() {
 			@Override
