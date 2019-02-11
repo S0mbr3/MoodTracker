@@ -37,8 +37,10 @@ public class SharedPreferencesManager {
     	PreferenceManager.getDefaultSharedPreferences(mContext).edit().remove(mContext.getString(
     			R.string.isErasedKey)).commit();
     	int days=1;
-    	mContext.getSharedPreferences(String.valueOf(days), 0).contains(mContext.getString(R.string.indexKey));
-    	while(mContext.getSharedPreferences(String.valueOf(days), 0).contains(mContext.getString(R.string.indexKey))) {
+    	mContext.getSharedPreferences(String.valueOf(days), 0).contains(
+    			mContext.getString(R.string.indexKey));
+    	while(mContext.getSharedPreferences(String.valueOf(days), 0).contains(
+    			mContext.getString(R.string.indexKey))) {
     		++days;
 		}
 		while(days >= 0){
@@ -60,8 +62,8 @@ public class SharedPreferencesManager {
 	}
     public boolean isErased(){
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-		boolean lol = mPreferences.contains(mContext.getString(R.string.isErasedKey));
-		return lol;
+
+		return mPreferences.contains(mContext.getString(R.string.isErasedKey));
 	}
 
     public void setSelectedHumor(int index, int historicDay, String commentTxt){

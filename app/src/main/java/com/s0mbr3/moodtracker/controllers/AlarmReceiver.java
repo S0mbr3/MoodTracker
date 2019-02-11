@@ -18,7 +18,6 @@ import java.util.Arrays;
  * Created by Oxhart on 22/01/2019.
  */
 public class AlarmReceiver extends BroadcastReceiver {
-    private String mDirPath;
     private SharedPreferencesManager mPreferencesManager;
     private int mIndex;
 
@@ -31,8 +30,6 @@ public class AlarmReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-            mDirPath = context.getFilesDir().getAbsolutePath();
-
             mPreferencesManager = new SharedPreferencesManager(context.getApplicationContext());
             Object[] data = mPreferencesManager.getSelectedHumor();
             mIndex = (int) data[0];

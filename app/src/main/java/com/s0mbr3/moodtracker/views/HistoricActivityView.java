@@ -34,7 +34,8 @@ public class HistoricActivityView {
     private ConstraintLayout mConstraintLayout;
     private static final float scale = Resources.getSystem().getDisplayMetrics().density;
 
-    public HistoricActivityView(TextView historicLine, LinearLayout layout, ConstraintLayout constraintLayout, int height, int width){
+    public HistoricActivityView(TextView historicLine, LinearLayout layout,
+								ConstraintLayout constraintLayout, int height, int width){
         this.mHistoricLayout = layout;
         this.mHeight = height;
         this.mWidth = width;
@@ -55,7 +56,8 @@ public class HistoricActivityView {
         Class<?> reflectClass;
         try {
             reflectClass = Class.forName(HistoricActivityView.class.getName());
-            Method method = reflectClass.getMethod(AppStartDriver.INSTANCE.getHumor(index), (Class[]) null);
+            Method method = reflectClass.getMethod(
+            		AppStartDriver.INSTANCE.getHumor(index), (Class[]) null);
             width = (int) method.invoke(this, (Object[]) null);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -86,8 +88,10 @@ public class HistoricActivityView {
         this.mConstraintLayout.addView(commentButton);
         ConstraintSet set = new ConstraintSet();
         set.clone(this.mConstraintLayout);
-        set.connect(this.mHistoricLine.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
-        set.connect(commentButton.getId(), ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dpToPx(5));
+        set.connect(this.mHistoricLine.getId(),
+				ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+        set.connect(commentButton.getId(),
+				ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, dpToPx(5));
         set.centerVertically(commentButton.getId(), ConstraintSet.PARENT_ID);
 		set.constrainHeight(commentButton.getId(), (int) size);
 		set.constrainWidth(commentButton.getId(), (int) size);

@@ -1,15 +1,12 @@
 package com.s0mbr3.moodtracker.views;
 
 import android.content.res.Resources;
-import android.media.MediaPlayer;
-import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.widget.ImageView;
 
 import com.s0mbr3.moodtracker.R;
 import com.s0mbr3.moodtracker.models.AppStartDriver;
-import com.s0mbr3.moodtracker.controllers.MyGestureListener;
 import com.s0mbr3.moodtracker.models.SizeManager;
 
 import java.lang.reflect.InvocationTargetException;

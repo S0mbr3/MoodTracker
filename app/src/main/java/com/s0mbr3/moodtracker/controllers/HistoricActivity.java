@@ -120,7 +120,8 @@ public class HistoricActivity extends AppCompatActivity implements View.OnClickL
         float size = getResources().getDimension(R.dimen.historic_text_size);
         historicLine.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
         //the major drawing
-        HistoricActivityView historicActivityView = new HistoricActivityView(historicLine, mLayout, constraintLayout, mHeight, mWidth);
+        HistoricActivityView historicActivityView = new HistoricActivityView(historicLine,
+                mLayout, constraintLayout, mHeight, mWidth);
         if(mCommentTxt == null) historicActivityView.createHistoricLine(mIndex);
         else historicActivityView.createHistoricLine(mIndex, mCommentButton, buttonSize);
     }

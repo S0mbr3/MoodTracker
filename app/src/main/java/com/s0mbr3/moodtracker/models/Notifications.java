@@ -28,7 +28,8 @@ public class Notifications {
 
 	public void Notification(String title) {
 		String message = this.messagePicker();
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, "default")
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(
+				mContext, "default")
 				.setSmallIcon(R.mipmap.ic_launcher)
 				.setContentTitle(title)
 				.setContentText(message)
