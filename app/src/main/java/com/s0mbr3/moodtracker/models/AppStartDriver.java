@@ -1,8 +1,6 @@
 package com.s0mbr3.moodtracker.models;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.preference.PreferenceManager;
 import android.util.ArrayMap;
 import android.util.SparseArray;
 

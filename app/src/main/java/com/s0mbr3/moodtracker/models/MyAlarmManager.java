@@ -11,7 +11,7 @@ import com.s0mbr3.moodtracker.controllers.AlarmReceiver;
 import java.util.Calendar;
 
 /**
- * class triggered by the MainActivity or the DeveiceRebootReceiver to initialize the calendar
+ * class triggered by the MainActivity or the DeviceRebootReceiver to initialize the calendar
  * and start the schedule task via the AlarmManager
  */
 public class MyAlarmManager {
@@ -25,13 +25,13 @@ public class MyAlarmManager {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.set(Calendar.HOUR_OF_DAY, 17);
-		calendar.set(Calendar.MINUTE, 5);
+		calendar.set(Calendar.HOUR_OF_DAY, 24);
+		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		PendingIntent alarmIntent = PendingIntent.getBroadcast(context.getApplicationContext(),
-				0, intent,PendingIntent.FLAG_CANCEL_CURRENT);
+				0, intent,0);
 
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
 				AlarmManager.INTERVAL_FIFTEEN_MINUTES, alarmIntent);

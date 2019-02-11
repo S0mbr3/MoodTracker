@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 		this.historic();
 		this.statistics();
 		this.getSize();
-		Log.d("on create", "ouioui");
 
 
 	}
